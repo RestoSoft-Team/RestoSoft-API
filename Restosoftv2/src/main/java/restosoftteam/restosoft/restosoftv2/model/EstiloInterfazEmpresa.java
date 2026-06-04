@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "estilos_interfaces_empresas", schema = "restosoft_v2")
-public class EstilosInterfacesEmpresa {
+public class EstiloInterfazEmpresa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idestilo", nullable = false)

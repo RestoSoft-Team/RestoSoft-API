@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "configuracion_paginas_clientes", schema = "restosoft_v2")
-public class ConfiguracionPaginasCliente {
+public class ConfiguracionPaginaCliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idpagina", nullable = false)
