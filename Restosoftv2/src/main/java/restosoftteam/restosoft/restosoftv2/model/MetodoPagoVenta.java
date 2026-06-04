@@ -1,6 +1,7 @@
 package restosoftteam.restosoft.restosoftv2.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,15 +10,17 @@ import lombok.Setter;
 @Entity
 @Table(name = "metodo_pago_ventas", schema = "restosoft_v2")
 public class MetodoPagoVenta {
-    @EmbeddedId
-    private MetodoPagoVentaId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idmetodo_pago_ventas", nullable = false)
+    private Integer id;
 
-    @MapsId("idmetodoPago")
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idmetodo_pago", nullable = false)
     private MetodoPago idmetodoPago;
 
-    @MapsId("idventa")
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idventa", nullable = false)
     private Venta idventa;

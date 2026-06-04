@@ -14,7 +14,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "movimientos_inventario", schema = "restosoft_v2")
-public class MovimientosInventario {
+public class MovimientoInventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idmovimiento", nullable = false)

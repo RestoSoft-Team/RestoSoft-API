@@ -9,16 +9,18 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "empresas_usuarios", schema = "restosoft_v2")
-public class EmpresasUsuario {
-    @EmbeddedId
-    private EmpresasUsuarioId id;
+public class EmpresaUsuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idempresas_usuarios", nullable = false)
+    private Integer id;
 
-    @MapsId("idempresa")
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
     private Empresa idempresa;
 
-    @MapsId("idusuario")
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idusuario", nullable = false)
     private Usuario idusuario;
