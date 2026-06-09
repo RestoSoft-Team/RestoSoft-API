@@ -1,12 +1,15 @@
 package restosoftteam.restosoft.restosoftv2.dto.response;
 
-import restosoftteam.restosoft.restosoftv2.model.Empresa;
+import lombok.Data;
 
+@Data
 public class MesaResponse {
-    private Integer id;
     private String numeroMesa;
     private Integer disponibilidadPersonas;
-    private String numeroUbicacion;
+    private double posicionX;
+    private double posicionY;
+    private String tipoMesa;
     private String estado;
-    private Empresa idempresa;
+    private Integer idEmpresa;
+    private Integer idZona;
 }
