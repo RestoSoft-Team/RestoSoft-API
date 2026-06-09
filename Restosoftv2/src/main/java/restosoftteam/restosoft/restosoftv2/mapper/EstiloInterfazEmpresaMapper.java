@@ -5,7 +5,7 @@ import restosoftteam.restosoft.restosoftv2.dto.request.EstiloInterfazEmpresaRequ
 import restosoftteam.restosoft.restosoftv2.dto.response.EstiloInterfazEmpresaResponse;
 import restosoftteam.restosoft.restosoftv2.model.EstiloInterfazEmpresa;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EstiloInterfazEmpresaMapper {
     EstiloInterfazEmpresa toEntity(EstiloInterfazEmpresaRequest request);
     EstiloInterfazEmpresaResponse toResponse(EstiloInterfazEmpresa entity);

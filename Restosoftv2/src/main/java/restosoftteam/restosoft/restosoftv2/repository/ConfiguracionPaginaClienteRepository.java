@@ -7,4 +7,8 @@ public interface ConfiguracionPaginaClienteRepository extends JpaRepository<Conf
     ConfiguracionPaginaCliente findByIdempresa_Id(Integer idempresa);
 
     boolean existsByIdEmpresa(Integer id);
+
+    ConfiguracionPaginaCliente findByIdEmpresa_Id(Integer idEmpresa);
+
+    boolean existsByIdEmpresa_Id(void attr0);
 }

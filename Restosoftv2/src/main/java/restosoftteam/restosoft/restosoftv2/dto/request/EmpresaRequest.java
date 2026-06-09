@@ -1,7 +1,11 @@
 package restosoftteam.restosoft.restosoftv2.dto.request;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class EmpresaRequest {
     @NotNull(message = "El nombre de la empresa no puede estar vacio.")
     private String nombre;

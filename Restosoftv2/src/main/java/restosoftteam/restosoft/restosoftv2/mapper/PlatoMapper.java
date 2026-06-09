@@ -5,7 +5,7 @@ import restosoftteam.restosoft.restosoftv2.dto.request.PlatoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.PlatoResponse;
 import restosoftteam.restosoft.restosoftv2.model.Plato;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PlatoMapper {
     Plato toEntity(PlatoRequest request);
     PlatoResponse toResponse(Plato plato);
