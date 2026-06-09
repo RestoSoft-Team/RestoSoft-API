@@ -5,4 +5,6 @@ import restosoftteam.restosoft.restosoftv2.model.ConfiguracionPaginaCliente;
 
 public interface ConfiguracionPaginaClienteRepository extends JpaRepository<ConfiguracionPaginaCliente, Integer> {
     ConfiguracionPaginaCliente findByIdempresa_Id(Integer idempresa);
+
+    boolean existsByIdEmpresa(Integer id);
 }
