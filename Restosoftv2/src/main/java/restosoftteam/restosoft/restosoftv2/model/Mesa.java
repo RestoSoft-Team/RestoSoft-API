@@ -29,18 +29,30 @@ public class Mesa {
     @Column(name = "disponibilidad_personas", nullable = false)
     private Integer disponibilidadPersonas;
 
-    @Size(max = 100)
-    @Column(name = "numero_ubicacion", length = 100)
-    private String numeroUbicacion;
+    @NotNull
+    @Column(name = "posicion_x")
+    private double posicionX;
 
-    @Lob
-    @Column(name = "estado")
+    @NotNull
+    @Column(name = "posicion_y")
+    private double posiciony;
+
+    @NotNull
+    @Column(name = "tipo_mesa")
+    private String tipoMesa;
+
+    @Column(name = "estado", length = 20)
     private String estado;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
     private Empresa idempresa;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idZona", nullable = false)
+    private Zona zona;
 
 
 }

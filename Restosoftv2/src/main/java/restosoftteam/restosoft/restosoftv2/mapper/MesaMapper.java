@@ -1,0 +1,21 @@
+package restosoftteam.restosoft.restosoftv2.mapper;
+
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import restosoftteam.restosoft.restosoftv2.dto.request.MesaRequest;
+import restosoftteam.restosoft.restosoftv2.dto.response.MesaResponse;
+import restosoftteam.restosoft.restosoftv2.model.Mesa;
+
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface MesaMapper {
+
+    @Mapping(target = "zona", ignore = true)
+    @Mapping(target = "idempresa", ignore = true)
+    Mesa toEntity(MesaRequest mesaRequest);
+
+    @Mapping(source = "idempresa.id", target = "idEmpresa")
+    @Mapping(source = "zona.id", target = "idZona")
+    MesaResponse toResponse(Mesa mesa);
+}
