@@ -46,6 +46,7 @@ public class GeminiServiceImpl implements GeminiService {
               ]
             }
             """.formatted(mimeType, base64Image);
+        //Generacion Json
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
