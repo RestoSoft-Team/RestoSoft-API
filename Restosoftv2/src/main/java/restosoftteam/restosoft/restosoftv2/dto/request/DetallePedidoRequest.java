@@ -13,9 +13,9 @@ import java.math.BigDecimal;
 @Setter
 public class DetallePedidoRequest {
     @Positive(message = "El id del pedido no puede ser negativo.")
-    private Pedido idpedido;
+    private Integer idpedido;
     @Positive(message = "El id del plato no puede ser negativo.")
-    private Plato idplato;
+    private Integer idplato;
     @Positive(message = "La cantidad de platos no puede ser negativa. ")
     private Integer cantidad;
     @Positive(message = "El precio del plato no puede ser negativo.")
