@@ -1,6 +1,7 @@
 package restosoftteam.restosoft.restosoftv2.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import restosoftteam.restosoft.restosoftv2.dto.request.ConfiguracionPaginaClienteRequest;
@@ -9,10 +10,14 @@ import restosoftteam.restosoft.restosoftv2.model.ConfiguracionPaginaCliente;
 
 @Mapper(componentModel = "spring")
 public interface ConfiguracionPaginaClienteMapper {
-    ConfiguracionPaginaCliente toEntity(ConfiguracionPaginaClienteRequest request);
-    ConfiguracionPaginaClienteResponse toResponse(ConfiguracionPaginaCliente entity);
-    void updateEntityFromDto(ConfiguracionPaginaClienteRequest dto, @MappingTarget ConfiguracionPaginaCliente entity);
 
+    @Mapping(target = "idempresa", ignore = true)
+    ConfiguracionPaginaCliente toEntity(ConfiguracionPaginaClienteRequest request);
+
+    ConfiguracionPaginaClienteResponse toResponse(ConfiguracionPaginaCliente entity);
+
+    @Mapping(target = "idempresa", ignore = true)
+    void updateEntityFromDto(ConfiguracionPaginaClienteRequest dto, @MappingTarget ConfiguracionPaginaCliente entity);
 
 
 }
