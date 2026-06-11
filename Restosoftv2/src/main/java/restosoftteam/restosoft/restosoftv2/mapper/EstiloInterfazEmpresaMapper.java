@@ -15,5 +15,6 @@ public interface EstiloInterfazEmpresaMapper {
 
     EstiloInterfazEmpresaResponse toResponse(EstiloInterfazEmpresa entity);
 
+    @Mapping(target = "idempresa", ignore = true)
     void updateEntityFromDto(EstiloInterfazEmpresaRequest dto, @MappingTarget EstiloInterfazEmpresa entity);
 }
