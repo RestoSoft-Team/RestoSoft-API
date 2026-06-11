@@ -5,7 +5,7 @@ import restosoftteam.restosoft.restosoftv2.dto.request.DetallePedidoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.DetallePedidoResponse;
 import restosoftteam.restosoft.restosoftv2.model.DetallePedido;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface DetallePedidoMapper {
     DetallePedido  toEntity(DetallePedidoRequest request);
     DetallePedidoResponse toResponse(DetallePedido entity);

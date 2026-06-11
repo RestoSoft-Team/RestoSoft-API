@@ -1,8 +1,12 @@
 package restosoftteam.restosoft.restosoftv2.dto.request;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import restosoftteam.restosoft.restosoftv2.model.Empresa;
 
+@Getter
+@Setter
 public class ConfiguracionPaginaClienteRequest {
 
     @NotNull(message = "El titulo de la pagina cliente no puede estar vacio.")
@@ -23,5 +27,5 @@ public class ConfiguracionPaginaClienteRequest {
     private String imagen2;
     private String disenoCard;
     @NotNull(message = "El id empresa no puede estar vacio.")
-    private Empresa idempresa;
+    private Integer idempresa;
 }
