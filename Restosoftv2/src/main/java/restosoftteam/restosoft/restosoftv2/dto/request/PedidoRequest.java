@@ -14,13 +14,13 @@ public class PedidoRequest {
 
     private String observaciones;
     @NotNull(message = "El id mesa no puede estar vacio.")
-    private Mesa idmesa;
+    private Integer idmesa;
     @NotNull(message = "El id empresa no puede estar vacio.")
-    private Empresa idempresa;
+    private Integer idempresa;
     @NotNull(message = "El estado de el pedido no puede estar vacio.")
     private String estado;
     @NotNull(message = "El id usuario de el pedido no puede estar vacio.")
-    private Usuario idusuario;
+    private Integer idusuario;
     @NotNull(message = "La fecha de el pedido no puede estar vacio.")
     private Instant fecha;
 }
