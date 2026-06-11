@@ -29,12 +29,12 @@ public class Pedido {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idmesa", nullable = false)
-    private Mesa idmesa;
+    private Mesa mesa;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa idempresa;
+    private Empresa empresa;
 
     @NotNull
     @Lob
@@ -44,7 +44,7 @@ public class Pedido {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idusuario", nullable = false)
-    private Usuario idusuario;
+    private Usuario usuario;
 
     @NotNull
     @Column(name = "fecha", nullable = false)

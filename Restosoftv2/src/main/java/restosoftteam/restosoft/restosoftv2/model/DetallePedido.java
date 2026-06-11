@@ -24,12 +24,12 @@ public class DetallePedido {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idpedido", nullable = false)
-    private Pedido idpedido;
+    private Pedido pedido;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idplato", nullable = false)
-    private Plato idplato;
+    private Plato plato;
 
     @NotNull
     @Column(name = "cantidad", nullable = false)

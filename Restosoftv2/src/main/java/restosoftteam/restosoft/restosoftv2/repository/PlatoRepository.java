@@ -7,5 +7,5 @@ import restosoftteam.restosoft.restosoftv2.model.Plato;
 import java.util.List;
 
 public interface PlatoRepository extends JpaRepository<Plato, Integer> {
-    List<Plato> findAllByEmpresaId_Id(Integer idEmpresa);
+    List<Plato> findAllByEmpresa_Id(Integer idEmpresa);
 }

@@ -9,11 +9,11 @@ import restosoftteam.restosoft.restosoftv2.model.DetallePedido;
 
 @Mapper(componentModel = "spring")
 public interface DetallePedidoMapper {
-    @Mapping(target = "idpedido", ignore = true)
-    @Mapping(target = "idplato", ignore = true)
+    @Mapping(target = "pedido", ignore = true)
+    @Mapping(target = "plato", ignore = true)
     DetallePedido  toEntity(DetallePedidoRequest request);
     DetallePedidoResponse toResponse(DetallePedido entity);
-    @Mapping(target = "idpedido", ignore = true)
-    @Mapping(target = "idplato", ignore = true)
+    @Mapping(target = "pedido", ignore = true)
+    @Mapping(target = "plato", ignore = true)
     void  updateEntityFromDto(DetallePedidoRequest dto, @MappingTarget DetallePedido entity);
 }

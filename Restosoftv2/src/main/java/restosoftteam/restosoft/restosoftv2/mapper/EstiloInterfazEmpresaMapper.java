@@ -10,11 +10,11 @@ import restosoftteam.restosoft.restosoftv2.model.EstiloInterfazEmpresa;
 @Mapper(componentModel = "spring")
 public interface EstiloInterfazEmpresaMapper {
 
-    @Mapping(target = "idempresa", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
     EstiloInterfazEmpresa toEntity(EstiloInterfazEmpresaRequest request);
 
     EstiloInterfazEmpresaResponse toResponse(EstiloInterfazEmpresa entity);
 
-    @Mapping(target = "idempresa", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
     void updateEntityFromDto(EstiloInterfazEmpresaRequest dto, @MappingTarget EstiloInterfazEmpresa entity);
 }

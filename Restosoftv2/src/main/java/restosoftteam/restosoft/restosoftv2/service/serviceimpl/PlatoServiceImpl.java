@@ -38,7 +38,7 @@ public class PlatoServiceImpl implements PlatoService {
     @Override
     public List<PlatoResponse> findAllByEmpresaId(Integer idEmpresa) {
 
-        return platoRepository.findAllByEmpresaId_Id(idEmpresa)
+        return platoRepository.findAllByEmpresa_Id(idEmpresa)
                 .stream().map(platoMapper::toResponse).toList();
 
     }
@@ -57,8 +57,8 @@ public class PlatoServiceImpl implements PlatoService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("La categoria del plato relacionada no existe."));
 
         platoMapper.updateEntityFromDto(request, plato);
-        plato.setIdempresa(empresa);
-        plato.setIdcategoria(platoCategoria);
+        plato.setEmpresa(empresa);
+        plato.setCategoria(platoCategoria);
 
         return platoMapper.toResponse(platoRepository.save(plato));
 
@@ -75,8 +75,8 @@ public class PlatoServiceImpl implements PlatoService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("La categoria del plato relacionada no existe."));
 
         Plato plato = platoMapper.toEntity(request);
-        plato.setIdempresa(empresa);
-        plato.setIdcategoria(platoCategoria);
+        plato.setEmpresa(empresa);
+        plato.setCategoria(platoCategoria);
         return platoMapper.toResponse(platoRepository.save(plato));
 
     }

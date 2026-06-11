@@ -40,13 +40,13 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public List<PedidoResponse> findAllByIdEmpresa_Id(Integer idEmpresa) {
+    public List<PedidoResponse> findAllByEmpresa_Id(Integer idEmpresa) {
 
         if(!empresaRepository.existsById(idEmpresa)){
             throw new RecursoNoEncontradoException("La empresa relacionada al pedido no se ha encontrado.");
         }
 
-        return pedidoRepository.findAllByIdEmpresa_Id(idEmpresa)
+        return pedidoRepository.findAllByEmpresa_Id(idEmpresa)
                 .stream().map(pedidoMapper::toResponse).toList();
 
     }
@@ -69,9 +69,9 @@ public class PedidoServiceImpl implements PedidoService {
 
 
         pedidoMapper.updateEntityFromDto(request, pedido);
-        pedido.setIdempresa(empresa);
-        pedido.setIdmesa(mesa);
-        pedido.setIdusuario(usuario);
+        pedido.setEmpresa(empresa);
+        pedido.setMesa(mesa);
+        pedido.setUsuario(usuario);
 
 
         return pedidoMapper.toResponse(pedidoRepository.save(pedido));
@@ -92,9 +92,9 @@ public class PedidoServiceImpl implements PedidoService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("El usuario relacionado al pedido no se ha encontrado"));
 
         Pedido pedido = pedidoMapper.toEntity(request);
-        pedido.setIdempresa(empresa);
-        pedido.setIdmesa(mesa);
-        pedido.setIdusuario(usuario);
+        pedido.setEmpresa(empresa);
+        pedido.setMesa(mesa);
+        pedido.setUsuario(usuario);
 
         return pedidoMapper.toResponse(pedidoRepository.save(pedido));
 

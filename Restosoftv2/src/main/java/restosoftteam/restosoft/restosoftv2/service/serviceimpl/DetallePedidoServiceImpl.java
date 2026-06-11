@@ -55,15 +55,15 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
 
         DetallePedido detallePedido = detallePedidoMapper.toEntity(request);
 
-        detallePedido.setIdplato(plato);
-        detallePedido.setIdpedido(pedido);
+        detallePedido.setPlato(plato);
+        detallePedido.setPedido(pedido);
 
         return detallePedidoMapper.toResponse(detallePedidoRepository.save(detallePedido));
 
     }
 
     @Override
-    public List<DetallePedidoResponse> listAllByIdPedido(int idPedido) {
+    public List<DetallePedidoResponse> listAllByPedidoId(int idPedido) {
 
         Pedido pedido = pedidoRepository.findById(idPedido)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Pedido al cual  se relaciona el detalle pedido."));
@@ -90,8 +90,8 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
 
         detallePedidoMapper.updateEntityFromDto(request, detallePedido);
 
-        detallePedido.setIdpedido(pedido);
-        detallePedido.setIdplato(plato);
+        detallePedido.setPedido(pedido);
+        detallePedido.setPlato(plato);
 
         return detallePedidoMapper.toResponse(detallePedidoRepository.save(detallePedido));
     }
