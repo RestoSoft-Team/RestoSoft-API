@@ -8,7 +8,6 @@ import restosoftteam.restosoft.restosoftv2.dto.response.DetallePedidoResponse;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.mapper.DetallePedidoMapper;
 import restosoftteam.restosoft.restosoftv2.model.DetallePedido;
-import restosoftteam.restosoft.restosoftv2.model.Empresa;
 import restosoftteam.restosoft.restosoftv2.model.Pedido;
 import restosoftteam.restosoft.restosoftv2.model.Plato;
 import restosoftteam.restosoft.restosoftv2.repository.DetallePedidoRepository;
@@ -16,6 +15,8 @@ import restosoftteam.restosoft.restosoftv2.repository.EmpresaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.PedidoRepository;
 import restosoftteam.restosoft.restosoftv2.repository.PlatoRepository;
 import restosoftteam.restosoft.restosoftv2.service.DetallePedidoService;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +60,18 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
 
         return detallePedidoMapper.toResponse(detallePedidoRepository.save(detallePedido));
 
+    }
+
+    @Override
+    public List<DetallePedidoResponse> listAllByIdPedido(int idPedido) {
+
+        Pedido pedido = pedidoRepository.findById(idPedido)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Pedido al cual  se relaciona el detalle pedido."));
+        List<DetallePedido> listaDetallePedido = detallePedidoRepository.findAllByPedido_Id(pedido.getId());
+
+        return listaDetallePedido.stream()
+                .map(detallePedidoMapper::toResponse)
+                .toList();
     }
 
     @Override
