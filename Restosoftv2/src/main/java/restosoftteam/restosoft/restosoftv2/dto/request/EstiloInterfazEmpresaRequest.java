@@ -14,5 +14,5 @@ public class EstiloInterfazEmpresaRequest {
     private String colorEnfasisTablas;
     private String colorSidebar;
     @NotNull(message = "El id de empresa no puede estar vacio.")
-    private Empresa idempresa;
+    private Integer idempresa;
 }

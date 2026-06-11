@@ -15,5 +15,5 @@ public interface DetallePedidoMapper {
     DetallePedidoResponse toResponse(DetallePedido entity);
     @Mapping(target = "idpedido", ignore = true)
     @Mapping(target = "idplato", ignore = true)
-    DetallePedidoRequest updateEntityFromDto(DetallePedidoRequest dto, @MappingTarget DetallePedido entity);
+    void  updateEntityFromDto(DetallePedidoRequest dto, @MappingTarget DetallePedido entity);
 }
