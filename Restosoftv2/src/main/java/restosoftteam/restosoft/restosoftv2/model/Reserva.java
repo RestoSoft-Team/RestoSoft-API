@@ -42,7 +42,7 @@ public class Reserva {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa idempresa;
+    private Empresa empresa;
 
     @NotNull
     @Lob
