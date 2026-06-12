@@ -21,4 +21,5 @@ public interface PedidoMapper {
     @Mapping(target = "mesa", ignore = true)
     @Mapping(target = "usuario", ignore = true)
     void updateEntityFromDto(PedidoRequest dto,@MappingTarget Pedido entity);
+    ///  es un comentario para un commit sisiis
 }
