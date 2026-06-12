@@ -11,12 +11,12 @@ import restosoftteam.restosoft.restosoftv2.model.ConfiguracionPaginaCliente;
 @Mapper(componentModel = "spring")
 public interface ConfiguracionPaginaClienteMapper {
 
-    @Mapping(target = "idempresa", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
     ConfiguracionPaginaCliente toEntity(ConfiguracionPaginaClienteRequest request);
 
     ConfiguracionPaginaClienteResponse toResponse(ConfiguracionPaginaCliente entity);
 
-    @Mapping(target = "idempresa", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
     void updateEntityFromDto(ConfiguracionPaginaClienteRequest dto, @MappingTarget ConfiguracionPaginaCliente entity);
 
 

@@ -28,7 +28,8 @@ public class MesaServiceImpl implements MesaService {
     public MesaResponse crearMesa(MesaRequest mesaRequest) {
         Mesa mesa = mesaMapper.toEntity(mesaRequest);
 
-        Empresa empresa = empresaRepository.findById(mesaRequest.getIdempresa()).orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
+        Empresa empresa = empresaRepository.findById(mesaRequest.getIdempresa())
+                .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
 
         mesa.setIdempresa(empresa);
         Mesa guardar =  mesaRepository.save(mesa);

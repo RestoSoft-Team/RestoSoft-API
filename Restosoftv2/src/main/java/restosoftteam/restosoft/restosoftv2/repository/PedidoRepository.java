@@ -7,6 +7,6 @@ import restosoftteam.restosoft.restosoftv2.model.Pedido;
 import java.util.List;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
-    List<Pedido> findAllByIdEmpresa_Id(Integer id);
+    List<Pedido> findAllByEmpresa_Id(Integer id);
 
 }

@@ -10,15 +10,16 @@ import restosoftteam.restosoft.restosoftv2.model.Pedido;
 @Mapper(componentModel = "spring")
 public interface PedidoMapper {
 
-    @Mapping(target = "idempresa", ignore = true)
-    @Mapping(target = "idmesa", ignore = true)
-    @Mapping(target = "idusuario", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
+    @Mapping(target = "mesa", ignore = true)
+    @Mapping(target = "usuario", ignore = true)
     Pedido toEntity(PedidoRequest request);
 
     PedidoResponse toResponse(Pedido pedido);
 
-    @Mapping(target = "idempresa", ignore = true)
-    @Mapping(target = "idmesa", ignore = true)
-    @Mapping(target = "idusuario", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
+    @Mapping(target = "mesa", ignore = true)
+    @Mapping(target = "usuario", ignore = true)
     void updateEntityFromDto(PedidoRequest dto,@MappingTarget Pedido entity);
+    ///  es un comentario para un commit sisiis
 }

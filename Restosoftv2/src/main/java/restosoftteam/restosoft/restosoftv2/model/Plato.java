@@ -50,7 +50,7 @@ public class Plato {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idcategoria", nullable = false)
-    private PlatoCategoria idcategoria;
+    private PlatoCategoria categoria;
 
     @NotNull
     @Lob
@@ -60,7 +60,7 @@ public class Plato {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa idempresa;
+    private Empresa empresa;
 
 
 }

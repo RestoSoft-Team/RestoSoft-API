@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PedidoService {
     PedidoResponse findById(Integer id);
-    List<PedidoResponse> findAllByIdEmpresa_Id(Integer id);
+    List<PedidoResponse> findAllByEmpresa_Id(Integer id);
     PedidoResponse update(PedidoRequest request, Integer id);
     PedidoResponse save(PedidoRequest request);
     void delete(Integer id);

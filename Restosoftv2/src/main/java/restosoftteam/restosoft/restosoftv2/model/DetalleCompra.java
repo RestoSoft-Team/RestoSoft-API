@@ -24,12 +24,12 @@ public class DetalleCompra {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idcompra", nullable = false)
-    private Compra idcompra;
+    private Compra compra;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idinsumo", nullable = false)
-    private Insumo idinsumo;
+    private Insumo insumo;
 
     @NotNull
     @Column(name = "cantidad", nullable = false, precision = 10, scale = 2)

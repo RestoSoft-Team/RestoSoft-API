@@ -59,7 +59,7 @@ public class ConfiguracionPaginaCliente {
     @NotNull
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa idempresa;
+    private Empresa empresa;
 
 
 }

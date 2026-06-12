@@ -26,7 +26,7 @@ public class ConfiguracionPaginaClienteServiceImpl implements ConfiguracionPagin
     @Override
     public ConfiguracionPaginaClienteResponse findByEmpresaId(Integer idEmpresa) {
 
-        ConfiguracionPaginaCliente configuracion = configuracionPaginaClienteRepository.findByIdEmpresa_Id(idEmpresa);
+        ConfiguracionPaginaCliente configuracion = configuracionPaginaClienteRepository.findByEmpresa_Id(idEmpresa);
         if (configuracion != null) {
             return configuracionPaginaClienteMapper.toResponse(configuracion);
         }
@@ -41,13 +41,13 @@ public class ConfiguracionPaginaClienteServiceImpl implements ConfiguracionPagin
         Empresa empresa = empresaRepository.findById(request.getIdempresa())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Empresa relacionada a la configuracion no encontrada"));
 
-        boolean existe = configuracionPaginaClienteRepository.existsByIdEmpresa_Id(request.getIdempresa());
+        boolean existe = configuracionPaginaClienteRepository.existsByEmpresa_Id(request.getIdempresa());
         if (existe) {
             throw new RegistroYaExistenteException("La configuracion de pagina cliente ya existe");
         }
 
         ConfiguracionPaginaCliente configuracion = configuracionPaginaClienteMapper.toEntity(request);
-        configuracion.setIdempresa(empresa);
+        configuracion.setEmpresa(empresa);
 
         return configuracionPaginaClienteMapper.toResponse(configuracionPaginaClienteRepository.save(configuracion));
 
@@ -67,7 +67,7 @@ public class ConfiguracionPaginaClienteServiceImpl implements ConfiguracionPagin
 
         configuracionPaginaClienteMapper.updateEntityFromDto(request, configuracion);
 
-        configuracion.setIdempresa(empresa);
+        configuracion.setEmpresa(empresa);
         configuracion.setId(id);
 
         return configuracionPaginaClienteMapper.toResponse(configuracionPaginaClienteRepository.save(configuracion));

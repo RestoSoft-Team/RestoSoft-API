@@ -23,9 +23,9 @@ public class PlatoRequest {
     @NotNull(message = "La imagen del plato no puede estar vacia.")
     private String imagenUrl;
     @NotNull(message = "La categoria del plato no puede estar vacio.")
-    private PlatoCategoria idcategoria;
+    private Integer idcategoria;
     @NotNull(message = "El estado del plato no puede estar vacio.")
     private String estado;
     @NotNull(message = "El id de empresa del plato no puede estar vacia.")
-    private Empresa idempresa;
+    private Integer idempresa;
 }

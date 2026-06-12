@@ -24,7 +24,7 @@ public class EstiloInterfazEmpresaServiceImpl implements EstiloInterfazEmpresaSe
     @Override
     public EstiloInterfazEmpresaResponse findByIdEmpresa(Integer id) {
 
-        EstiloInterfazEmpresa estilo = estiloInterfazEmpresaRepository.findByIdEmpresa_Id(id);
+        EstiloInterfazEmpresa estilo = estiloInterfazEmpresaRepository.findByEmpresa_Id(id);
         if (estilo != null) {
             return estiloInterfazEmpresaMapper.toResponse(estilo);
         }
@@ -40,7 +40,7 @@ public class EstiloInterfazEmpresaServiceImpl implements EstiloInterfazEmpresaSe
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada a los estilos de interfaz no existe"));
 
         EstiloInterfazEmpresa estilo = estiloInterfazEmpresaMapper.toEntity(request);
-        estilo.setIdempresa(empresa);
+        estilo.setEmpresa(empresa);
 
         return estiloInterfazEmpresaMapper.toResponse(
                 estiloInterfazEmpresaRepository.save(estilo));
@@ -59,7 +59,7 @@ public class EstiloInterfazEmpresaServiceImpl implements EstiloInterfazEmpresaSe
 
         estiloInterfazEmpresaMapper.updateEntityFromDto(request, estilo);
 
-        estilo.setIdempresa(empresa);
+        estilo.setEmpresa(empresa);
         return estiloInterfazEmpresaMapper.toResponse(
                 estiloInterfazEmpresaRepository.save(estilo));
 
