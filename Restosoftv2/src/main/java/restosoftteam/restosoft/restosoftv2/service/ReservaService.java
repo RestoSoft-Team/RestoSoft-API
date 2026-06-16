@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ReservaService {
     ReservaMesaResponse save(ReservaRequest request, List<Integer> idSmesas);
-    ReservaResponse update(ReservaRequest request, List<Integer> idSmesas, Integer idReserva);
+    ReservaMesaResponse update(ReservaRequest request, Integer idReserva, List<Integer> idSmesas);
     void delete(Integer idReserva);
 
 

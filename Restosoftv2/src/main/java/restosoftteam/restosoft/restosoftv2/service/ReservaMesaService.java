@@ -18,8 +18,6 @@ public interface ReservaMesaService {
 
     ReservaMesaResponse update(Reserva reserva, List<Integer> mesasIds);
 
-//    List<ReservaMesaResponse> saveAll(List<ReservaMesaRequest> reservasMesas);
-
     void deleteByReservaAndMesa(Integer idReserva, Integer idMesa);
 
     void deleteAllByReserva(Integer idReserva);
