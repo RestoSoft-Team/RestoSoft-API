@@ -9,13 +9,13 @@ import restosoftteam.restosoft.restosoftv2.model.Reserva;
 
 @Mapper(componentModel = "spring")
 public interface ReservaMapper {
-    @Mapping(target = "idusuario", ignore = true)
-    @Mapping(target = "idempresa", ignore = true)
+    @Mapping(target = "usuario", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
     Reserva toEntity(ReservaRequest request);
 
     ReservaResponse toResponse(Reserva reserva);
 
-    @Mapping(target = "idusuario", ignore = true)
-    @Mapping(target = "idempresa", ignore = true)
+    @Mapping(target = "usuario", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
     void updateReservaFromDto(ReservaRequest request, @MappingTarget Reserva reserva);
 }

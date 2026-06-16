@@ -2,12 +2,10 @@ package restosoftteam.restosoft.restosoftv2.dto.request;
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
-import restosoftteam.restosoft.restosoftv2.model.Empresa;
-import restosoftteam.restosoft.restosoftv2.model.Usuario;
+import restosoftteam.restosoft.restosoftv2.enums.EstadoReserva;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,5 +26,5 @@ public class ReservaRequest {
     @NotNull(message = "El id de empresa de la reserva no puede estar vacio.")
     private Integer idempresa;
     @NotNull(message = "El estado de la reserva no puede estar vacio.")
-    private String estado;
+    private EstadoReserva estado;
 }

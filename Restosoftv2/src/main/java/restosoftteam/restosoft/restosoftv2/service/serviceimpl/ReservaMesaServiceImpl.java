@@ -3,8 +3,8 @@ package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import restosoftteam.restosoft.restosoftv2.dto.request.ReservaMesaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponse;
+import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponseMapStruct;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.ValorInconsistenteException;
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMapper;
@@ -31,7 +31,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     private final ReservaMapper reservaMapper;
 
     @Override
-    public List<ReservaMesaResponse> findAllByReserva_Id(Integer idReserva) {
+    public List<ReservaMesaResponseMapStruct> findAllByReserva_Id(Integer idReserva) {
 
         Reserva reserva = reservaRepository.findById(idReserva)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La reserva relacionada no existe."));
@@ -43,7 +43,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     }
 
     @Override
-    public List<ReservaMesaResponse> findAllByMesa_Id(Integer idMesa) {
+    public List<ReservaMesaResponseMapStruct> findAllByMesa_Id(Integer idMesa) {
 
         Mesa mesa = mesaRepository.findById(idMesa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La mesa relacionada no existe."));
@@ -57,7 +57,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     @Transactional
     public ReservaMesaResponse save(Reserva reserva, List<Integer> mesasIds) {
 
-        validarCapacidadMesasReserva(reserva,mesasIds);
+        validarCapacidadMesasReserva(reserva, mesasIds);
 
         List<ReservaMesa> listaReservaMesas = new ArrayList<>();
 
@@ -89,31 +89,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     public ReservaMesaResponse update(Reserva reserva, List<Integer> mesasIds) {
 
         reservaMesaRepository.deleteAllByReserva(reserva);
-
-        validarCapacidadMesasReserva(reserva,mesasIds);
-
-        List<ReservaMesa> listaReservaMesas = new ArrayList<>();
-
-        for (Integer idMesa : mesasIds) {
-            ReservaMesa reservaMesa = new ReservaMesa(reserva, obtenerMesaPorId(idMesa));
-            listaReservaMesas.add(reservaMesa);
-        }
-
-        List<ReservaMesa> listaResultado = reservaMesaRepository.saveAll(listaReservaMesas);
-
-        ReservaMesaResponse reservaMesaResponse = new ReservaMesaResponse();
-
-        if (!listaResultado.isEmpty()) {
-            reservaMesaResponse.setId(listaResultado.getFirst().getId());
-            reservaMesaResponse.setReserva(reservaMapper.toResponse(listaResultado.getFirst().getReserva()));
-
-            List<Mesa> listaMesasRespuesta = new ArrayList<>();
-            for (ReservaMesa reservaMesa : listaResultado) {
-                listaMesasRespuesta.add(reservaMesa.getMesa());
-            }
-            reservaMesaResponse.setListaMesas(listaMesasRespuesta);
-        }
-        return reservaMesaResponse;
+        return save(reserva, mesasIds);
 
     }
 
@@ -141,26 +117,6 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
         reservaMesaRepository.deleteAllByReserva(reserva);
 
     }
-
-
-    private ReservaMesa toEntityuseGetReference(ReservaMesaRequest request) {
-
-        ReservaMesa reservaMesa = new ReservaMesa();
-        reservaMesa.setMesa(mesaRepository.getReferenceById(request.getIdmesa()));
-        reservaMesa.setReserva(reservaRepository.getReferenceById(request.getIdreserva()));
-
-        return reservaMesa;
-
-    }
-
-
-
-
-
-
-
-
-
 
     private Mesa obtenerMesaPorId(Integer idMesa) {
         return mesaRepository.findById(idMesa)
@@ -200,12 +156,4 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
 
     }
 
-
-    /// FALTA AÑADIR QUE UNA RESERVA SEA LA QUE CONTENGA TODAS LAS MESAS NO VARIAS Y QUE LO DE FECHAS PARA ACTIVACION
-    /// AGEGAR QUE UNA RESERVA NO TENGA MAS DE UNA MESA SI LAS PERSONAS QUE ESTAN EN LA DESCRIPCION NO CUMPLEN LA CANTIDAD
-    ///  AGREGAR QUE SEA CREACION DE RESERVA -> METODO CON ENTITY Y CON LIST<INTEGER> DE IDS DE MESAS (COMPROBAR EXISTENCIA)
-    /// DEVOLCER DTO DE ACEPTACION PERSONALIZADO, CREAR EXEPCION PERSONALIZADA
-
-
-    /// Falta disparadores y yap controlllers
 }

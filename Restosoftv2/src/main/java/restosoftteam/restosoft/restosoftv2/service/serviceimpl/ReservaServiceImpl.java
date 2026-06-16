@@ -3,9 +3,11 @@ package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import restosoftteam.restosoft.restosoftv2.dto.request.ReservaMesaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.request.ReservaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponse;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaResponse;
+import restosoftteam.restosoft.restosoftv2.enums.EstadoReserva;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.RegistroYaExistenteException;
 import restosoftteam.restosoft.restosoftv2.exception.ValorInconsistenteException;
@@ -60,7 +62,9 @@ public class ReservaServiceImpl implements ReservaService {
 
     }
 
-    ReservaMesaResponse update(ReservaRequest request, Integer idReserva, List<Integer> idSmesas) {
+    @Override
+    @Transactional
+    public ReservaMesaResponse update(ReservaRequest request, Integer idReserva, List<Integer> idSmesas) {
 
         if(idSmesas.isEmpty()){
             throw new ValorInconsistenteException("No se ha seleccionado ninguna mesa.");
@@ -87,8 +91,15 @@ public class ReservaServiceImpl implements ReservaService {
 
     }
 
+    public boolean ModificarEstadoReserva(Integer id,EstadoReserva estadoReserva) {
+        return reservaRepository.updateEstadoById(id, estadoReserva);
+    }
 
-//    void delete(Integer idReserva);
+    @Override
+    @Transactional
+    public void delete(Integer idReserva){
+        reservaMesaService.deleteAllByReserva(idReserva);
+    }
 
     private void validarDisponibilidad(LocalDate fecha, LocalTime hora){
 
