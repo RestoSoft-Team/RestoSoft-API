@@ -29,7 +29,7 @@ public class PlanificadorReservasServiceImpl {
     @Transactional
     public void verificarYActivarReservas() {
         LocalDate hoy = LocalDate.now();
-        LocalTime ahora = LocalTime.now();
+        LocalTime ahora = LocalTime.now().minusHours(1);
 
         List<Reserva> reservasParaActivar = reservaRepository.findReservasPorActivar(hoy, ahora, EstadoReserva.CONFIRMADA);
 
