@@ -21,12 +21,12 @@ public class ReservaRequest {
     @NotNull(message = "La hora de la reserva no puede estar vacia.")
     private LocalTime hora;
     @NotNull(message = "El id usuario de la reserva no puede estar vacia.")
-    private Usuario idusuario;
+    private Integer idusuario;
     @Positive(message = "La cantidad de personas de la reserva no puede ser negativa.")
     @NotNull(message = "La cantidad de personas de la reserva no puede estar vacia.")
     private Integer cantidadPersonas;
     @NotNull(message = "El id de empresa de la reserva no puede estar vacio.")
-    private Empresa idempresa;
+    private Integer idempresa;
     @NotNull(message = "El estado de la reserva no puede estar vacio.")
     private String estado;
 }

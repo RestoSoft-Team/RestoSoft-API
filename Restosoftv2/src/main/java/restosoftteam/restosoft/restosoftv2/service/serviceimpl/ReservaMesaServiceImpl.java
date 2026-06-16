@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import restosoftteam.restosoft.restosoftv2.dto.request.ReservaMesaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponse;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
+import restosoftteam.restosoft.restosoftv2.exception.ValorInconsistenteException;
+import restosoftteam.restosoft.restosoftv2.mapper.ReservaMapper;
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMesaMapper;
 import restosoftteam.restosoft.restosoftv2.model.Mesa;
 import restosoftteam.restosoft.restosoftv2.model.Reserva;
@@ -15,6 +17,7 @@ import restosoftteam.restosoft.restosoftv2.repository.ReservaMesaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.ReservaRepository;
 import restosoftteam.restosoft.restosoftv2.service.ReservaMesaService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +28,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     private final ReservaMesaMapper reservaMesaMapper;
     private final ReservaRepository reservaRepository;
     private final MesaRepository mesaRepository;
+    private final ReservaMapper reservaMapper;
 
     @Override
     public List<ReservaMesaResponse> findAllByReserva_Id(Integer idReserva) {
@@ -51,38 +55,68 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
 
     @Override
     @Transactional
-    public ReservaMesaResponse save(ReservaMesaRequest request) {
+    public ReservaMesaResponse save(Reserva reserva, List<Integer> mesasIds) {
 
-        if (!reservaRepository.existsById(request.getIdreserva())) {
-            throw new RecursoNoEncontradoException("La reserva relacionada no existe.");
+        validarCapacidadMesasReserva(reserva,mesasIds);
+
+        List<ReservaMesa> listaReservaMesas = new ArrayList<>();
+
+        for (Integer idMesa : mesasIds) {
+            ReservaMesa reservaMesa = new ReservaMesa(reserva, obtenerMesaPorId(idMesa));
+            listaReservaMesas.add(reservaMesa);
         }
 
-        if (!mesaRepository.existsById(request.getIdmesa())) {
-            throw new RecursoNoEncontradoException("La mesa relacionada no existe.");
-        }
+        List<ReservaMesa> listaResultado = reservaMesaRepository.saveAll(listaReservaMesas);
 
-        return reservaMesaMapper.toResponse(
-                reservaMesaRepository.save(toEntityuseGetReference(request)));
+        ReservaMesaResponse reservaMesaResponse = new ReservaMesaResponse();
+
+        if (!listaResultado.isEmpty()) {
+            reservaMesaResponse.setId(listaResultado.getFirst().getId());
+            reservaMesaResponse.setReserva(reservaMapper.toResponse(listaResultado.getFirst().getReserva()));
+
+            List<Mesa> listaMesasRespuesta = new ArrayList<>();
+            for (ReservaMesa reservaMesa : listaResultado) {
+                listaMesasRespuesta.add(reservaMesa.getMesa());
+            }
+            reservaMesaResponse.setListaMesas(listaMesasRespuesta);
+        }
+        return reservaMesaResponse;
 
     }
-
 
     @Override
     @Transactional
-    public List<ReservaMesaResponse> saveAll(List<ReservaMesaRequest> reservasMesas) {
+    public ReservaMesaResponse update(Reserva reserva, List<Integer> mesasIds) {
 
-        reservasMesas.forEach(request ->
-                validarExistencia(request.getIdreserva(), request.getIdmesa()));
+        reservaMesaRepository.deleteAllByReserva(reserva);
 
-        List<ReservaMesa> reservasMesa = reservasMesas.stream()
-                .map(this::toEntityuseGetReference).toList();
+        validarCapacidadMesasReserva(reserva,mesasIds);
 
+        List<ReservaMesa> listaReservaMesas = new ArrayList<>();
 
-        return reservaMesaRepository.saveAll(reservasMesa)
-                .stream().map(reservaMesaMapper::toResponse).toList();
+        for (Integer idMesa : mesasIds) {
+            ReservaMesa reservaMesa = new ReservaMesa(reserva, obtenerMesaPorId(idMesa));
+            listaReservaMesas.add(reservaMesa);
+        }
 
+        List<ReservaMesa> listaResultado = reservaMesaRepository.saveAll(listaReservaMesas);
+
+        ReservaMesaResponse reservaMesaResponse = new ReservaMesaResponse();
+
+        if (!listaResultado.isEmpty()) {
+            reservaMesaResponse.setId(listaResultado.getFirst().getId());
+            reservaMesaResponse.setReserva(reservaMapper.toResponse(listaResultado.getFirst().getReserva()));
+
+            List<Mesa> listaMesasRespuesta = new ArrayList<>();
+            for (ReservaMesa reservaMesa : listaResultado) {
+                listaMesasRespuesta.add(reservaMesa.getMesa());
+            }
+            reservaMesaResponse.setListaMesas(listaMesasRespuesta);
+        }
+        return reservaMesaResponse;
 
     }
+
 
     @Override
     @Transactional
@@ -108,14 +142,6 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
 
     }
 
-    private void validarExistencia(Integer idReserva, Integer idMesa) {
-        if (!reservaRepository.existsById(idReserva)) {
-            throw new RecursoNoEncontradoException("La reserva relacionada con ID " + idReserva + " no existe.");
-        }
-        if (!mesaRepository.existsById(idMesa)) {
-            throw new RecursoNoEncontradoException("La mesa relacionada con ID " + idMesa + " no existe.");
-        }
-    }
 
     private ReservaMesa toEntityuseGetReference(ReservaMesaRequest request) {
 
@@ -129,6 +155,57 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
 
 
 
-    /// FALTA AÑADIR QUE UNA RESERVA SEA LA QUE CONTENGA TODAS LAS MESAS NO VARIAS Y QUE LO DE FECHAS PARA ACTIVACION
 
+
+
+
+
+
+
+    private Mesa obtenerMesaPorId(Integer idMesa) {
+        return mesaRepository.findById(idMesa)
+                .orElseThrow(() -> new RecursoNoEncontradoException("La mesa relacionada con  el id " + idMesa + " no existe."));
+    }
+
+    private void validarCapacidadMesasReserva(Reserva reserva, List<Integer> listaMesaIds) {
+
+        int cantidadPersonasReserva = reserva.getCantidadPersonas();
+        int capacidadTotalMesas = 0;
+        boolean existeMesaSuficiente = false;
+
+        for (Integer mesaId : listaMesaIds) {
+            Integer capacidadMesa = mesaRepository.obtenerDisponibilidadPersonasByMesa_Id(mesaId);
+
+            if (capacidadMesa == null) {
+                throw new RecursoNoEncontradoException(
+                        "La mesa relacionada con el id: " + mesaId + " no existe.");
+            }
+
+            if (capacidadMesa >= cantidadPersonasReserva) {
+                existeMesaSuficiente = true;
+            }
+
+            capacidadTotalMesas += capacidadMesa;
+        }
+
+        if (capacidadTotalMesas < cantidadPersonasReserva) {
+            throw new ValorInconsistenteException(
+                    "La disponibilidad de las mesas seleccionadas no alcanza para la cantidad de personas en la reserva.");
+        }
+
+        if (listaMesaIds.size() > 1 && existeMesaSuficiente) {
+            throw new ValorInconsistenteException(
+                    "No es posible seleccionar varias mesas cuando una sola mesa tiene capacidad suficiente para la reserva.");
+        }
+
+    }
+
+
+    /// FALTA AÑADIR QUE UNA RESERVA SEA LA QUE CONTENGA TODAS LAS MESAS NO VARIAS Y QUE LO DE FECHAS PARA ACTIVACION
+    /// AGEGAR QUE UNA RESERVA NO TENGA MAS DE UNA MESA SI LAS PERSONAS QUE ESTAN EN LA DESCRIPCION NO CUMPLEN LA CANTIDAD
+    ///  AGREGAR QUE SEA CREACION DE RESERVA -> METODO CON ENTITY Y CON LIST<INTEGER> DE IDS DE MESAS (COMPROBAR EXISTENCIA)
+    /// DEVOLCER DTO DE ACEPTACION PERSONALIZADO, CREAR EXEPCION PERSONALIZADA
+
+
+    /// Falta disparadores y yap controlllers
 }
