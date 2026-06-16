@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
-import restosoftteam.restosoft.restosoftv2.dto.response.EstadoReserva;
+import restosoftteam.restosoft.restosoftv2.enums.EstadoReserva;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
