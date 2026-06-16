@@ -3,8 +3,8 @@ package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import restosoftteam.restosoft.restosoftv2.dto.request.ReservaMesaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponse;
+import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponseMapStruct;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.ValorInconsistenteException;
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMapper;
@@ -31,7 +31,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     private final ReservaMapper reservaMapper;
 
     @Override
-    public List<ReservaMesaResponse> findAllByReserva_Id(Integer idReserva) {
+    public List<ReservaMesaResponseMapStruct> findAllByReserva_Id(Integer idReserva) {
 
         Reserva reserva = reservaRepository.findById(idReserva)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La reserva relacionada no existe."));
@@ -43,7 +43,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     }
 
     @Override
-    public List<ReservaMesaResponse> findAllByMesa_Id(Integer idMesa) {
+    public List<ReservaMesaResponseMapStruct> findAllByMesa_Id(Integer idMesa) {
 
         Mesa mesa = mesaRepository.findById(idMesa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La mesa relacionada no existe."));
