@@ -47,7 +47,7 @@ public class Mesa {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa idempresa;
+    private Empresa empresa;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

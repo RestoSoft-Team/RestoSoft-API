@@ -9,4 +9,7 @@ public interface MesaService {
 
     MesaResponse crearMesaConZonaReal(MesaRequest mesaRequest, Integer idZonaReal);
 
+    MesaResponse actualizarMesa (MesaRequest mesaRequest, Integer idMesa);
+
+    void intercambiarNumeroMesa (Integer idMesaA, Integer idMesaB);
 }

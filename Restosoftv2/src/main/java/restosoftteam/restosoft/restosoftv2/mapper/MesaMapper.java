@@ -12,10 +12,10 @@ import restosoftteam.restosoft.restosoftv2.model.Mesa;
 public interface MesaMapper {
 
     @Mapping(target = "zona", ignore = true)
-    @Mapping(target = "idempresa", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
     Mesa toEntity(MesaRequest mesaRequest);
 
-    @Mapping(source = "idempresa.id", target = "idEmpresa")
+    @Mapping(source = "empresa.id", target = "idEmpresa")
     @Mapping(source = "zona.id", target = "idZona")
     MesaResponse toResponse(Mesa mesa);
 }
