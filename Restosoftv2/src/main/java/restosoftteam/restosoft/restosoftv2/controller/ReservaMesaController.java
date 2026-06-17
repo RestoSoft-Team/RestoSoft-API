@@ -29,14 +29,17 @@ public class ReservaMesaController {
         return ResponseEntity.ok(lista);
     }
 
-    @DeleteMapping("/reserva/{idReserva/mesa/{idMesa}}")
-    public ResponseEntity<Void> delete(@PathVariable Integer idReserva, @PathVariable Integer idMesa) {
+    @DeleteMapping("/reserva/{idReserva}/mesa/{idMesa}")
+    public ResponseEntity<Void> eliminarPorIdReservaYIdMesa(
+            @PathVariable Integer idReserva,
+            @PathVariable Integer idMesa) {
+
         reservaMesaService.deleteByReservaAndMesa(idReserva, idMesa);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/reserva/{idReserva}")
-    public ResponseEntity<Void> delete(@PathVariable Integer idReserva) {
+    public ResponseEntity<Void> eliminarPorIdReserva(@PathVariable Integer idReserva) {
         reservaMesaService.deleteAllByReserva(idReserva);
         return ResponseEntity.noContent().build();
     }
