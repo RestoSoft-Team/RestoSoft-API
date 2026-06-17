@@ -40,8 +40,13 @@ public class MovimientoInventario {
     private BigDecimal stockNuevo;
 
     @NotNull
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "fecha_movimiento", nullable = false)
+    @Column(
+            name = "fecha_movimiento",
+            nullable = false,
+            insertable = false,
+            updatable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+    )
     private Instant fechaMovimiento;
 
     @Size(max = 255)
