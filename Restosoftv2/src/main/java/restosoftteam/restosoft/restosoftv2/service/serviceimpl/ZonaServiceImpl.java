@@ -11,6 +11,8 @@ import restosoftteam.restosoft.restosoftv2.repository.EmpresaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.ZonaRespository;
 import restosoftteam.restosoft.restosoftv2.service.ZonaService;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ZonaServiceImpl implements ZonaService {
@@ -36,7 +38,7 @@ public class ZonaServiceImpl implements ZonaService {
         Zona zonaExistente = zonaRespository.findById(zonaRequest.getId()).orElseThrow(() -> new RuntimeException("Zona no encontrada"));
 
         zonaExistente.setNombreZona(zonaRequest.getNombreZona());
-        zonaExistente.setPlanoUrl(zonaRequest.getUrlZona());
+        zonaExistente.setPlanoUrl(zonaRequest.getPlanoUrl());
         zonaExistente.setEstado(zonaRequest.getEstado());
 
         return zonaMapper.toResponse(zonaRespository.save(zonaExistente));
@@ -50,5 +52,13 @@ public class ZonaServiceImpl implements ZonaService {
 
         return zonaMapper.toResponse(zona);
 
+    }
+
+    @Override
+    public List<ZonaResponse> obtenerZonasPorEmpresa(Integer idEmpresa) {
+        List<Zona> zonas = zonaRespository.findAllByIdEmpresa_Id(idEmpresa);
+        return zonas.stream()
+                .map(zonaMapper::toResponse)
+                .toList();
     }
 }

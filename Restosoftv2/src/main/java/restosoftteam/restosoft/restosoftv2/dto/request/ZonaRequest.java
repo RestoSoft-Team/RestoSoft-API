@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 public class ZonaRequest {
 
-    @NotNull(message = "Eñ id de la Zona no puede estar vacio")
     private Integer id;
 
     private Long idTemporal;
@@ -15,7 +14,7 @@ public class ZonaRequest {
     private String nombreZona;
 
     @NotNull(message = "La url de la zona no puede estar vacia")
-    private String urlZona;
+    private String planoUrl;
 
     @NotNull(message = "El estado de la mesa no puede ser null")
     private String estado;
