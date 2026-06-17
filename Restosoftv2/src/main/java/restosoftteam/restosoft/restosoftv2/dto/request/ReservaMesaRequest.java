@@ -9,6 +9,6 @@ import restosoftteam.restosoft.restosoftv2.model.Reserva;
 @Getter
 @Setter
 public class ReservaMesaRequest {
-    private Reserva idreserva;
-    private Mesa idmesa;
+    private Integer idreserva;
+    private Integer idmesa;
 }
