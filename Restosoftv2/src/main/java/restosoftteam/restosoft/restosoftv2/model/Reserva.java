@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restosoftteam.restosoft.restosoftv2.enums.EstadoReserva;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -33,7 +34,7 @@ public class Reserva {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idusuario", nullable = false)
-    private Usuario idusuario;
+    private Usuario usuario;
 
     @NotNull
     @Column(name = "cantidad_personas", nullable = false)
@@ -42,12 +43,12 @@ public class Reserva {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa idempresa;
+    private Empresa empresa;
 
     @NotNull
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
-    private String estado;
+    private EstadoReserva estado;
 
 
 }

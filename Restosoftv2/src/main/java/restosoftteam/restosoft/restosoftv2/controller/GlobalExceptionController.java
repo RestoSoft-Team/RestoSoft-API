@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import restosoftteam.restosoft.restosoftv2.dto.response.ErrorResponse;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.RegistroYaExistenteException;
+import restosoftteam.restosoft.restosoftv2.exception.ValorInconsistenteException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -61,6 +62,22 @@ public class GlobalExceptionController {
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ValorInconsistenteException.class)
+    public ResponseEntity<ErrorResponse> manejarValorInconsistente(
+            ValorInconsistenteException ex, HttpServletRequest request) {
+
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Inconsistencia en los datos")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .validations(null)
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
