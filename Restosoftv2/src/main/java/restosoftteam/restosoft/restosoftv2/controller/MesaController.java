@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import restosoftteam.restosoft.restosoftv2.dto.response.MesaResponse;
 import restosoftteam.restosoft.restosoftv2.service.MesaService;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/mesas")
@@ -21,6 +23,9 @@ public class MesaController {
         mesaService.intercambiarNumeroMesa(idMesaA, idMesaB);
         return ResponseEntity.ok().build();
     }
-
+    @GetMapping("/empresa/{idEmpresa}")
+    public ResponseEntity<List<MesaResponse>> obtenerMesasPorEmpresa(@PathVariable Integer idEmpresa) {
+        return ResponseEntity.ok(mesaService.obtenerMesasPorEmpresa(idEmpresa));
+    }
 
 }

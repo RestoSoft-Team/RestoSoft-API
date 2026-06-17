@@ -43,11 +43,10 @@ public class MesaServiceImpl implements MesaService {
 
     @Override
     public MesaResponse crearMesaConZonaReal(MesaRequest mesaRequest, Integer idZonaReal) {
-
         Mesa mesa = mesaMapper.toEntity(mesaRequest);
 
         Zona zona = zonaRespository.findById(idZonaReal)
-                .orElseThrow(() -> new RuntimeException("Zona no encontrada con el ID real: " + idZonaReal));
+                .orElseThrow(() -> new RuntimeException("Zona no encontrada"));
 
         Empresa empresa = empresaRepository.findById(mesaRequest.getIdempresa())
                 .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
@@ -55,9 +54,9 @@ public class MesaServiceImpl implements MesaService {
         mesa.setZona(zona);
         mesa.setEmpresa(empresa);
 
-        Mesa mesaGuardada = mesaRepository.save(mesa);
+        System.out.println("Guardando mesa en zona: " + mesa.getZona().getId());
 
-        return mesaMapper.toResponse(mesaGuardada);
+        return mesaMapper.toResponse(mesaRepository.save(mesa));
     }
 
     @Override
@@ -112,5 +111,13 @@ public class MesaServiceImpl implements MesaService {
         mesaA.setNumeroMesa(numeroOriginalB);
         mesaRepository.save(mesaA);
 
+    }
+
+    @Override
+    public List<MesaResponse> obtenerMesasPorEmpresa(Integer idEmpresa) {
+        List<Mesa> mesas = mesaRepository.findAllByEmpresa_Id(idEmpresa);
+        return mesas.stream()
+                .map(mesaMapper::toResponse)
+                .toList();
     }
 }

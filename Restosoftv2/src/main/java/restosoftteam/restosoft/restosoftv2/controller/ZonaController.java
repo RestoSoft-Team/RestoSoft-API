@@ -13,6 +13,7 @@ import restosoftteam.restosoft.restosoftv2.service.MesaService;
 import restosoftteam.restosoft.restosoftv2.service.ZonaService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "*")
@@ -39,7 +40,7 @@ public class ZonaController {
         return ResponseEntity.ok(zonaService.eliminarZona(id, idEmpresa));
     }
 
-    @PostMapping("/configuracion")
+    @PostMapping("/guardarM")
     public ResponseEntity<Map<String, String>> guardarConfiguracionCompleta(@Valid @RequestBody ConfiguracionesRestauranteRequest request) {
 
         Map<Long, Integer> mapaIdsZonas = new HashMap<>();
@@ -73,5 +74,10 @@ public class ZonaController {
         response.put("status", "200");
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/empresa/{idEmpresa}")
+    public ResponseEntity<List<ZonaResponse>> obtenerZonasPorEmpresa(@PathVariable Integer idEmpresa) {
+        return ResponseEntity.ok(zonaService.obtenerZonasPorEmpresa(idEmpresa));
     }
 }

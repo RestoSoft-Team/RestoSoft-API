@@ -22,5 +22,6 @@ public interface MesaRepository extends JpaRepository<Mesa, Integer> {
     boolean existsBynumeroMesaAndEmpresa_IdAndIdNot(String numeroMesa, Integer empresaId, Integer idMesa);
 
     List<Mesa> findAllById(Integer id);
+    List<Mesa> findAllByEmpresa_Id(Integer idEmpresa);
 
 }

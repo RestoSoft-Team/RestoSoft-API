@@ -35,7 +35,7 @@ public class Mesa {
 
     @NotNull
     @Column(name = "posicion_y")
-    private double posiciony;
+    private double posicionY;
 
     @NotNull
     @Column(name = "tipo_mesa")
@@ -51,7 +51,7 @@ public class Mesa {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idZona", nullable = false)
+    @JoinColumn(name = "id_zona", nullable = false) // Correcto
     private Zona zona;
 
 

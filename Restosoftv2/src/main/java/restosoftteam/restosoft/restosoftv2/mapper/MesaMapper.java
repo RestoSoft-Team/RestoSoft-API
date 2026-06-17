@@ -11,8 +11,6 @@ import restosoftteam.restosoft.restosoftv2.model.Mesa;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MesaMapper {
 
-    @Mapping(target = "zona", ignore = true)
-    @Mapping(target = "empresa", ignore = true)
     Mesa toEntity(MesaRequest mesaRequest);
 
     @Mapping(source = "empresa.id", target = "idEmpresa")
