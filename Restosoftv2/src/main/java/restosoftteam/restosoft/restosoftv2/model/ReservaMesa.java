@@ -29,5 +29,10 @@ public class ReservaMesa {
     @JoinColumn(name = "idmesa", nullable = false)
     private Mesa mesa;
 
+    public ReservaMesa(Reserva reserva, Mesa mesa) {
+        this.reserva = reserva;
+        this.mesa = mesa;
+    }
+
 
 }

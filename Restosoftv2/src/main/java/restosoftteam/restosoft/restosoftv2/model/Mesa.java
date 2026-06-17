@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restosoftteam.restosoft.restosoftv2.enums.EstadoMesa;
 
 @Getter
 @Setter
@@ -42,7 +43,8 @@ public class Mesa {
     private String tipoMesa;
 
     @Column(name = "estado", length = 20)
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    private EstadoMesa estado;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

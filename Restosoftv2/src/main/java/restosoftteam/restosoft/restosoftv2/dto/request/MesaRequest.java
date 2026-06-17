@@ -3,6 +3,7 @@ package restosoftteam.restosoft.restosoftv2.dto.request;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import restosoftteam.restosoft.restosoftv2.enums.EstadoMesa;
 import restosoftteam.restosoft.restosoftv2.model.Empresa;
 
 @Data
@@ -18,7 +19,7 @@ public class MesaRequest {
     @NotNull(message = "El tipo de mesa no puede estar vacio")
     private String tipoMesa;
     @NotNull(message = "El estado de mesa no puede estar vacio.")
-    private String estado;
+    private EstadoMesa estado;
     @NotNull(message = "El id de empresa no puede estar vacio.")
     private Integer idempresa;
     @NotNull(message = "El id de Zona no puede estar vacío")
