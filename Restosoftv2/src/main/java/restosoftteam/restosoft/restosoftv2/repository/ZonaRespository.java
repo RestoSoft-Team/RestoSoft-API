@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import restosoftteam.restosoft.restosoftv2.model.Zona;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,4 +17,6 @@ public interface ZonaRespository extends JpaRepository<Zona, Integer> {
     void deleteByIdAndIdEmpresa_Id(Integer id, Integer idEmpresa);
 
     Optional<Zona> findByIdAndIdEmpresa_Id(Integer id, Integer idEmpresa);
+
+    List<Zona> findAllByIdEmpresa_Id(Integer idEmpresa);
 }
