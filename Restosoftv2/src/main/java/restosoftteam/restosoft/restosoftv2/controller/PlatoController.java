@@ -18,31 +18,31 @@ public class PlatoController {
     private final PlatoService platoService;
 
     @GetMapping("/{idPlato}")
-    public ResponseEntity<PlatoResponse> findById(@PathVariable Integer idPlato) {
+    public ResponseEntity<PlatoResponse> obtenerPorId(@PathVariable Integer idPlato) {
         PlatoResponse platoResponse = platoService.findById(idPlato);
         return ResponseEntity.ok(platoResponse);
     }
 
     @GetMapping("/empresa/{idEmpresa}")
-    public ResponseEntity<List<PlatoResponse>> findAllByEmpresaId(@PathVariable Integer idEmpresa) {
+    public ResponseEntity<List<PlatoResponse>> listarPorEmpresaId(@PathVariable Integer idEmpresa) {
         List<PlatoResponse> listaplatoResponse = platoService.findAllByEmpresaId(idEmpresa);
         return ResponseEntity.ok(listaplatoResponse);
     }
 
     @PostMapping
-    public ResponseEntity<PlatoResponse> save(@Valid @RequestBody PlatoRequest request){
+    public ResponseEntity<PlatoResponse> guardarPlato(@Valid @RequestBody PlatoRequest request){
         PlatoResponse platoResponse = platoService.save(request);
         return new ResponseEntity<>(platoResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("/{idPlato}")
-    public ResponseEntity<PlatoResponse> update(@PathVariable Integer idPlato, @Valid @RequestBody PlatoRequest request){
+    public ResponseEntity<PlatoResponse> actualizarPlato(@PathVariable Integer idPlato, @Valid @RequestBody PlatoRequest request){
         PlatoResponse platoResponse = platoService.update(request,idPlato);
         return ResponseEntity.ok(platoResponse);
     }
 
     @DeleteMapping("/{idPlato}")
-    public ResponseEntity<Void> delete(@PathVariable Integer idPlato) {
+    public ResponseEntity<Void> eliminarPlato(@PathVariable Integer idPlato) {
         platoService.delete(idPlato);
         return ResponseEntity.noContent().build();
     }
