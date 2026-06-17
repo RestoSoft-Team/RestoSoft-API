@@ -1,6 +1,7 @@
 package restosoftteam.restosoft.restosoftv2.dto.response;
 
 import lombok.Data;
+import restosoftteam.restosoft.restosoftv2.enums.EstadoMesa;
 
 @Data
 public class MesaResponse {
@@ -9,7 +10,7 @@ public class MesaResponse {
     private double posicionX;
     private double posicionY;
     private String tipoMesa;
-    private String estado;
+    private EstadoMesa estado;
     private Integer idEmpresa;
     private Integer idZona;
 }
