@@ -5,6 +5,7 @@ import restosoftteam.restosoft.restosoftv2.enums.EstadoMesa;
 
 @Data
 public class MesaResponse {
+    private Integer id;
     private String numeroMesa;
     private Integer disponibilidadPersonas;
     private double posicionX;
