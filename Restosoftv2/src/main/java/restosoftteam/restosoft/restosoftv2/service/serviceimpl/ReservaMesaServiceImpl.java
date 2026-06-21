@@ -9,9 +9,11 @@ import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoExceptio
 import restosoftteam.restosoft.restosoftv2.exception.ValorInconsistenteException;
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMapper;
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMesaMapper;
+import restosoftteam.restosoft.restosoftv2.model.Empresa;
 import restosoftteam.restosoft.restosoftv2.model.Mesa;
 import restosoftteam.restosoft.restosoftv2.model.Reserva;
 import restosoftteam.restosoft.restosoftv2.model.ReservaMesa;
+import restosoftteam.restosoft.restosoftv2.repository.EmpresaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.MesaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.ReservaMesaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.ReservaRepository;
@@ -29,9 +31,30 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     private final ReservaRepository reservaRepository;
     private final MesaRepository mesaRepository;
     private final ReservaMapper reservaMapper;
+    private final EmpresaRepository empresaRepository;
 
     @Override
-    public List<ReservaMesaResponseMapStruct> findAllByReserva_Id(Integer idReserva) {
+    public List<ReservaMesaResponseMapStruct> findAllByEmpresaIdDiario(Integer idEmpresa){
+
+        Empresa empresa = empresaRepository.findById(idEmpresa).
+                orElseThrow(()-> new RecursoNoEncontradoException("Empresa relacionda no encontrada."));
+
+        return reservaMesaRepository.
+                findAllByEmpresaAndFechaToday(empresa).stream().map(reservaMesaMapper ::toResponse).toList();
+
+    }
+
+    @Override
+    public List<ReservaMesaResponseMapStruct> findAllByEmpresaIdGeneral(Integer idEmpresa){
+        Empresa empresa = empresaRepository.findById(idEmpresa).
+                orElseThrow(()-> new RecursoNoEncontradoException("Empresa relacionda no encontrada."));
+
+        return reservaMesaRepository.
+                findAllByEmpresa(empresa).stream().map(reservaMesaMapper ::toResponse).toList();
+    }
+
+    @Override
+    public List<ReservaMesaResponseMapStruct> findAllByReservaId(Integer idReserva) {
 
         Reserva reserva = reservaRepository.findById(idReserva)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La reserva relacionada no existe."));
@@ -43,7 +66,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     }
 
     @Override
-    public List<ReservaMesaResponseMapStruct> findAllByMesa_Id(Integer idMesa) {
+    public List<ReservaMesaResponseMapStruct> findAllByMesaId(Integer idMesa) {
 
         Mesa mesa = mesaRepository.findById(idMesa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La mesa relacionada no existe."));

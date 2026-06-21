@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -24,6 +26,10 @@ public class Rol {
     @NotNull
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
+
+    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Usuario> usuarios;
+
 
 
 }
