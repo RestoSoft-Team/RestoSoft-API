@@ -19,13 +19,25 @@ public class ReservaMesaController {
 
     @GetMapping("/reserva/{idReserva}")
     public ResponseEntity<List<ReservaMesaResponseMapStruct>> listarPorReservaId(@PathVariable Integer idReserva) {
-        List<ReservaMesaResponseMapStruct> lista = reservaMesaService.findAllByReserva_Id(idReserva);
+        List<ReservaMesaResponseMapStruct> lista = reservaMesaService.findAllByReservaId(idReserva);
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/empresa/{idEmpresa}/hoy")
+    public ResponseEntity<List<ReservaMesaResponseMapStruct>> listarPorIdEmpresaDiario(@PathVariable Integer idEmpresa) {
+        List<ReservaMesaResponseMapStruct> lista = reservaMesaService.findAllByEmpresaIdDiario(idEmpresa);
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/empresa/{idEmpresa}")
+    public ResponseEntity<List<ReservaMesaResponseMapStruct>> listarPorIdEmpresaGeneral(@PathVariable Integer idEmpresa) {
+        List<ReservaMesaResponseMapStruct> lista = reservaMesaService.findAllByEmpresaIdGeneral(idEmpresa);
         return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/mesa/{idMesa}")
     public ResponseEntity<List<ReservaMesaResponseMapStruct>> listarPorMesaId(@PathVariable Integer idMesa) {
-        List<ReservaMesaResponseMapStruct> lista = reservaMesaService.findAllByMesa_Id(idMesa);
+        List<ReservaMesaResponseMapStruct> lista = reservaMesaService.findAllByMesaId(idMesa);
         return ResponseEntity.ok(lista);
     }
 
@@ -43,6 +55,5 @@ public class ReservaMesaController {
         reservaMesaService.deleteAllByReserva(idReserva);
         return ResponseEntity.noContent().build();
     }
-///
 
 }
