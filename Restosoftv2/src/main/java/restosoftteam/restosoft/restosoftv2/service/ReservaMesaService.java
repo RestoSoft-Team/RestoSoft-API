@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface ReservaMesaService {
 
-    List<ReservaMesaResponseMapStruct> findAllByReserva_Id(Integer idReserva);
+    List<ReservaMesaResponseMapStruct> findAllByReservaId(Integer idReserva);
 
-    List<ReservaMesaResponseMapStruct> findAllByMesa_Id(Integer idMesa);
+    List<ReservaMesaResponseMapStruct> findAllByMesaId(Integer idMesa);
 
     ReservaMesaResponse save(Reserva reserva, List<Integer> mesasIds);
 
@@ -23,5 +23,7 @@ public interface ReservaMesaService {
 
     void deleteAllByReserva(Integer idReserva);
 
+    List<ReservaMesaResponseMapStruct> findAllByEmpresaIdDiario(Integer idEmpresa);
 
+    List<ReservaMesaResponseMapStruct> findAllByEmpresaIdGeneral(Integer idEmpresa);
 }

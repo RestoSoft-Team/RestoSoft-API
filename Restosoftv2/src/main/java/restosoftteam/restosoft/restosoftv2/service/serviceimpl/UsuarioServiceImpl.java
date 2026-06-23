@@ -44,6 +44,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    public List<UsuarioResponse> listarClientes(){
+        return usuarioRepository.findAllByRolCliente()
+                .stream().map(usuarioMapper::toResponse).toList();
+    }
+
+    @Override
     public List<UsuarioResponse> listarUsuarios() {
         return usuarioRepository.findAll()
                 .stream()

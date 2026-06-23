@@ -17,4 +17,6 @@ public interface UsuarioService {
     UsuarioResponse actualizarUsuario(Integer id, UsuarioRequest request);
 
     void eliminarUsuario(Integer id);
+
+    List<UsuarioResponse> listarClientes();
 }
