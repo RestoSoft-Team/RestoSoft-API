@@ -22,12 +22,17 @@ public class ReservaMesa {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idreserva", nullable = false)
-    private Reserva idreserva;
+    private Reserva reserva;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idmesa", nullable = false)
-    private Mesa idmesa;
+    private Mesa mesa;
+
+    public ReservaMesa(Reserva reserva, Mesa mesa) {
+        this.reserva = reserva;
+        this.mesa = mesa;
+    }
 
 
 }

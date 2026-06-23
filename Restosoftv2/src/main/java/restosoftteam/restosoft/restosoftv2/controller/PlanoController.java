@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import restosoftteam.restosoft.restosoftv2.service.GeminiService;
+import restosoftteam.restosoft.restosoftv2.service.IAService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,14 +15,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PlanoController {
 
-    private final GeminiService geminiService;
+    private final IAService iaService;
 
     @PostMapping("/upload-plano")
     public ResponseEntity<?> subirYAnalizarPlano(@RequestParam("imagen") MultipartFile imagen) {
         try {
             String urlPlanoGuardado = "http://localhost:8080/uploads/plano_temp.jpg";
 
-            String jsonMesas = geminiService.analizarImagenPlano(imagen);
+            String jsonMesas = iaService.analizarImagenPlanoGemini(imagen);
 
             Map<String, Object> response = new HashMap<>();
             response.put("url", urlPlanoGuardado);

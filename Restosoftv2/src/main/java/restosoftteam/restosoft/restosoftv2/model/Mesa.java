@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restosoftteam.restosoft.restosoftv2.enums.EstadoMesa;
 
 @Getter
 @Setter
@@ -35,23 +36,24 @@ public class Mesa {
 
     @NotNull
     @Column(name = "posicion_y")
-    private double posiciony;
+    private double posicionY;
 
     @NotNull
     @Column(name = "tipo_mesa")
     private String tipoMesa;
 
     @Column(name = "estado", length = 20)
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    private EstadoMesa estado;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa idempresa;
+    private Empresa empresa;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idZona", nullable = false)
+    @JoinColumn(name = "id_zona", nullable = false) // Correcto
     private Zona zona;
 
 
