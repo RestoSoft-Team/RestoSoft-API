@@ -32,9 +32,6 @@ public class ReservaController {
     @PutMapping("/{idReserva}")
     public ResponseEntity<ReservaMesaResponse> actualizarReserva(@PathVariable Integer idReserva, @Valid @RequestBody ReservaCompletaRequest request) {
 
-        System.out.println(idReserva);
-        System.out.println(request);
-
         ReservaMesaResponse reservaMesaResponse = reservaService.update(request.getReserva(), idReserva, request.getIdsMesa());
         return ResponseEntity.ok(reservaMesaResponse);
     }
