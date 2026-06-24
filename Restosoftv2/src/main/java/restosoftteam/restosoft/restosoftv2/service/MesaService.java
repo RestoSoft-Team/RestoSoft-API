@@ -15,5 +15,7 @@ public interface MesaService {
 
     void intercambiarNumeroMesa (Integer idMesaA, Integer idMesaB);
 
+    void intercambiarUbicacionMesa(Integer idMesaA, Integer idMesaB);
+
     List<MesaResponse> obtenerMesasPorEmpresa(Integer idEmpresa);
 }
