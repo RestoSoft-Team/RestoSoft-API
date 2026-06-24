@@ -28,6 +28,13 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.obtenerUsuarioPorId(id));
     }
 
+    @GetMapping("/clientes")
+    public ResponseEntity<List<UsuarioResponse>> obtenerClientes(){
+        List<UsuarioResponse> lista = usuarioService.listarClientes();
+        return ResponseEntity.ok(lista);
+    }
+
+
     @GetMapping
     public ResponseEntity<List<UsuarioResponse>> listarUsuarios() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
