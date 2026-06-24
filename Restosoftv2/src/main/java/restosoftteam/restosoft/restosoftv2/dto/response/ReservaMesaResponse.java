@@ -12,5 +12,5 @@ import java.util.List;
 public class ReservaMesaResponse {
     private Integer id;
     private ReservaResponse reserva;
-    private List<Mesa> listaMesas;
+    private List<MesaResponse> listaMesas;
 }

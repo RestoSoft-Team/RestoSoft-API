@@ -3,10 +3,12 @@ package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import restosoftteam.restosoft.restosoftv2.dto.response.MesaResponse;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponse;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponseMapStruct;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.ValorInconsistenteException;
+import restosoftteam.restosoft.restosoftv2.mapper.MesaMapper;
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMapper;
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMesaMapper;
 import restosoftteam.restosoft.restosoftv2.model.Empresa;
@@ -30,6 +32,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     private final ReservaMesaMapper reservaMesaMapper;
     private final ReservaRepository reservaRepository;
     private final MesaRepository mesaRepository;
+    private final MesaMapper mesaMapper;
     private final ReservaMapper reservaMapper;
     private final EmpresaRepository empresaRepository;
 
@@ -97,9 +100,9 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
             reservaMesaResponse.setId(listaResultado.getFirst().getId());
             reservaMesaResponse.setReserva(reservaMapper.toResponse(listaResultado.getFirst().getReserva()));
 
-            List<Mesa> listaMesasRespuesta = new ArrayList<>();
+            List<MesaResponse> listaMesasRespuesta = new ArrayList<>();
             for (ReservaMesa reservaMesa : listaResultado) {
-                listaMesasRespuesta.add(reservaMesa.getMesa());
+                listaMesasRespuesta.add(mesaMapper.toResponse(reservaMesa.getMesa()));
             }
             reservaMesaResponse.setListaMesas(listaMesasRespuesta);
         }
