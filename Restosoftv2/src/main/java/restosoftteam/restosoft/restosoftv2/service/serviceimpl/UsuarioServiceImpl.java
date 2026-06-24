@@ -1,6 +1,7 @@
 package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import restosoftteam.restosoft.restosoftv2.dto.request.UsuarioRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioResponse;
@@ -23,6 +24,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final EmpresaUsuarioRepository empresaUsuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UsuarioResponse crearUsuario(UsuarioRequest request) {
@@ -30,9 +32,9 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new RegistroYaExistenteException("Ya existe un usuario con ese email");
         }
         Usuario usuario = usuarioMapper.toEntity(request);
+        usuario.setPassword(passwordEncoder.encode(request.getPassword()));
         usuario.setFechaCreacion(LocalDate.now());
         usuario.setFechaActualizacion(LocalDate.now());
-        // IMPORTANTE: en producción encriptar password con BCrypt aquí
         return usuarioMapper.toResponse(usuarioRepository.save(usuario));
     }
 
@@ -69,6 +71,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setTelefono(request.getTelefono());
         usuario.setEstado(request.getEstado());
         usuario.setFechaNacimiento(request.getFechaNacimiento());
+        usuario.setPassword(passwordEncoder.encode(request.getPassword()));
         usuario.setFechaActualizacion(LocalDate.now());
         return usuarioMapper.toResponse(usuarioRepository.save(usuario));
     }
