@@ -18,9 +18,9 @@ public class MesaController {
 
     private final MesaService mesaService;
 
-    @PutMapping("/{MesaA}/{MesaB}")
+    @PutMapping("/{idMesaA}/{idMesaB}")
     public ResponseEntity<MesaResponse> intercambioMesa (@PathVariable Integer idMesaA, @PathVariable Integer idMesaB) {
-        mesaService.intercambiarNumeroMesa(idMesaA, idMesaB);
+        mesaService.intercambiarUbicacionMesa(idMesaA, idMesaB);
         return ResponseEntity.ok().build();
     }
     @GetMapping("/empresa/{idEmpresa}")
