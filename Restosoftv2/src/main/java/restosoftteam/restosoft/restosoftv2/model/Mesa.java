@@ -55,7 +55,7 @@ public class Mesa {
     @NotNull
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_zona", nullable = false) // Correcto
+    @JoinColumn(name = "id_zona", nullable = false)
     private Zona zona;
 
 

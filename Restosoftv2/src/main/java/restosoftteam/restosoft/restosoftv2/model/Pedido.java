@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,13 +44,9 @@ public class Pedido {
     private String estado;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idusuario", nullable = false)
-    private Usuario usuario;
-
-    @NotNull
     @Column(name = "fecha", nullable = false)
     private Instant fecha;
 
-
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PedidoUsuario> usuarios = new ArrayList<>();
 }
