@@ -7,14 +7,9 @@ import restosoftteam.restosoft.restosoftv2.dto.request.PedidoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.PedidoResponse;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.mapper.PedidoMapper;
-import restosoftteam.restosoft.restosoftv2.model.Empresa;
-import restosoftteam.restosoft.restosoftv2.model.Mesa;
-import restosoftteam.restosoft.restosoftv2.model.Pedido;
-import restosoftteam.restosoft.restosoftv2.model.Usuario;
-import restosoftteam.restosoft.restosoftv2.repository.EmpresaRepository;
-import restosoftteam.restosoft.restosoftv2.repository.MesaRepository;
-import restosoftteam.restosoft.restosoftv2.repository.PedidoRepository;
-import restosoftteam.restosoft.restosoftv2.repository.UsuarioRepository;
+import restosoftteam.restosoft.restosoftv2.mapper.PedidoUsuarioMapper;
+import restosoftteam.restosoft.restosoftv2.model.*;
+import restosoftteam.restosoft.restosoftv2.repository.*;
 import restosoftteam.restosoft.restosoftv2.service.PedidoService;
 
 import java.util.List;
@@ -28,6 +23,8 @@ public class PedidoServiceImpl implements PedidoService {
     private final PedidoRepository pedidoRepository;
     private final MesaRepository mesaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final PedidoUsuarioRepository pedidoUsuarioRepository;
+    private final PedidoUsuarioMapper pedidoUsuarioMapper;
 
     @Override
     public PedidoResponse findById(Integer id) {
@@ -61,17 +58,20 @@ public class PedidoServiceImpl implements PedidoService {
         Empresa empresa = empresaRepository.findById(request.getIdempresa())
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada al pedido no se ha encontrado."));
 
+        Usuario usuario = usuarioRepository.findById(request.getIdusuario()).orElseThrow(() -> new RecursoNoEncontradoException("Usuario no found"));
+
         Mesa mesa = mesaRepository.findById(request.getIdmesa())
                 .orElseThrow(() -> new RecursoNoEncontradoException("La mesa relacionada al pedido no se ha encontrado."));
 
-        Usuario usuario = usuarioRepository.findById(request.getIdusuario())
-                .orElseThrow(() -> new RecursoNoEncontradoException("El usuario relacionado al pedido no se ha encontrado"));
+       List<PedidoUsuario> listaPedidos = pedidoUsuarioRepository.findAllByUsuario(usuario)
+                        .orElseThrow(() -> new RecursoNoEncontradoException("La usuario relacionada no se ha encontrado."));
 
 
         pedidoMapper.updateEntityFromDto(request, pedido);
         pedido.setEmpresa(empresa);
         pedido.setMesa(mesa);
-        pedido.setUsuario(usuario);
+        pedido.setUsuarios(listaPedidos);
+
 
 
         return pedidoMapper.toResponse(pedidoRepository.save(pedido));
@@ -91,13 +91,15 @@ public class PedidoServiceImpl implements PedidoService {
         Usuario usuario = usuarioRepository.findById(request.getIdusuario())
                 .orElseThrow(() -> new RecursoNoEncontradoException("El usuario relacionado al pedido no se ha encontrado"));
 
+        List<PedidoUsuario> listaPedidos = pedidoUsuarioRepository.findAllByUsuario(usuario)
+                .orElseThrow(() -> new RecursoNoEncontradoException("La usuario relacionada no se ha encontrado."));
+
         Pedido pedido = pedidoMapper.toEntity(request);
         pedido.setEmpresa(empresa);
         pedido.setMesa(mesa);
-        pedido.setUsuario(usuario);
+        pedido.setUsuarios(listaPedidos);
 
         return pedidoMapper.toResponse(pedidoRepository.save(pedido));
-
     }
 
     @Override

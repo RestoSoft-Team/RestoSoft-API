@@ -12,13 +12,11 @@ public interface PedidoMapper {
 
     @Mapping(target = "empresa", ignore = true)
     @Mapping(target = "mesa", ignore = true)
-    @Mapping(target = "usuario", ignore = true)
     Pedido toEntity(PedidoRequest request);
 
     PedidoResponse toResponse(Pedido pedido);
 
     @Mapping(target = "empresa", ignore = true)
     @Mapping(target = "mesa", ignore = true)
-    @Mapping(target = "usuario", ignore = true)
     void updateEntityFromDto(PedidoRequest dto,@MappingTarget Pedido entity);
 }
