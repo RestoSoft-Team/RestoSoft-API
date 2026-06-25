@@ -19,8 +19,6 @@ public class SesionMesaController {
     private final MesaRepository mesaRepository;
     private final MesaMapper mesaMapper;
 
-    // Memoria temporal: Key -> IdUsuario, Value -> IdMesa
-    // No bloquea la mesa, solo recuerda qué mesa abrió cada mesero
     private final Map<Integer, Integer> mesasAbiertasPorUsuario = new ConcurrentHashMap<>();
 
     @PostMapping("/mesa-activa/{idMesa}")
@@ -28,7 +26,6 @@ public class SesionMesaController {
             @PathVariable Integer idMesa,
             @RequestHeader("X-User-Id") Integer idUsuario) {
 
-        // Solo valida que la mesa exista, NO la bloquea
         mesaRepository.findById(idMesa)
                 .orElseThrow(() -> new RuntimeException("La mesa no existe"));
 
@@ -43,7 +40,7 @@ public class SesionMesaController {
         Integer idMesa = mesasAbiertasPorUsuario.get(idUsuario);
 
         if (idMesa == null) {
-            return ResponseEntity.noContent().build(); // 204: No tiene mesa asignada
+            return ResponseEntity.noContent().build(); 
         }
 
         return mesaRepository.findById(idMesa)
