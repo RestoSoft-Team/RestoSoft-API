@@ -3,10 +3,8 @@ package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import restosoftteam.restosoft.restosoftv2.dto.request.ReservaMesaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.request.ReservaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponse;
-import restosoftteam.restosoft.restosoftv2.dto.response.ReservaResponse;
 import restosoftteam.restosoft.restosoftv2.enums.EstadoReserva;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.RegistroYaExistenteException;
@@ -14,9 +12,9 @@ import restosoftteam.restosoft.restosoftv2.exception.ValorInconsistenteException
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMapper;
 import restosoftteam.restosoft.restosoftv2.model.Empresa;
 import restosoftteam.restosoft.restosoftv2.model.Reserva;
+import restosoftteam.restosoft.restosoftv2.model.ReservaMesa;
 import restosoftteam.restosoft.restosoftv2.model.Usuario;
 import restosoftteam.restosoft.restosoftv2.repository.EmpresaRepository;
-import restosoftteam.restosoft.restosoftv2.repository.ReservaMesaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.ReservaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.UsuarioRepository;
 import restosoftteam.restosoft.restosoftv2.service.ReservaMesaService;
@@ -25,6 +23,8 @@ import restosoftteam.restosoft.restosoftv2.service.ReservaService;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -45,7 +45,7 @@ public class ReservaServiceImpl implements ReservaService {
             throw new ValorInconsistenteException("No se ha seleccionado ninguna mesa.");
         }
 
-        validarDisponibilidad(request.getFecha(),request.getHora());
+        validarDisponibilidadMesas(request.getFecha(),request.getHora(),idSmesas,null);
 
         Empresa empresa = empresaRepository.findById(request.getIdempresa())
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada no existe."));
@@ -73,7 +73,22 @@ public class ReservaServiceImpl implements ReservaService {
         Reserva reserva = reservaRepository.findById(idReserva)
                 .orElseThrow(()-> new RecursoNoEncontradoException("La reserva que se intenta actualizar no existe."));
 
-        validarDisponibilidadExcluyendoId(request.getFecha(),request.getHora(),idReserva);
+        boolean cambioFecha = !reserva.getFecha().equals(request.getFecha());
+
+        boolean cambioHora = !reserva.getHora().equals(request.getHora());
+
+        boolean cambioMesas = reservaMesaService.cambiaronMesas(reserva,idSmesas);
+
+        if (cambioFecha || cambioHora || cambioMesas) {
+
+            validarDisponibilidadMesas(
+                    request.getFecha(),
+                    request.getHora(),
+                    idSmesas,
+                    idReserva
+            );
+
+        }
 
         Empresa empresa = empresaRepository.findById(request.getIdempresa())
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada no existe."));
@@ -101,22 +116,38 @@ public class ReservaServiceImpl implements ReservaService {
         reservaMesaService.deleteAllByReserva(idReserva);
     }
 
-    private void validarDisponibilidad(LocalDate fecha, LocalTime hora){
+    private void validarDisponibilidadMesas(
+            LocalDate fecha,
+            LocalTime hora,
+            List<Integer> mesaIds,
+            Integer idReservaExcluir) {
 
-        if (reservaRepository.buscarPorFechaYRangoHora(fecha,
-                hora.minusHours(1).minusMinutes(30),
-                hora.plusHours(1).plusMinutes(30)) > 0) {
-            throw new RegistroYaExistenteException("Ya existe una reserva con esa fecha y hora actualmente.");
-        }
 
-    }
+        LocalTime horaInicio = hora.minusHours(1).minusMinutes(30);
+        LocalTime horaFin = hora.plusHours(1).plusMinutes(30);
 
-    private void validarDisponibilidadExcluyendoId(LocalDate fecha, LocalTime hora,Integer id){
+        List<ReservaMesa> reservasMesas = reservaRepository.buscarMesasReservadas(
+                fecha,
+                horaInicio,
+                horaFin,
+                idReservaExcluir
+        );
 
-        if (reservaRepository.buscarPorFechaYRangoHoraExcluyendoId(fecha,
-                hora.minusHours(1).minusMinutes(30),
-                hora.plusHours(1).plusMinutes(30),id) > 0) {
-            throw new RegistroYaExistenteException("Ya existe una reserva con esa fecha y hora actualmente.");
+        Set<Integer> mesasOcupadas = reservasMesas.stream()
+                .map(rm -> rm.getMesa().getId())
+                .collect(Collectors.toSet());
+
+        List<Integer> mesasEnConflicto = mesaIds.stream()
+                .filter(mesasOcupadas::contains)
+                .toList();
+
+        if (!mesasEnConflicto.isEmpty()) {
+
+            throw new RegistroYaExistenteException(
+                    "Las siguientes mesas ya se encuentran reservadas: "
+                            + mesasEnConflicto
+            );
+
         }
 
     }

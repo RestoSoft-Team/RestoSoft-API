@@ -19,10 +19,19 @@ public interface ReservaMesaRepository extends JpaRepository<ReservaMesa, Intege
 
    void deleteAllByReserva(Reserva reserva);
 
-    @Query("SELECT r from ReservaMesa r WHERE r.reserva.empresa = :empresa AND r.reserva.fecha = CURRENT_DATE")
+
+    @Query("SELECT r FROM ReservaMesa r " +
+            "JOIN FETCH r.reserva res " +
+            "JOIN FETCH res.usuario u " +
+            "JOIN FETCH r.mesa m " +
+            "WHERE res.empresa = :empresa AND res.fecha = CURRENT_DATE")
     List<ReservaMesa> findAllByEmpresaAndFechaToday(@Param("empresa") Empresa empresa);
 
-    @Query("SELECT r from ReservaMesa r WHERE r.reserva.empresa = :empresa")
+    @Query("SELECT r FROM ReservaMesa r " +
+            "JOIN FETCH r.reserva res " +
+            "JOIN FETCH res.usuario u " +
+            "JOIN FETCH r.mesa m " +
+            "WHERE res.empresa = :empresa")
     List<ReservaMesa> findAllByEmpresa(@Param("empresa") Empresa empresa);
 
 }

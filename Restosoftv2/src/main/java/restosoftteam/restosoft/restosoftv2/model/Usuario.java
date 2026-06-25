@@ -68,4 +68,6 @@ public class Usuario {
     private Rol rol;
 
 
+
+
 }
