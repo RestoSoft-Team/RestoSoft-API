@@ -20,4 +20,5 @@ public class PedidoResponse {
     private String estado;
     private Instant fecha;
     private List<PedidoUsuarioResponse> usuarios;
+    //
 }
