@@ -22,6 +22,7 @@ import restosoftteam.restosoft.restosoftv2.repository.ReservaRepository;
 import restosoftteam.restosoft.restosoftv2.service.ReservaMesaService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -179,6 +180,20 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
             throw new ValorInconsistenteException(
                     "No es posible seleccionar varias mesas cuando una sola mesa tiene capacidad suficiente para la reserva.");
         }
+
+    }
+    @Override
+    public boolean cambiaronMesas(Reserva reserva,
+                                             List<Integer> nuevasMesas){
+
+        List<Integer> actuales =
+                reservaMesaRepository.findAllByReserva(reserva)
+                        .stream()
+                        .map(rm -> rm.getMesa().getId())
+                        .toList();
+
+        return !new HashSet<>(actuales)
+                .equals(new HashSet<>(nuevasMesas));
 
     }
 
