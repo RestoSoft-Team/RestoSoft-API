@@ -36,8 +36,13 @@ public class DetallePedido {
     private Integer cantidad;
 
     @NotNull
+    @Column(name = "cantidad_preparada", nullable = false)
+    private Integer cantidadPreparada = 0;
+
+    @NotNull
     @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioUnitario;
 
-
+    @Column(name = "estado", length = 50)
+    private String estado;
 }

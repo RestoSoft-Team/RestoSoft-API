@@ -11,4 +11,5 @@ public interface DetallePedidoService {
     DetallePedidoResponse save(DetallePedidoRequest detallePedidoRequest);
     DetallePedidoResponse update(DetallePedidoRequest detallePedidoRequest, Integer id);
     void deleteByid(Integer id);
+    //
 }

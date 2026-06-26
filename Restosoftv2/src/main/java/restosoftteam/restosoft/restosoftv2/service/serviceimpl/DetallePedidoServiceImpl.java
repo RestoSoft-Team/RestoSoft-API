@@ -88,10 +88,24 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
         DetallePedido detallePedido = detallePedidoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El detalle pedido  no se ha encontrado"));
 
-        detallePedidoMapper.updateEntityFromDto(request, detallePedido);
+//        detallePedidoMapper.updateEntityFromDto(request, detallePedido);
+//
+//        detallePedido.setPedido(pedido);
+//        detallePedido.setPlato(plato); detallePedidoMapper.updateEntityFromDto(request, detallePedido);
 
-        detallePedido.setPedido(pedido);
-        detallePedido.setPlato(plato);
+
+//        detallePedido.setPedido(pedido);
+//        detallePedido.setPlato(plato);
+
+        detallePedido.setCantidadPreparada(request.getCantidadPreparada());
+
+        if (detallePedido.getCantidadPreparada() == 0) {
+            detallePedido.setEstado("PENDIENTE");
+        } else if (detallePedido.getCantidadPreparada() < detallePedido.getCantidad()) {
+            detallePedido.setEstado("PREPARANDO");
+        } else if (detallePedido.getCantidadPreparada() >= detallePedido.getCantidad()) {
+            detallePedido.setEstado("LISTO");
+        }
 
         return detallePedidoMapper.toResponse(detallePedidoRepository.save(detallePedido));
     }
