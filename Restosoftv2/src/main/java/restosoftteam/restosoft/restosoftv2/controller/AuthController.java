@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import restosoftteam.restosoft.restosoftv2.dto.request.LoginRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.LoginResponse;
+import restosoftteam.restosoft.restosoftv2.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")
