@@ -15,16 +15,16 @@ import restosoftteam.restosoft.restosoftv2.dto.response.LoginResponse;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(
-            @Valid @RequestBody LoginRequest request){
-
-        return ResponseEntity.ok(
-                authService.login(request)
-        );
-
-    }
+//    //private final AuthService authService;
+//
+//    @PostMapping("/login")
+//    public ResponseEntity<LoginResponse> login(
+//            @Valid @RequestBody LoginRequest request){
+//
+////        return ResponseEntity.ok(
+////               // authService.login(request)
+////        );
+//
+//    }
 
 }
