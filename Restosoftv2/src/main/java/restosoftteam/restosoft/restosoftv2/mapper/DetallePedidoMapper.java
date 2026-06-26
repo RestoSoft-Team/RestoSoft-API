@@ -11,9 +11,14 @@ import restosoftteam.restosoft.restosoftv2.model.DetallePedido;
 public interface DetallePedidoMapper {
     @Mapping(target = "pedido", ignore = true)
     @Mapping(target = "plato", ignore = true)
-    DetallePedido  toEntity(DetallePedidoRequest request);
+    DetallePedido toEntity(DetallePedidoRequest request);
+
+    @Mapping(source = "plato.id", target = "idPlato")
+    @Mapping(source = "plato.nombre", target = "nombrePlato")
+    @Mapping(source = "plato.categoria.nombre", target = "categoriaPlato")
     DetallePedidoResponse toResponse(DetallePedido entity);
+
     @Mapping(target = "pedido", ignore = true)
     @Mapping(target = "plato", ignore = true)
-    void  updateEntityFromDto(DetallePedidoRequest dto, @MappingTarget DetallePedido entity);
+    void updateEntityFromDto(DetallePedidoRequest dto, @MappingTarget DetallePedido entity);
 }

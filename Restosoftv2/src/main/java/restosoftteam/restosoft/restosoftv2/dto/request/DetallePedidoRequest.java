@@ -20,4 +20,6 @@ public class DetallePedidoRequest {
     private Integer cantidad;
     @Positive(message = "El precio del plato no puede ser negativo.")
     private BigDecimal precioUnitario;
+    @Positive(message = "La cantidad preparada no puede ser negativa.")
+    private Integer cantidadPreparada;
 }
