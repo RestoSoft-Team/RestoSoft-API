@@ -11,12 +11,14 @@ import restosoftteam.restosoft.restosoftv2.model.Pedido;
 public interface PedidoMapper {
 
     @Mapping(target = "empresa", ignore = true)
-    @Mapping(target = "mesa", ignore = true)
+    @Mapping(target = "mesas", ignore = true)
+    @Mapping(target = "usuarios", ignore = true)
     Pedido toEntity(PedidoRequest request);
 
     PedidoResponse toResponse(Pedido pedido);
 
     @Mapping(target = "empresa", ignore = true)
-    @Mapping(target = "mesa", ignore = true)
-    void updateEntityFromDto(PedidoRequest dto,@MappingTarget Pedido entity);
+    @Mapping(target = "mesas", ignore = true)
+    @Mapping(target = "usuarios", ignore = true)
+    void updateEntityFromDto(PedidoRequest dto, @MappingTarget Pedido entity);
 }

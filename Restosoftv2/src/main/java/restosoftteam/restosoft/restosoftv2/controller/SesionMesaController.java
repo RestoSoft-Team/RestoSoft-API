@@ -40,7 +40,7 @@ public class SesionMesaController {
         Integer idMesa = mesasAbiertasPorUsuario.get(idUsuario);
 
         if (idMesa == null) {
-            return ResponseEntity.noContent().build(); 
+            return ResponseEntity.noContent().build();
         }
 
         return mesaRepository.findById(idMesa)
