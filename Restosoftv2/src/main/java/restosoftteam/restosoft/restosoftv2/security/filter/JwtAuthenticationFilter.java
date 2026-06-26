@@ -1,9 +1,11 @@
 package restosoftteam.restosoft.restosoftv2.security.filter;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,13 +18,10 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-
-    public JwtAuthenticationFilter(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -30,43 +29,64 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+        String authorizationHeader = request.getHeader("Authorization");
 
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (authorizationHeader == null ||
+                !authorizationHeader.startsWith("Bearer ")) {
+
             filterChain.doFilter(request, response);
             return;
+
         }
 
-        String token = header.substring(7);
+        String token = authorizationHeader.substring(7);
 
-        if (!jwtService.validarToken(token)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        jwtService.validarToken(token);
 
-        Integer usuarioId = jwtService.extraerUsuarioId(token);
-        Integer empresaId = jwtService.extraerEmpresaId(token);
-        String email = jwtService.extraerEmail(token);
-        String rol = jwtService.extraerRol(token);
+        Claims claims = jwtService.obtenerClaims(token);
 
-        UsuarioAutenticado usuario = new UsuarioAutenticado(
-                usuarioId,
-                empresaId,
-                email,
-                rol,
-                List.of(new SimpleGrantedAuthority("ROLE_" + rol))
-        );
+        Integer usuarioId = claims.get("usuarioId", Integer.class);
+
+        Integer empresaId = claims.get("empresaId", Integer.class);
+
+        String rol = claims.get("rol", String.class);
+
+        String email = claims.getSubject();
+
+        UsuarioAutenticado usuarioAutenticado =
+                new UsuarioAutenticado(
+
+                        usuarioId,
+
+                        empresaId,
+
+                        email,
+
+                        rol
+
+                );
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
-                        usuario,
+
+                        usuarioAutenticado,
+
                         null,
-                        usuario.getAuthorities()
+
+                        List.of(
+                                new SimpleGrantedAuthority(
+                                        "ROLE_" + rol
+                                )
+                        )
+
                 );
 
-        SecurityContextHolder.getContext()
+        SecurityContextHolder
+                .getContext()
                 .setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
+
     }
+
 }

@@ -19,37 +19,38 @@ public class IdEmpresaArgumentResolver implements HandlerMethodArgumentResolver 
     public boolean supportsParameter(MethodParameter parameter) {
 
         return parameter.hasParameterAnnotation(IdEmpresa.class)
-                && parameter.getParameterType().equals(Integer.class);
+                && Integer.class.equals(parameter.getParameterType());
 
     }
 
     @Override
-    public Object resolveArgument(
-            MethodParameter parameter,
-            ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest,
-            WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(MethodParameter parameter,
+                                  ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest,
+                                  WebDataBinderFactory binderFactory) {
 
         Authentication authentication =
-                SecurityContextHolder
-                        .getContext()
-                        .getAuthentication();
+                SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof UsuarioAutenticado usuario)) {
+
             throw new JwtAuthenticationException(
                     "No existe un usuario autenticado."
             );
+
         }
 
-        Object principal = authentication.getPrincipal();
+        Integer empresaId = usuario.getEmpresaId();
 
-        if (!(principal instanceof UsuarioAutenticado usuario)) {
+        if (empresaId == null) {
+
             throw new JwtAuthenticationException(
-                    "El principal autenticado no es válido."
+                    "El usuario autenticado no pertenece a ninguna empresa."
             );
+
         }
 
-        return usuario.getEmpresaId();
+        return empresaId;
 
     }
 
