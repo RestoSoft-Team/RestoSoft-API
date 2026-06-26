@@ -22,17 +22,17 @@ public class EmpresaUsuario {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa idempresa;
+    private Empresa empresa;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idusuario", nullable = false)
-    private Usuario idusuario;
+    private Usuario usuario;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idrol", nullable = false)
-    private Rol idrol;
+    private Rol rol;
 
 
 }
