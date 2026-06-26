@@ -1,15 +1,12 @@
 package restosoftteam.restosoft.restosoftv2.security.resolver;
 
 import org.springframework.core.MethodParameter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
-import restosoftteam.restosoft.restosoftv2.security.exception.JwtAuthenticationException;
 import restosoftteam.restosoft.restosoftv2.security.model.UsuarioAutenticado;
 
 @Component
@@ -17,41 +14,34 @@ public class IdEmpresaArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-
-        return parameter.hasParameterAnnotation(IdEmpresa.class)
-                && Integer.class.equals(parameter.getParameterType());
-
+        return parameter.hasParameterAnnotation(IdEmpresa.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter,
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) {
+                                  WebDataBinderFactory binderFactory) throws Exception {
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+        String headerEmpresaId = webRequest.getHeader("idempresa");
 
-        if (authentication == null || !(authentication.getPrincipal() instanceof UsuarioAutenticado usuario)) {
-
-            throw new JwtAuthenticationException(
-                    "No existe un usuario autenticado."
-            );
-
+        if (headerEmpresaId != null && !headerEmpresaId.isBlank()) {
+            try {
+                return Integer.parseInt(headerEmpresaId);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("El header idempresa debe ser un número válido.");
+            }
         }
 
-        Integer empresaId = usuario.getEmpresaId();
+        UsuarioAutenticado usuarioAutenticado = (UsuarioAutenticado) webRequest
+                .getUserPrincipal();
 
-        if (empresaId == null) {
-
-            throw new JwtAuthenticationException(
-                    "El usuario autenticado no pertenece a ninguna empresa."
-            );
-
+        if (usuarioAutenticado != null && usuarioAutenticado.getEmpresaId() != null) {
+            return usuarioAutenticado.getEmpresaId();
         }
 
-        return empresaId;
-
+        throw new RuntimeException(
+                "Se requiere el ID de la empresa. Envíalo en el header 'idempresa' o inicia sesión con un token válido."
+        );
     }
-
 }
