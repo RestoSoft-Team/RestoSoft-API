@@ -41,6 +41,19 @@ public interface EmpresaUsuarioRepository extends JpaRepository<EmpresaUsuario, 
                 JOIN FETCH eu.usuario u
                 JOIN FETCH eu.empresa e
                 JOIN FETCH eu.rol r
+            WHERE e.id = :empresaId AND eu.rol.nombre = 'CLIENTE'
+            ORDER BY u.nombres
+            """)
+    List<EmpresaUsuario> listarClientesPorEmpresa(
+            @Param("empresaId") Integer empresaId
+    );
+
+    @Query("""
+            SELECT eu
+            FROM EmpresaUsuario eu
+                JOIN FETCH eu.usuario u
+                JOIN FETCH eu.empresa e
+                JOIN FETCH eu.rol r
             WHERE u.id = :usuarioId
               AND e.id = :empresaId
             """)

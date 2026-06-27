@@ -69,4 +69,5 @@ public interface UsuarioService {
 
     UsuarioResponse crearCliente(ClienteRequest request);
 
+    List<UsuarioCompletoResponse> listarClientes(Integer idEmpresa);
 }

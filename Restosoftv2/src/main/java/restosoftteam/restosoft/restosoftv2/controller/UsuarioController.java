@@ -1,5 +1,6 @@
 package restosoftteam.restosoft.restosoftv2.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,12 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class UsuarioController {
 
-    // ÚNICO SERVICIO QUE DEBE CONOCER EL CONTROLLER
     private final UsuarioService usuarioService;
 
 
     @PostMapping("/empleados")
     public ResponseEntity<UsuarioCompletoResponse> crearEmpleado(
+            @Parameter(hidden = true)
             @IdEmpresa Integer idEmpresa,
             @Valid @RequestBody EmpleadoRequest request) {
 
@@ -37,6 +38,8 @@ public class UsuarioController {
 
     @PostMapping("/clientes")
     public ResponseEntity<UsuarioResponse> crearCliente(
+            @Parameter(hidden = true)
+            @IdEmpresa Integer idEmpresa,
             @Valid @RequestBody ClienteRequest request) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -46,9 +49,20 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<List<UsuarioCompletoResponse>> listarEmpleados(
+            @Parameter(hidden = true)
             @IdEmpresa Integer idEmpresa) {
 
         return ResponseEntity.ok(usuarioService.listarEmpleados(idEmpresa));
+    }
+
+    @GetMapping("/clientes")
+    public ResponseEntity<List<UsuarioCompletoResponse>> listarClientes(
+            @Parameter(hidden = true)
+            @IdEmpresa Integer idEmpresa) {
+
+        System.out.println(idEmpresa + "Id empresa");
+
+        return ResponseEntity.ok(usuarioService.listarClientes(idEmpresa));
     }
 
 

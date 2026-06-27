@@ -62,9 +62,8 @@ public class Usuario {
     @Column(name = "fecha_actualizacion", nullable = false)
     private LocalDate fechaActualizacion;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idrol", nullable = false)
+    @JoinColumn(name = "idrol")
     private Rol rol;
 
 
