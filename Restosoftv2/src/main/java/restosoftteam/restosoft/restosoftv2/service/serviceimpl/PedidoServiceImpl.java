@@ -9,11 +9,13 @@ import restosoftteam.restosoft.restosoftv2.dto.response.PedidoResponse;
 import restosoftteam.restosoft.restosoftv2.enums.EstadoMesa;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.RegistroYaExistenteException;
+import restosoftteam.restosoft.restosoftv2.mapper.DetallePedidoMapper;
 import restosoftteam.restosoft.restosoftv2.mapper.PedidoMapper;
 import restosoftteam.restosoft.restosoftv2.model.*;
 import restosoftteam.restosoft.restosoftv2.repository.*;
 import restosoftteam.restosoft.restosoftv2.service.PedidoService;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class PedidoServiceImpl implements PedidoService {
     private final PedidoUsuarioRepository pedidoUsuarioRepository;
     private final PlatoRepository platoRepository;
     private final DetallePedidoRepository detallePedidoRepository;
+    private final DetallePedidoMapper detallePedidoMapper;
 
     @Override
     public PedidoResponse findById(Integer id) {
@@ -40,12 +43,42 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    @Transactional
     public List<PedidoResponse> findAllByEmpresa_Id(Integer idEmpresa) {
-        if(!empresaRepository.existsById(idEmpresa)){
+        if (!empresaRepository.existsById(idEmpresa)) {
             throw new RecursoNoEncontradoException("La empresa relacionada al pedido no se ha encontrado.");
         }
-        return pedidoRepository.findAllByEmpresa_Id(idEmpresa)
-                .stream().map(pedidoMapper::toResponse).toList();
+
+        List<Pedido> pedidos = pedidoRepository.findAllByEmpresa_Id(idEmpresa);
+        List<PedidoResponse> responses = new ArrayList<>();
+
+        for (Pedido p : pedidos) {
+            PedidoResponse res = new PedidoResponse();
+            res.setId(p.getId());
+            res.setObservaciones(p.getObservaciones());
+            res.setEstado(p.getEstado());
+            res.setFecha(p.getFecha());
+
+            List<String> nombresMeseros = new ArrayList<>();
+            for (PedidoUsuario pu : p.getUsuarios()) {
+                nombresMeseros.add(pu.getUsuario().getNombres() + " " + pu.getUsuario().getApellidos());
+            }
+            res.setNombresMeseros(nombresMeseros);
+
+            List<PedidoMesa> mesasDelPedido = pedidoMesaRepository.findByPedido_Id(p.getId());
+            List<String> numerosMesas = new ArrayList<>();
+            for (PedidoMesa pm : mesasDelPedido) {
+                numerosMesas.add("Mesa " + pm.getMesa().getNumeroMesa());
+            }
+            res.setNumerosMesas(numerosMesas);
+
+            List<DetallePedido> detalles = detallePedidoRepository.findAllByPedido_Id(p.getId());
+            res.setDetalles(detalles.stream().map(detallePedidoMapper::toResponse).toList());
+
+            responses.add(res);
+        }
+
+        return responses;
     }
 
     @Override
@@ -103,7 +136,16 @@ public class PedidoServiceImpl implements PedidoService {
                 dp.setPlato(plato);
                 dp.setCantidad(dr.getCantidad());
                 dp.setPrecioUnitario(dr.getPrecioUnitario());
-                dp.setEstado("PENDIENTE");
+
+                List<UnidadPreparacion> unidades = new ArrayList<>();
+                for (int i = 0; i < dr.getCantidad(); i++) {
+                    UnidadPreparacion unidad = new UnidadPreparacion();
+                    unidad.setDetallePedido(dp);
+                    unidad.setEstado("PENDIENTE");
+                    unidad.setFechaInicio(Instant.now());
+                    unidades.add(unidad);
+                }
+                dp.setUnidades(unidades);
 
                 detalles.add(dp);
             }
@@ -124,7 +166,6 @@ public class PedidoServiceImpl implements PedidoService {
 
         pedidoMapper.updateEntityFromDto(request, pedido);
         pedido.setEmpresa(empresa);
-
 
 
         return pedidoMapper.toResponse(pedidoRepository.save(pedido));
@@ -161,11 +202,12 @@ public class PedidoServiceImpl implements PedidoService {
         }
         response.setNombresMeseros(nombresMeseros);
 
-        if (pedidosMesa.size() > 1) {
-            response.setMesasUnidasInfo(pedidosMesa.size() + " Mesas Unidas");
-        } else {
-            response.setMesasUnidasInfo("Mesa Principal");
+        List<PedidoMesa> todasLasMesasPedido = pedidoMesaRepository.findByPedido_Id(pedido.getId());
+        List<String> numerosMesas = new ArrayList<>();
+        for (PedidoMesa pm : todasLasMesasPedido) {
+            numerosMesas.add("Mesa " + pm.getMesa().getNumeroMesa());
         }
+        response.setNumerosMesas(numerosMesas);
 
         return response;
     }

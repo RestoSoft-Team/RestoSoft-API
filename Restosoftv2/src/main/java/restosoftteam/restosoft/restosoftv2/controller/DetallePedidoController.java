@@ -46,4 +46,10 @@ public class DetallePedidoController {
         detallePedidoService.deleteByid(idDetallePedido);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/unidad/{idUnidad}/estado/{estado}")
+    public ResponseEntity<Void> actualizarEstadoUnidad(@PathVariable Integer idUnidad, @PathVariable String estado) {
+        detallePedidoService.actualizarEstadoUnidad(idUnidad, estado);
+        return ResponseEntity.ok().build();
+    }
 }

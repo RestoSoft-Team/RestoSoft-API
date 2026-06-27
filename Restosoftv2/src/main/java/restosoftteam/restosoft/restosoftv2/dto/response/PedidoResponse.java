@@ -14,5 +14,7 @@ public class PedidoResponse {
     private Instant fecha;
 
     private List<String> nombresMeseros;
-    private String mesasUnidasInfo;
+    private List<String> numerosMesas;
+
+    private List<DetallePedidoResponse> detalles;
 }
