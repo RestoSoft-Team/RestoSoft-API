@@ -100,6 +100,18 @@ public class EmpresaUsuarioServiceImpl implements EmpresaUsuarioService {
     }
 
     @Override
+    public List<UsuarioCompletoResponse> listarClientes(Integer idEmpresa){
+
+        List<UsuarioCompletoResponse> lista =  empresaUsuarioRepository.listarClientesPorEmpresa(idEmpresa)
+                .stream()
+                .map(this::construirResponse)
+                .toList();
+
+        System.out.println(lista.size() + " clientes listado" + "La lista resultado es : " + lista.size());
+        return lista;
+    }
+
+    @Override
     public UsuarioCompletoResponse actualizarEmpleado(
             Usuario usuario,
             Integer idEmpresa,

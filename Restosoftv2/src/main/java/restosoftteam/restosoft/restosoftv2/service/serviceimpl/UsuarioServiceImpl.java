@@ -91,6 +91,17 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<UsuarioCompletoResponse> listarClientes(
+            Integer idEmpresa) {
+
+        return empresaUsuarioService.listarClientes(
+                idEmpresa
+        );
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public UsuarioResponse obtenerUsuario(Integer idUsuario) {
 
         Usuario usuario = usuarioRepository.findById(idUsuario)

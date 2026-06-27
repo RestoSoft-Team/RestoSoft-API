@@ -22,6 +22,10 @@ public interface EmpresaUsuarioService {
             Integer idEmpresa
     );
 
+    List<UsuarioCompletoResponse> listarClientes(
+            Integer idEmpresa
+    );
+
     UsuarioCompletoResponse actualizarEmpleado(
             Usuario usuario,
             Integer idEmpresa,

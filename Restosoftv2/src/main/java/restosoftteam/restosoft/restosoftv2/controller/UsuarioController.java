@@ -55,6 +55,16 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.listarEmpleados(idEmpresa));
     }
 
+    @GetMapping("/clientes")
+    public ResponseEntity<List<UsuarioCompletoResponse>> listarClientes(
+            @Parameter(hidden = true)
+            @IdEmpresa Integer idEmpresa) {
+
+        System.out.println(idEmpresa + "Id empresa");
+
+        return ResponseEntity.ok(usuarioService.listarClientes(idEmpresa));
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioCompletoResponse> obtenerEmpleado(
