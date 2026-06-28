@@ -48,7 +48,7 @@ public class InsumoServiceImpl implements InsumoService {
 
     @Override
     @Transactional
-    public InsumoResponse crear(InsumoRequest request) {
+    public InsumoResponse crear(Integer idEmpresa,InsumoRequest request) {
         if (insumoRepository.existsByNombreAndEmpresaId(request.getNombre(), request.getIdEmpresa())){
             throw new RegistroYaExistenteException("Ya existe un insumo con ese nombre en esta empresa");
         }
@@ -77,7 +77,7 @@ public class InsumoServiceImpl implements InsumoService {
 
     @Override
     @Transactional
-    public InsumoResponse actualizar(Integer id, InsumoRequest request) {
+    public InsumoResponse actualizar(Integer id,Integer idEmpresa ,InsumoRequest request) {
         Insumo insumo = insumoRepository.findByIdAndEmpresaId(id, request.getIdEmpresa())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Insumo no encontrado"));
 
