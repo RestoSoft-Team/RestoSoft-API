@@ -11,6 +11,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -54,10 +56,6 @@ public class Insumo {
     @Column(name = "estado", nullable = false, length = 20)
     private String estado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idproveedor")
-    private Proveedor proveedor;
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
@@ -66,4 +64,7 @@ public class Insumo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idcategoria")
     private InsumoCategoria categoria;
+
+    @OneToMany(mappedBy = "insumo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProveedorInsumo> proveedores = new ArrayList<>();
 }

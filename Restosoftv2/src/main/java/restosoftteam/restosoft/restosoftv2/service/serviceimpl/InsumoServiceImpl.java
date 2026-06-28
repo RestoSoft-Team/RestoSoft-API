@@ -8,16 +8,11 @@ import restosoftteam.restosoft.restosoftv2.dto.response.InsumoResponse;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.RegistroYaExistenteException;
 import restosoftteam.restosoft.restosoftv2.mapper.InsumoMapper;
-import restosoftteam.restosoft.restosoftv2.model.Empresa;
-import restosoftteam.restosoft.restosoftv2.model.Insumo;
-import restosoftteam.restosoft.restosoftv2.model.Proveedor;
-import restosoftteam.restosoft.restosoftv2.repository.EmpresaRepository;
-import restosoftteam.restosoft.restosoftv2.repository.InsumoRepository;
-import restosoftteam.restosoft.restosoftv2.repository.ProveedorRepository;
+import restosoftteam.restosoft.restosoftv2.model.*;
+import restosoftteam.restosoft.restosoftv2.repository.*;
 import restosoftteam.restosoft.restosoftv2.service.InsumoService;
-import restosoftteam.restosoft.restosoftv2.model.InsumoCategoria;
-import restosoftteam.restosoft.restosoftv2.repository.InsumoCategoriaRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,6 +24,7 @@ public class InsumoServiceImpl implements InsumoService {
     private final ProveedorRepository proveedorRepository;
     private final InsumoCategoriaRepository insumoCategoriaRepository;
     private final InsumoMapper insumoMapper;
+    private final ProveedorInsumoRepository proveedorInsumoRepository;
 
     @Override
     @Transactional
@@ -40,6 +36,7 @@ public class InsumoServiceImpl implements InsumoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public InsumoResponse obtenerPorId(Integer id, Integer idEmpresa) {
         Insumo insumo = insumoRepository.findByIdAndEmpresaId(id, idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Insumo no encontrado"));
@@ -61,15 +58,17 @@ public class InsumoServiceImpl implements InsumoService {
                     .orElseThrow(() -> new RecursoNoEncontradoException("Proveedor no encontrado"));
         }
 
+
+
         InsumoCategoria categoria = null;
         if (request.getIdCategoria() != null){
             categoria = insumoCategoriaRepository.findById(request.getIdCategoria())
                     .orElseThrow(() -> new RecursoNoEncontradoException("Categoría no encontrada"));
         }
-
+        List<ProveedorInsumo> listaProveedorInsumo = new ArrayList<>();
         Insumo insumo = insumoMapper.toEntity(request);
         insumo.setEmpresa(empresa);
-        insumo.setProveedor(proveedor);
+        insumo.setProveedores(listaProveedorInsumo);
         insumo.setCategoria(categoria);
 
         return insumoMapper.toResponse(insumoRepository.save(insumo));
@@ -93,9 +92,27 @@ public class InsumoServiceImpl implements InsumoService {
                     .orElseThrow(() -> new RecursoNoEncontradoException("Categoría no encontrada"));
         }
 
+        // 1. Mapear campos simples (nombre, stock, etc)
         insumoMapper.updateEntityFromDto(request, insumo);
-        insumo.setProveedor(proveedor);
+
+        // 2. Asignar categoría
         insumo.setCategoria(categoria);
+
+        // ✅ 3. MANEJO SEGURO DE PROVEEDORES (Sin reemplazar la lista de Hibernate)
+        // Primero, limpiamos los proveedores actuales de esta lista vigilada
+        insumo.getProveedores().clear();
+
+        // Segundo, si mandaron un proveedor nuevo, lo agregamos a la MISMA lista
+        if (proveedor != null) {
+            ProveedorInsumo nuevaRelacion = new ProveedorInsumo();
+            nuevaRelacion.setInsumo(insumo);
+            nuevaRelacion.setProveedor(proveedor);
+            // Si tu entidad ProveedorInsumo tiene campo estado, descomenta la siguiente línea:
+            // nuevaRelacion.setEstado("ACTIVO");
+
+            insumo.getProveedores().add(nuevaRelacion);
+        }
+
         return insumoMapper.toResponse(insumoRepository.save(insumo));
     }
 

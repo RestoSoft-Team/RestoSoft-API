@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Data
 public class MovimientoInventarioRequest {
@@ -19,7 +20,15 @@ public class MovimientoInventarioRequest {
     @NotNull @Positive(message = "La cantidad debe ser mayor a cero")
     private BigDecimal cantidad;
 
+    private BigDecimal stockAnterior;
+
+    private BigDecimal stockNuevo;
+
+    private BigDecimal costoUnitario;
+
     private String observacion;
+
+    private Instant fechaMovimiento;
 
     @NotNull(message = "La empresa es obligatoria")
     private Integer idEmpresa;

@@ -13,4 +13,7 @@ public class InsumoCategoriaResponse {
 
     private Integer id;
     private String nombre;
+    private String descripcion;
+    private String estado;
+    private Long cantidadInsumos;
 }

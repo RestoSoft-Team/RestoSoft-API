@@ -1,6 +1,8 @@
 package restosoftteam.restosoft.restosoftv2.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import restosoftteam.restosoft.restosoftv2.model.InsumoCategoria;
 
 import java.util.List;
@@ -14,4 +16,7 @@ public interface InsumoCategoriaRepository extends JpaRepository <InsumoCategori
     List<InsumoCategoria> findByNombreContainingIgnoreCase(String palabra);
 
     boolean existsByNombre(String nombre);
+
+    @Query("SELECT COUNT(i) FROM Insumo i WHERE i.categoria.id = :idCategoria")
+    Long contarInsumosPorCategoria(@Param("idCategoria") Integer idCategoria);
 }

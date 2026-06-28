@@ -11,4 +11,7 @@ public class ProveedorResponse {
     private String nombre;
     private String telefono;
     private String email;
+    private String direccion;
+    private String nombreEmpresa;
+    private Integer idEmpresa;
 }

@@ -28,6 +28,14 @@ public class InsumoCategoria {
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
+    @Size(max = 255)
+    @Column(name = "descripcion", length = 255)
+    private String descripcion;
+
+    @Size(max = 50)
+    @Column(name = "estado", length = 50)
+    private String estado;
+
     @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
     private List<Insumo> insumos;
 }

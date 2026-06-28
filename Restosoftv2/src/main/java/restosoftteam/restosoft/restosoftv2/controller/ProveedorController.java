@@ -11,6 +11,7 @@ import restosoftteam.restosoft.restosoftv2.service.ProveedorService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/proveedores")
 @RequiredArgsConstructor
@@ -26,5 +27,18 @@ public class ProveedorController {
     @GetMapping
     public ResponseEntity<List<ProveedorResponse>> listar(){
         return ResponseEntity.ok(proveedorService.listar());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProveedorResponse> actualizar(
+            @PathVariable Integer id,
+            @RequestBody ProveedorRequest request) {
+        return ResponseEntity.ok(proveedorService.actualizar(id, request)); // ← proveedorService
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        proveedorService.eliminar(id); // ← proveedorService
+        return ResponseEntity.noContent().build();
     }
 }

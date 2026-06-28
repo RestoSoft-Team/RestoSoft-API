@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -19,6 +22,9 @@ public class Proveedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idproveedor", nullable = false)
     private Integer id;
+
+    @Column(name = "estado", nullable = false)
+    private Boolean estado;
 
     @Size(max = 100)
     @NotNull
@@ -41,6 +47,9 @@ public class Proveedor {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
     private Empresa empresa;
+
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProveedorInsumo> insumos = new ArrayList<>();
 
 
 }

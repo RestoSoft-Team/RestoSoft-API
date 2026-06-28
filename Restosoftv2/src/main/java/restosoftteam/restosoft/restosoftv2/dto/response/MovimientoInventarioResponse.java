@@ -14,7 +14,10 @@ public class MovimientoInventarioResponse {
     private String tipoMovimiento;
     private BigDecimal cantidad;
     private BigDecimal stockAnterior;
-    private BigDecimal StockNuevo;
+    private BigDecimal stockNuevo;
     private String nombreInsumo;
+    private String proveedorNombre;
+    private BigDecimal costoUnitario;
     private Instant fechaMovimiento;
+    private String observacion;
 }

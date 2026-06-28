@@ -25,7 +25,13 @@ public class InsumoCategoriaServiceImpl implements InsumoCategoriaService {
     public List<InsumoCategoriaResponse> listarTodos() {
         return repository.findAll()
                 .stream()
-                .map(mapper::toResponse)
+                .map(cat -> {
+                    InsumoCategoriaResponse response = mapper.toResponse(cat);
+                    response.setCantidadInsumos(
+                            repository.contarInsumosPorCategoria(cat.getId())
+                    );
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -33,8 +39,10 @@ public class InsumoCategoriaServiceImpl implements InsumoCategoriaService {
     @Transactional(readOnly = true)
     public InsumoCategoriaResponse buscarPorId(Integer id) {
         InsumoCategoria categoria = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoria de insumo no encontrada con el ID:   " + id));
-        return mapper.toResponse(categoria);
+                .orElseThrow(() -> new RuntimeException("Categoria no encontrada con ID: " + id));
+        InsumoCategoriaResponse response = mapper.toResponse(categoria);
+        response.setCantidadInsumos(repository.contarInsumosPorCategoria(id));
+        return response;
     }
 
     @Override

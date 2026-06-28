@@ -8,6 +8,7 @@ import restosoftteam.restosoft.restosoftv2.model.Empresa;
 import restosoftteam.restosoft.restosoftv2.model.Proveedor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -26,9 +27,9 @@ public class InsumoResponse {
     private String empresaNombre;
 
     private String descripcion;
-    private Double stockMinimo;
+    private BigDecimal stockMinimo;
     private String categoria;
-    private String fechaVencimiento;
+    private LocalDate fechaVencimiento;
 
 
 }
