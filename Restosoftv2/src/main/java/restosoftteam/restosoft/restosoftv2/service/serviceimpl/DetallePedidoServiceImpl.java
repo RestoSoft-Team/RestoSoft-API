@@ -49,12 +49,16 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
 
     @Override
     @Transactional
-    public DetallePedidoResponse save(DetallePedidoRequest request) {
+    public DetallePedidoResponse save(DetallePedidoRequest request, Integer idEmpresa) {
         Plato plato = platoRepository.findById(request.getIdplato())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Plato relacionado no encontrado."));
 
         Pedido pedido = pedidoRepository.findById(request.getIdpedido())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Pedido relacionado no encontrado."));
+
+        if (!pedido.getEmpresa().getId().equals(idEmpresa)) {
+            throw new RecursoNoEncontradoException("No tienes permiso para modificar este pedido.");
+        }
 
         DetallePedido detallePedido = new DetallePedido();
         detallePedido.setPlato(plato);

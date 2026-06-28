@@ -83,8 +83,8 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     @Transactional
-    public PedidoResponse save(PedidoRequest request) {
-        Empresa empresa = empresaRepository.findById(request.getIdempresa())
+    public PedidoResponse save(PedidoRequest request, Integer idEmpresa) {
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada al pedido no se ha encontrado."));
 
         Pedido pedido = pedidoMapper.toEntity(request);
@@ -181,15 +181,17 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     @Transactional
-    public PedidoResponse findPedidoActivoByMesa(Integer idMesa) {
+    public PedidoResponse findPedidoActivoByMesa(Integer idMesa, Integer idEmpresa) {
         List<PedidoMesa> pedidosMesa = pedidoMesaRepository.findByMesa_Id(idMesa);
 
         if (pedidosMesa.isEmpty()) {
             throw new RecursoNoEncontradoException("La mesa no tiene ningún pedido asignado.");
         }
-
         Pedido pedido = pedidosMesa.get(0).getPedido();
 
+        if (!pedido.getEmpresa().getId().equals(idEmpresa)) {
+            throw new RecursoNoEncontradoException("La mesa no tiene ningún pedido asignado.");
+        }
         PedidoResponse response = new PedidoResponse();
         response.setId(pedido.getId());
         response.setObservaciones(pedido.getObservaciones());

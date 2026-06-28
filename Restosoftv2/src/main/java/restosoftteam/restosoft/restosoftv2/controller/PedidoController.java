@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restosoftteam.restosoft.restosoftv2.dto.request.PedidoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.PedidoResponse;
+import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
 import restosoftteam.restosoft.restosoftv2.service.PedidoService;
 
 import java.util.List;
@@ -23,14 +24,15 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.findById(id));
     }
 
-    @GetMapping("/empresa/{idEmpresa}")
-    public ResponseEntity<List<PedidoResponse>> obtenerTodosPorIdEmpresa(@PathVariable Integer idEmpresa){
+    // 👇 Se quita el PathVariable y se usa la anotación
+    @GetMapping
+    public ResponseEntity<List<PedidoResponse>> obtenerTodosPorEmpresa(@IdEmpresa Integer idEmpresa){
         return ResponseEntity.ok(pedidoService.findAllByEmpresa_Id(idEmpresa));
     }
 
     @PostMapping
-    public ResponseEntity<PedidoResponse> crearPedido(@Valid @RequestBody PedidoRequest pedidoRequest){
-        PedidoResponse pedidoResponse = pedidoService.save(pedidoRequest);
+    public ResponseEntity<PedidoResponse> crearPedido(@Valid @RequestBody PedidoRequest pedidoRequest, @IdEmpresa Integer idEmpresa){
+        PedidoResponse pedidoResponse = pedidoService.save(pedidoRequest, idEmpresa);
         return new ResponseEntity<>(pedidoResponse, HttpStatus.CREATED);
     }
 
@@ -44,8 +46,9 @@ public class PedidoController {
         pedidoService.delete(idPedido);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/mesa/{idMesa}")
-    public ResponseEntity<PedidoResponse> obtenerPedidoPorMesa(@PathVariable Integer idMesa) {
-        return ResponseEntity.ok(pedidoService.findPedidoActivoByMesa(idMesa));
+    public ResponseEntity<PedidoResponse> obtenerPedidoPorMesa(@PathVariable Integer idMesa, @IdEmpresa Integer idEmpresa) {
+        return ResponseEntity.ok(pedidoService.findPedidoActivoByMesa(idMesa, idEmpresa));
     }
 }

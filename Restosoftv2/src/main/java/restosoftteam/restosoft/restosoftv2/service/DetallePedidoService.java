@@ -8,7 +8,7 @@ import java.util.List;
 public interface DetallePedidoService {
     List<DetallePedidoResponse> listAllByPedidoId(int idPedido);
     DetallePedidoResponse findByDetallePedidoId(Integer id, Integer idEmpresa);
-    DetallePedidoResponse save(DetallePedidoRequest detallePedidoRequest);
+    DetallePedidoResponse save(DetallePedidoRequest request, Integer idEmpresa);
     DetallePedidoResponse update(DetallePedidoRequest detallePedidoRequest, Integer id);
     void deleteByid(Integer id);
     void actualizarEstadoUnidad(Integer idUnidad, String estado);

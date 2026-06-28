@@ -9,7 +9,7 @@ public interface PedidoService {
     PedidoResponse findById(Integer id);
     List<PedidoResponse> findAllByEmpresa_Id(Integer id);
     PedidoResponse update(PedidoRequest request, Integer id);
-    PedidoResponse save(PedidoRequest request);
+    PedidoResponse save(PedidoRequest request, Integer idEmpresa);
     void delete(Integer id);
-    PedidoResponse findPedidoActivoByMesa(Integer idMesa);
+    PedidoResponse findPedidoActivoByMesa(Integer idMesa, Integer idEmpresa);
 }
