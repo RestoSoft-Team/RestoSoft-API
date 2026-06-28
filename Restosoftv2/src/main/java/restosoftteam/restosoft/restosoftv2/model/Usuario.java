@@ -54,6 +54,9 @@ public class Usuario {
     @Column(name = "estado", nullable = false)
     private String estado;
 
+    @Column(name = "imagen_url")
+    private String imagenUrl;
+
     @NotNull
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDate fechaCreacion;
@@ -62,10 +65,11 @@ public class Usuario {
     @Column(name = "fecha_actualizacion", nullable = false)
     private LocalDate fechaActualizacion;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idrol", nullable = false)
+    @JoinColumn(name = "idrol")
     private Rol rol;
+
+
 
 
 }

@@ -8,7 +8,7 @@ import java.util.List;
 public interface InsumoService {
     List<InsumoResponse> listarPorEmpresa(Integer idEmpresa);
     InsumoResponse obtenerPorId(Integer id, Integer idEmpresa);
-    InsumoResponse crear(InsumoRequest request);
-    InsumoResponse actualizar(Integer id, InsumoRequest request);
+    InsumoResponse crear(Integer idEmpresa,InsumoRequest request);
+    InsumoResponse actualizar(Integer id, Integer idEmpresa,InsumoRequest request);
     void eliminar(Integer id, Integer idEmpresa);
 }

@@ -120,4 +120,39 @@ public class MesaServiceImpl implements MesaService {
                 .map(mesaMapper::toResponse)
                 .toList();
     }
+
+    @Override
+    @Transactional
+    public void intercambiarUbicacionMesa(Integer idMesaA, Integer idMesaB) {
+        List<Mesa> mesas = mesaRepository.findAllById(List.of(idMesaA,idMesaB));
+
+        if(mesas.size() != 2){
+            throw new RuntimeException("Mesas no encontradas");
+        }
+
+        Mesa mesaA = mesas.stream().filter(m -> m.getId().equals(idMesaA)).findFirst().get();
+        Mesa mesaB = mesas.stream().filter(m -> m.getId().equals(idMesaB)).findFirst().get();
+
+        if(!mesaA.getEmpresa().getId().equals(mesaB.getEmpresa().getId())){
+            throw new RuntimeException("No puedes intercambiar mesas de diferentes empresas");
+        }
+
+        double posOriginalXA = mesaA.getPosicionX();
+        double posOriginalYA = mesaA.getPosicionY();
+        Zona zonaOriginalA = mesaA.getZona();
+
+        double posOriginalXB = mesaB.getPosicionX();
+        double posOriginalYB = mesaB.getPosicionY();
+        Zona zonaOriginalB = mesaB.getZona();
+
+        mesaA.setPosicionX(posOriginalXB);
+        mesaA.setPosicionY(posOriginalYB);
+        mesaA.setZona(zonaOriginalB);
+
+        mesaB.setPosicionX(posOriginalXA);
+        mesaB.setPosicionY(posOriginalYA);
+        mesaB.setZona(zonaOriginalA);
+
+        mesaRepository.saveAll(List.of(mesaA, mesaB));
+    }
 }

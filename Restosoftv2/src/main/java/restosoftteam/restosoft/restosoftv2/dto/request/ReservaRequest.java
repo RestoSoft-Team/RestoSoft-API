@@ -6,15 +6,17 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import restosoftteam.restosoft.restosoftv2.enums.EstadoReserva;
+import restosoftteam.restosoft.restosoftv2.validation.ReservaValida;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
 @Setter
+@ReservaValida
 public class ReservaRequest {
     @NotNull(message = "La fecha de la reserva no puede estar vacia.")
-    @FutureOrPresent
+    @FutureOrPresent(message = "La fecha de la reserva no puede ser pasada")
     private LocalDate fecha;
     @NotNull(message = "La hora de la reserva no puede estar vacia.")
     private LocalTime hora;

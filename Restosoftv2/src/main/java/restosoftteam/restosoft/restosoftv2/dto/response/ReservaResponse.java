@@ -13,8 +13,8 @@ public class ReservaResponse {
     private Integer id;
     private LocalDate fecha;
     private LocalTime hora;
-    private Usuario idusuario;
+    private UsuarioResponse usuario;
     private Integer cantidadPersonas;
-    private Empresa idempresa;
+    private EmpresaResponse empresa;
     private String estado;
 }

@@ -37,10 +37,8 @@ public class PlatoServiceImpl implements PlatoService {
 
     @Override
     public List<PlatoResponse> findAllByEmpresaId(Integer idEmpresa) {
-
-        return platoRepository.findAllByEmpresa_Id(idEmpresa)
+        return platoRepository.findAllConDetallesByEmpresa_Id(idEmpresa)
                 .stream().map(platoMapper::toResponse).toList();
-
     }
 
     @Override

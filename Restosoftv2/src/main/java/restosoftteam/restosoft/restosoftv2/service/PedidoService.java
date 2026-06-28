@@ -11,4 +11,5 @@ public interface PedidoService {
     PedidoResponse update(PedidoRequest request, Integer id);
     PedidoResponse save(PedidoRequest request);
     void delete(Integer id);
+    PedidoResponse findPedidoActivoByMesa(Integer idMesa);
 }

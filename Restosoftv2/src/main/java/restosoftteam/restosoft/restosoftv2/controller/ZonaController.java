@@ -9,6 +9,7 @@ import restosoftteam.restosoft.restosoftv2.dto.request.ConfiguracionesRestaurant
 import restosoftteam.restosoft.restosoftv2.dto.request.MesaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.request.ZonaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.ZonaResponse;
+import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
 import restosoftteam.restosoft.restosoftv2.service.MesaService;
 import restosoftteam.restosoft.restosoftv2.service.ZonaService;
 
@@ -76,8 +77,8 @@ public class ZonaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/empresa/{idEmpresa}")
-    public ResponseEntity<List<ZonaResponse>> obtenerZonasPorEmpresa(@PathVariable Integer idEmpresa) {
+    @GetMapping
+    public ResponseEntity<List<ZonaResponse>> obtenerZonasPorEmpresa(@IdEmpresa Integer idEmpresa) {
         return ResponseEntity.ok(zonaService.obtenerZonasPorEmpresa(idEmpresa));
     }
 }
