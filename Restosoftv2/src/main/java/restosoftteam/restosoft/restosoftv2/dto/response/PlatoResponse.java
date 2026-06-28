@@ -16,7 +16,7 @@ public class PlatoResponse {
     private Boolean representativo;
     private BigDecimal precio;
     private String imagenUrl;
-    private PlatoCategoria idcategoria;
+    private Integer idcategoria;
     private String estado;
-    private Empresa idempresa;
+    private Integer idempresa;
 }

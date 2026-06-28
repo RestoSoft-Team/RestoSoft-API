@@ -9,10 +9,13 @@ import restosoftteam.restosoft.restosoftv2.model.Plato;
 
 @Mapper(componentModel = "spring")
 public interface PlatoMapper {
+
     @Mapping(target = "empresa", ignore = true)
     @Mapping(target = "categoria", ignore = true)
     Plato toEntity(PlatoRequest request);
 
+    @Mapping(source = "categoria.id", target = "idcategoria")
+    @Mapping(source = "empresa.id", target = "idempresa")
     PlatoResponse toResponse(Plato plato);
 
     @Mapping(target = "empresa", ignore = true)

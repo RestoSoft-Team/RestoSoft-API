@@ -7,6 +7,7 @@ import restosoftteam.restosoft.restosoftv2.model.Mesa;
 import restosoftteam.restosoft.restosoftv2.model.Reserva;
 import restosoftteam.restosoft.restosoftv2.model.ReservaMesa;
 
+import java.util.HashSet;
 import java.util.List;
 
 public interface ReservaMesaService {
@@ -26,4 +27,7 @@ public interface ReservaMesaService {
     List<ReservaMesaResponseMapStruct> findAllByEmpresaIdDiario(Integer idEmpresa);
 
     List<ReservaMesaResponseMapStruct> findAllByEmpresaIdGeneral(Integer idEmpresa);
+
+    public boolean cambiaronMesas(Reserva reserva, List<Integer> nuevasMesas);
+
 }

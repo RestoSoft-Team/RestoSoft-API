@@ -1,5 +1,6 @@
 package restosoftteam.restosoft.restosoftv2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -52,8 +53,9 @@ public class Mesa {
     private Empresa empresa;
 
     @NotNull
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_zona", nullable = false) // Correcto
+    @JoinColumn(name = "id_zona", nullable = false)
     private Zona zona;
 
 

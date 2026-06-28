@@ -1,22 +1,73 @@
 package restosoftteam.restosoft.restosoftv2.service;
 
-import restosoftteam.restosoft.restosoftv2.dto.request.UsuarioRequest;
+import restosoftteam.restosoft.restosoftv2.dto.request.ClienteRequest;
+import restosoftteam.restosoft.restosoftv2.dto.request.EmpleadoRequest;
+import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioCompletoResponse;
 import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioResponse;
+
 import java.util.List;
 
 public interface UsuarioService {
 
-    UsuarioResponse crearUsuario(UsuarioRequest request);
+    /**
+     * Crea un empleado.
+     * Crea el usuario y posteriormente asigna
+     * la empresa y el rol correspondiente.
+     */
+    UsuarioCompletoResponse crearEmpleado(
+            Integer idEmpresa,
+            EmpleadoRequest request
+    );
 
-    UsuarioResponse obtenerUsuarioPorId(Integer id);
+    /**
+     * Obtiene un empleado específico
+     * perteneciente a una empresa.
+     */
+    UsuarioCompletoResponse obtenerEmpleado(
+            Integer idEmpresa,
+            Integer idUsuario
+    );
 
+    /**
+     * Lista todos los empleados
+     * de una empresa.
+     */
+    List<UsuarioCompletoResponse> listarEmpleados(
+            Integer idEmpresa
+    );
+
+    /**
+     * Actualiza la información
+     * del empleado.
+     */
+    UsuarioCompletoResponse actualizarEmpleado(
+            Integer idEmpresa,
+            Integer idUsuario,
+            EmpleadoRequest request
+    );
+
+    /**
+     * Elimina un empleado.
+     */
+    void eliminarEmpleado(
+            Integer idEmpresa,
+            Integer idUsuario
+    );
+
+    /**
+     * Obtiene únicamente la información
+     * básica de un usuario.
+     */
+    UsuarioResponse obtenerUsuario(
+            Integer idUsuario
+    );
+
+    /**
+     * Lista únicamente los usuarios.
+     */
     List<UsuarioResponse> listarUsuarios();
 
-    List<UsuarioResponse> listarUsuariosPorEmpresa(Integer idEmpresa);
+    UsuarioResponse crearCliente(ClienteRequest request);
 
-    UsuarioResponse actualizarUsuario(Integer id, UsuarioRequest request);
-
-    void eliminarUsuario(Integer id);
-
-    List<UsuarioResponse> listarClientes();
+    List<UsuarioCompletoResponse> listarClientes(Integer idEmpresa);
 }

@@ -24,14 +24,11 @@ public class PlanificadorReservasServiceImpl {
     private final ReservaMesaRepository reservaMesaRepository;
     private final MesaRepository mesaRepository;
 
-
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void verificarYActivarReservas() {
-        LocalDate hoy = LocalDate.now();
-        LocalTime ahora = LocalTime.now().minusHours(1);
 
-        List<Reserva> reservasParaActivar = reservaRepository.findReservasPorActivar(hoy, ahora, EstadoReserva.CONFIRMADA);
+        List<Reserva> reservasParaActivar = reservaRepository.findReservasPorActivar(LocalDate.now(), LocalTime.now().minusHours(1), EstadoReserva.CONFIRMADA);
 
         if (reservasParaActivar.isEmpty()) {
             return;
@@ -51,5 +48,19 @@ public class PlanificadorReservasServiceImpl {
             reserva.setEstado(EstadoReserva.ACTIVA);
             reservaRepository.save(reserva);
         }
+    }
+
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    public void verificarMesasPorCancelar() {
+
+        List<Reserva> reservasParaCancelar = reservaRepository.findReservasPorCancelar(LocalDate.now(), LocalTime.now());
+
+        if (reservasParaCancelar.isEmpty()) {
+            return;
+        }
+        reservasParaCancelar.forEach(reserva -> {reserva.setEstado(EstadoReserva.CANCELADA);});
+        reservaRepository.saveAll(reservasParaCancelar);
+
     }
 }
