@@ -5,6 +5,7 @@ import java.util.Arrays;
 public enum RolSistema {
 
     ADMINISTRADOR,
+    RECEPCIONISTA,
     MESERO,
     COCINA,
     CONFIGURACION,
