@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import restosoftteam.restosoft.restosoftv2.dto.request.ClienteRequest;
 import restosoftteam.restosoft.restosoftv2.dto.request.EmpleadoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioCompletoResponse;
@@ -25,25 +27,28 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
 
-    @PostMapping("/empleados")
+    @PostMapping(value = "/empleados", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UsuarioCompletoResponse> crearEmpleado(
             @Parameter(hidden = true)
             @IdEmpresa Integer idEmpresa,
-            @Valid @RequestBody EmpleadoRequest request) {
+            @Valid @RequestPart("empleado") EmpleadoRequest request,
+            @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(usuarioService.crearEmpleado(idEmpresa, request));
+                .body(usuarioService.crearEmpleado(idEmpresa, request, imagen));
     }
 
 
-    @PostMapping("/clientes")
+    @PostMapping(value = "/clientes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UsuarioResponse> crearCliente(
             @Parameter(hidden = true)
             @IdEmpresa Integer idEmpresa,
-            @Valid @RequestBody ClienteRequest request) {
+            @Valid @RequestPart("cliente") ClienteRequest request,
+            @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(usuarioService.crearCliente(request));
+                .body(usuarioService.crearCliente(idEmpresa,
+                        request,imagen));
     }
 
 
@@ -75,13 +80,14 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UsuarioCompletoResponse> actualizarEmpleado(
             @IdEmpresa Integer idEmpresa,
             @PathVariable Integer id,
-            @Valid @RequestBody EmpleadoRequest request) {
+            @Valid @RequestPart("empleado") EmpleadoRequest request,
+            @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
 
-        return ResponseEntity.ok(usuarioService.actualizarEmpleado(idEmpresa, id, request));
+        return ResponseEntity.ok(usuarioService.actualizarEmpleado(idEmpresa, id, request,imagen));
     }
 
 

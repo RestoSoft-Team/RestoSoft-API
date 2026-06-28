@@ -54,6 +54,9 @@ public class Usuario {
     @Column(name = "estado", nullable = false)
     private String estado;
 
+    @Column(name = "imagen_url")
+    private String imagenUrl;
+
     @NotNull
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDate fechaCreacion;

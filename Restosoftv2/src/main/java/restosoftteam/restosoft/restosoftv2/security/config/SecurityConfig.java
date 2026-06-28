@@ -3,7 +3,6 @@ package restosoftteam.restosoft.restosoftv2.security.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,7 +34,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Permitir el origen de VS Code Live Server
-        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500"));
+        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500","http://127.0.0.1:5501"));
 
         // Permitir todos los métodos (GET, POST, PUT, DELETE, OPTIONS)
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
@@ -80,12 +79,13 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+                        .requestMatchers("/uploads/**").permitAll()
+
                         // 5. CREACIÓN PÚBLICA (POST)
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/empleados").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/clientes").permitAll()
 
                         // 6. LISTAR CLIENTES PÚBLICO (GET) -> AGREGADO PARA ARREGLAR TU 403
-                        .requestMatchers(HttpMethod.GET, "/api/usuarios/clientes").permitAll()
 
                         // 7. PREFLIGHT DE CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

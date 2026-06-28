@@ -44,4 +44,7 @@ public class EmpleadoRequest {
     @NotNull(message = "Debe seleccionar un rol.")
     private Integer idRol;
 
+    private Boolean eliminarImagen = false;
+
+
 }

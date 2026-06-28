@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EmpresaUsuarioService {
 
-    UsuarioCompletoResponse crearEmpleado(
+    UsuarioCompletoResponse crearUsuario(
             Usuario usuario,
             Integer idEmpresa,
             Integer idRol
