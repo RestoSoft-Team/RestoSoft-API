@@ -30,7 +30,7 @@ public class ClienteRequest {
     @Size(max = 150)
     private String email;
 
-    @NotBlank
+    @NotNull
     @Size(min = 8, max = 255)
     private String password;
 
@@ -40,5 +40,9 @@ public class ClienteRequest {
 
     @NotNull
     private LocalDate fechaNacimiento;
+
+    private Boolean eliminarImagen;
+
+    private Boolean estado;
 
 }

@@ -206,6 +206,54 @@ public class UsuarioServiceImpl implements UsuarioService {
         );
 
     }
+    @Override
+    public UsuarioResponse actualizarCliente(
+            Integer idEmpresa,
+            Integer idUsuario,
+            ClienteRequest request,
+            MultipartFile nuevaImagen) {
+
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RecursoNoEncontradoException("El cliente no existe."));
+
+        if (!usuario.getEmail().equals(request.getEmail())
+                && usuarioRepository.existsByEmail(request.getEmail())) {
+            throw new RegistroYaExistenteException("Ya existe un usuario registrado con el correo: " + request.getEmail());
+        }
+
+        if (nuevaImagen != null && !nuevaImagen.isEmpty()) {
+            archivoStorageService.eliminarImagen(usuario.getImagenUrl());
+            try {
+                String nuevaRuta = archivoStorageService.guardarImagen(nuevaImagen);
+                usuario.setImagenUrl(nuevaRuta);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al guardar la nueva imagen del cliente", e);
+            }
+        } else if (request.getEliminarImagen() != null && request.getEliminarImagen()) {
+            archivoStorageService.eliminarImagen(usuario.getImagenUrl());
+            usuario.setImagenUrl(null);
+        }
+
+        usuario.setNombres(request.getNombres());
+        usuario.setApellidos(request.getApellidos());
+        usuario.setEmail(request.getEmail());
+        usuario.setTelefono(request.getTelefono());
+        usuario.setFechaNacimiento(request.getFechaNacimiento());
+
+        if (request.getEstado() != null) {
+            if (request.getEstado()) {
+                usuario.setEstado("ACTIVO");
+            } else {
+                usuario.setEstado("INACTIVO");
+            }
+        }
+
+        usuario.setFechaActualizacion(LocalDate.now());
+
+        Usuario usuarioActualizado = usuarioRepository.save(usuario);
+
+        return usuarioMapper.toResponse(usuarioActualizado);
+    }
 
     @Override
     public void eliminarEmpleado(
@@ -272,7 +320,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         UsuarioCompletoResponse usuarioCompleto = empresaUsuarioService.crearUsuario(
                 usuarioGuardado,
-                idEmpresa,2);
+                idEmpresa,3);
 
         if(usuarioCompleto==null){
             throw new RuntimeException("No se pudo crear el usuario");

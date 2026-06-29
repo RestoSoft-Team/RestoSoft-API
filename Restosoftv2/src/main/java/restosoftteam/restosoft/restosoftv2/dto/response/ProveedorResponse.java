@@ -14,4 +14,5 @@ public class ProveedorResponse {
     private String direccion;
     private String nombreEmpresa;
     private Integer idEmpresa;
+    private boolean estado;
 }

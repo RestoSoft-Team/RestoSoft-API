@@ -22,4 +22,6 @@ public class ProveedorRequest {
 
     @NotNull(message = "El ID de la empresa es obligatorio")
     private Integer idEmpresa;
+
+    private boolean estado;
 }
