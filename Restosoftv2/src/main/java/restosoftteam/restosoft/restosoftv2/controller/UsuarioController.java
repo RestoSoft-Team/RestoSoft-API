@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import restosoftteam.restosoft.restosoftv2.dto.request.ClienteRequest;
@@ -31,7 +32,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioCompletoResponse> crearEmpleado(
             @Parameter(hidden = true)
             @IdEmpresa Integer idEmpresa,
-            @Valid @RequestPart("empleado") EmpleadoRequest request,
+            @Validated(EmpleadoRequest.OnCreate.class) @RequestPart("empleado") EmpleadoRequest request,
             @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -43,7 +44,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponse> crearCliente(
             @Parameter(hidden = true)
             @IdEmpresa Integer idEmpresa,
-            @Valid @RequestPart("cliente") ClienteRequest request,
+            @Validated(ClienteRequest.OnCreate.class) @RequestPart("cliente") ClienteRequest request,
             @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -84,7 +85,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioCompletoResponse> actualizarEmpleado(
             @IdEmpresa Integer idEmpresa,
             @PathVariable Integer id,
-            @Valid @RequestPart("empleado") EmpleadoRequest request,
+            @Validated(EmpleadoRequest.OnUpdate.class) @RequestPart("empleado") EmpleadoRequest request,
             @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
 
         return ResponseEntity.ok(usuarioService.actualizarEmpleado(idEmpresa, id, request,imagen));
@@ -102,10 +103,11 @@ public class UsuarioController {
 
 
     @GetMapping("/me")
-    public ResponseEntity<UsuarioResponse> miPerfil(
-            @IdUsuario Integer idUsuario) {
+    public ResponseEntity<UsuarioCompletoResponse> miPerfil(
+            @IdUsuario Integer id,
+            @IdEmpresa Integer idEmpresa) {
 
-        return ResponseEntity.ok(usuarioService.obtenerUsuario(idUsuario));
+        return ResponseEntity.ok(usuarioService.obtenerEmpleado(idEmpresa, id));
     }
 
 }
