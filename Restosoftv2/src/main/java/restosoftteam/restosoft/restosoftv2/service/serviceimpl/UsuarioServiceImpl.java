@@ -13,6 +13,7 @@ import restosoftteam.restosoft.restosoftv2.exception.RegistroYaExistenteExceptio
 import restosoftteam.restosoft.restosoftv2.mapper.UsuarioMapper;
 import restosoftteam.restosoft.restosoftv2.model.Usuario;
 import restosoftteam.restosoft.restosoftv2.repository.EmpresaUsuarioRepository;
+import restosoftteam.restosoft.restosoftv2.repository.RolRepository;
 import restosoftteam.restosoft.restosoftv2.repository.UsuarioRepository;
 import restosoftteam.restosoft.restosoftv2.service.EmpresaUsuarioService;
 import restosoftteam.restosoft.restosoftv2.service.UsuarioService;
@@ -35,6 +36,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final PasswordEncoder passwordEncoder;
 
+
     @Override
     public UsuarioCompletoResponse crearEmpleado(
             Integer idEmpresa,
@@ -53,6 +55,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setFechaCreacion(LocalDate.now());
 
         usuario.setFechaActualizacion(LocalDate.now());
+
 
         Usuario usuarioGuardado =
                 usuarioRepository.save(usuario);

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restosoftteam.restosoft.restosoftv2.dto.request.PlatoCategoriaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.PlatoCategoriaResponse;
+import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
 import restosoftteam.restosoft.restosoftv2.service.PlatoCategoriaService;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public class PlatoCategoriaController {
     private final PlatoCategoriaService platoCategoriaService;
 
     @PostMapping
-    public ResponseEntity<PlatoCategoriaResponse> crear(@Valid @RequestBody PlatoCategoriaRequest request) {
-        return new ResponseEntity<>(platoCategoriaService.save(request), HttpStatus.CREATED);
+    public ResponseEntity<PlatoCategoriaResponse> crear(@Valid @RequestBody PlatoCategoriaRequest request, @IdEmpresa Integer idEmpresa) {
+        return new ResponseEntity<>(platoCategoriaService.save(request, idEmpresa), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -38,8 +39,9 @@ public class PlatoCategoriaController {
         return ResponseEntity.ok(platoCategoriaService.findById(id));
     }
 
-    @GetMapping("/empresa/{idEmpresa}")
-    public ResponseEntity<List<PlatoCategoriaResponse>> listarPorEmpresa(@PathVariable Integer idEmpresa) {
+    // 👇 Se quita el PathVariable y se usa la anotación
+    @GetMapping
+    public ResponseEntity<List<PlatoCategoriaResponse>> listarPorEmpresa(@IdEmpresa Integer idEmpresa) {
         return ResponseEntity.ok(platoCategoriaService.findAllByEmpresa(idEmpresa));
     }
 }
