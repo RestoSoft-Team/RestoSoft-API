@@ -12,8 +12,10 @@ import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioResponse;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.RegistroYaExistenteException;
 import restosoftteam.restosoft.restosoftv2.mapper.UsuarioMapper;
+import restosoftteam.restosoft.restosoftv2.model.Rol;
 import restosoftteam.restosoft.restosoftv2.model.Usuario;
 import restosoftteam.restosoft.restosoftv2.repository.EmpresaUsuarioRepository;
+import restosoftteam.restosoft.restosoftv2.repository.RolRepository;
 import restosoftteam.restosoft.restosoftv2.repository.UsuarioRepository;
 import restosoftteam.restosoft.restosoftv2.service.EmpresaUsuarioService;
 import restosoftteam.restosoft.restosoftv2.service.UsuarioService;
@@ -28,6 +30,8 @@ import java.util.List;
 public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+
+    private final RolRepository rolRepository;
 
     private final EmpresaUsuarioRepository empresaUsuarioRepository;
 
@@ -206,54 +210,6 @@ public class UsuarioServiceImpl implements UsuarioService {
         );
 
     }
-    @Override
-    public UsuarioResponse actualizarCliente(
-            Integer idEmpresa,
-            Integer idUsuario,
-            ClienteRequest request,
-            MultipartFile nuevaImagen) {
-
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RecursoNoEncontradoException("El cliente no existe."));
-
-        if (!usuario.getEmail().equals(request.getEmail())
-                && usuarioRepository.existsByEmail(request.getEmail())) {
-            throw new RegistroYaExistenteException("Ya existe un usuario registrado con el correo: " + request.getEmail());
-        }
-
-        if (nuevaImagen != null && !nuevaImagen.isEmpty()) {
-            archivoStorageService.eliminarImagen(usuario.getImagenUrl());
-            try {
-                String nuevaRuta = archivoStorageService.guardarImagen(nuevaImagen);
-                usuario.setImagenUrl(nuevaRuta);
-            } catch (IOException e) {
-                throw new RuntimeException("Error al guardar la nueva imagen del cliente", e);
-            }
-        } else if (request.getEliminarImagen() != null && request.getEliminarImagen()) {
-            archivoStorageService.eliminarImagen(usuario.getImagenUrl());
-            usuario.setImagenUrl(null);
-        }
-
-        usuario.setNombres(request.getNombres());
-        usuario.setApellidos(request.getApellidos());
-        usuario.setEmail(request.getEmail());
-        usuario.setTelefono(request.getTelefono());
-        usuario.setFechaNacimiento(request.getFechaNacimiento());
-
-        if (request.getEstado() != null) {
-            if (request.getEstado()) {
-                usuario.setEstado("ACTIVO");
-            } else {
-                usuario.setEstado("INACTIVO");
-            }
-        }
-
-        usuario.setFechaActualizacion(LocalDate.now());
-
-        Usuario usuarioActualizado = usuarioRepository.save(usuario);
-
-        return usuarioMapper.toResponse(usuarioActualizado);
-    }
 
     @Override
     public void eliminarEmpleado(
@@ -318,9 +274,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuarioGuardado =
                 usuarioRepository.save(usuario);
 
+        Rol rol = rolRepository.findByNombre("CLIENTE")
+                .orElseThrow(()-> new RecursoNoEncontradoException("Rol de cliente no existente contacte al administrador."));
+
+
         UsuarioCompletoResponse usuarioCompleto = empresaUsuarioService.crearUsuario(
                 usuarioGuardado,
-                idEmpresa,3);
+                idEmpresa,rol.getId());
 
         if(usuarioCompleto==null){
             throw new RuntimeException("No se pudo crear el usuario");

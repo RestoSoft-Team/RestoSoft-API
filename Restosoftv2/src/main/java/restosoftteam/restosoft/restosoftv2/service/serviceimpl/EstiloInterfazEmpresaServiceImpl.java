@@ -24,19 +24,18 @@ public class EstiloInterfazEmpresaServiceImpl implements EstiloInterfazEmpresaSe
     @Override
     public EstiloInterfazEmpresaResponse findByIdEmpresa(Integer id) {
 
-        EstiloInterfazEmpresa estilo = estiloInterfazEmpresaRepository.findByEmpresa_Id(id);
-        if (estilo != null) {
-            return estiloInterfazEmpresaMapper.toResponse(estilo);
-        }
-        throw new RecursoNoEncontradoException("Los estilos de interfaz de la empresa no existen.");
+        EstiloInterfazEmpresa estilo = estiloInterfazEmpresaRepository.findByEmpresa_Id(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada no existe."));
+
+        return estiloInterfazEmpresaMapper.toResponse(estilo);
 
     }
 
     @Override
     @Transactional
-    public EstiloInterfazEmpresaResponse save(EstiloInterfazEmpresaRequest request) {
+    public EstiloInterfazEmpresaResponse save(EstiloInterfazEmpresaRequest request, Integer idEmpresa) {
 
-        Empresa empresa = empresaRepository.findById(request.getIdempresa())
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada a los estilos de interfaz no existe"));
 
         EstiloInterfazEmpresa estilo = estiloInterfazEmpresaMapper.toEntity(request);
@@ -49,12 +48,12 @@ public class EstiloInterfazEmpresaServiceImpl implements EstiloInterfazEmpresaSe
 
     @Override
     @Transactional
-    public EstiloInterfazEmpresaResponse update(EstiloInterfazEmpresaRequest request, Integer id) {
+    public EstiloInterfazEmpresaResponse update(EstiloInterfazEmpresaRequest request, Integer idEmpresa) {
 
-        Empresa empresa = empresaRepository.findById(request.getIdempresa())
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada a los estilos de interfaz no existe"));
 
-        EstiloInterfazEmpresa estilo = estiloInterfazEmpresaRepository.findById(id)
+        EstiloInterfazEmpresa estilo = estiloInterfazEmpresaRepository.findByEmpresa_Id(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El estilo de interfaz que se intenta actualizar no existe."));
 
         estiloInterfazEmpresaMapper.updateEntityFromDto(request, estilo);
@@ -69,7 +68,7 @@ public class EstiloInterfazEmpresaServiceImpl implements EstiloInterfazEmpresaSe
     @Transactional
     public void delete(Integer id) {
 
-        EstiloInterfazEmpresa estilo = estiloInterfazEmpresaRepository.findById(id)
+        EstiloInterfazEmpresa estilo = estiloInterfazEmpresaRepository.findByEmpresa_Id(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El estilo de interfaz que se intenta eliminar no existe."));
         estiloInterfazEmpresaRepository.delete(estilo);
 
