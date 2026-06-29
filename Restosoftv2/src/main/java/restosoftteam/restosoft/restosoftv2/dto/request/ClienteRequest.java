@@ -30,8 +30,8 @@ public class ClienteRequest {
     @Size(max = 150)
     private String email;
 
-    @NotBlank
-    @Size(min = 8, max = 255)
+    @NotBlank(message = "La contraseña es obligatoria.", groups = ClienteRequest.OnCreate.class)
+    @Size(min = 8, max = 255, message = "La contraseña debe tener al menos 8 caracteres.", groups = {ClienteRequest.OnCreate.class, ClienteRequest.OnUpdate.class})
     private String password;
 
     @NotBlank
@@ -40,5 +40,8 @@ public class ClienteRequest {
 
     @NotNull
     private LocalDate fechaNacimiento;
+
+    public interface OnCreate {}
+    public interface OnUpdate {}
 
 }
