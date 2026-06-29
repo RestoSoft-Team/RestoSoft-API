@@ -33,7 +33,7 @@ public class EmpresaUsuarioServiceImpl implements EmpresaUsuarioService {
     private final EmpresaUsuarioMapper empresaUsuarioMapper;
 
     @Override
-    public UsuarioCompletoResponse crearEmpleado(
+    public UsuarioCompletoResponse crearUsuario(
             Usuario usuario,
             Integer idEmpresa,
             Integer idRol) {

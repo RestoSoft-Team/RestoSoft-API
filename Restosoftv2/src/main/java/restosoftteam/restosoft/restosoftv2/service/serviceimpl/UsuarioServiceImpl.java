@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import restosoftteam.restosoft.restosoftv2.dto.request.ClienteRequest;
 import restosoftteam.restosoft.restosoftv2.dto.request.EmpleadoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioCompletoResponse;
@@ -13,11 +14,11 @@ import restosoftteam.restosoft.restosoftv2.exception.RegistroYaExistenteExceptio
 import restosoftteam.restosoft.restosoftv2.mapper.UsuarioMapper;
 import restosoftteam.restosoft.restosoftv2.model.Usuario;
 import restosoftteam.restosoft.restosoftv2.repository.EmpresaUsuarioRepository;
-import restosoftteam.restosoft.restosoftv2.repository.RolRepository;
 import restosoftteam.restosoft.restosoftv2.repository.UsuarioRepository;
 import restosoftteam.restosoft.restosoftv2.service.EmpresaUsuarioService;
 import restosoftteam.restosoft.restosoftv2.service.UsuarioService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -36,15 +37,28 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final ArchivoStorageService archivoStorageService;
 
     @Override
     public UsuarioCompletoResponse crearEmpleado(
             Integer idEmpresa,
-            EmpleadoRequest request) {
+            EmpleadoRequest request,
+            MultipartFile imagen) {
 
         validarCorreoDisponible(request.getEmail());
 
         Usuario usuario = usuarioMapper.toEntity(request);
+
+        if (imagen != null && !imagen.isEmpty()) {
+
+            try {
+                String rutaImagen = archivoStorageService.guardarImagen(imagen);
+                usuario.setImagenUrl(rutaImagen);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al guardar la imagen del empleado", e);
+            }
+
+        }
 
         usuario.setPassword(
                 passwordEncoder.encode(request.getPassword())
@@ -56,11 +70,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         usuario.setFechaActualizacion(LocalDate.now());
 
-
         Usuario usuarioGuardado =
                 usuarioRepository.save(usuario);
 
-        return empresaUsuarioService.crearEmpleado(
+        return empresaUsuarioService.crearUsuario(
                 usuarioGuardado,
                 idEmpresa,
                 request.getIdRol()
@@ -133,7 +146,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioCompletoResponse actualizarEmpleado(
             Integer idEmpresa,
             Integer idUsuario,
-            EmpleadoRequest request) {
+            EmpleadoRequest request,
+            MultipartFile nuevaImagen) {
 
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() ->
@@ -150,6 +164,19 @@ public class UsuarioServiceImpl implements UsuarioService {
                             + request.getEmail()
             );
 
+        }
+
+        if (nuevaImagen != null && !nuevaImagen.isEmpty()) {
+            archivoStorageService.eliminarImagen(usuario.getImagenUrl());
+            try {
+                String nuevaRuta = archivoStorageService.guardarImagen(nuevaImagen);
+                usuario.setImagenUrl(nuevaRuta);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al guardar la nueva imagen", e);
+            }
+        } else if (request.getEliminarImagen() != null && request.getEliminarImagen()) {
+            archivoStorageService.eliminarImagen(usuario.getImagenUrl());
+            usuario.setImagenUrl(null);
         }
 
         usuario.setNombres(request.getNombres());
@@ -210,18 +237,49 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioResponse crearCliente(ClienteRequest request) {
+    public UsuarioResponse crearCliente(
+            Integer idEmpresa,
+            ClienteRequest request,
+            MultipartFile imagen) {
+
         validarCorreoDisponible(request.getEmail());
 
         Usuario usuario = usuarioMapper.toEntity(request);
-        usuario.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        if (imagen != null && !imagen.isEmpty()) {
+
+            try {
+                String rutaImagen = archivoStorageService.guardarImagen(imagen);
+                usuario.setImagenUrl(rutaImagen);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al guardar la imagen del empleado", e);
+            }
+
+        }
+
+        usuario.setPassword(
+                passwordEncoder.encode(request.getPassword())
+        );
+
         usuario.setEstado("ACTIVO");
+
         usuario.setFechaCreacion(LocalDate.now());
+
         usuario.setFechaActualizacion(LocalDate.now());
 
-        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+        Usuario usuarioGuardado =
+                usuarioRepository.save(usuario);
+
+        UsuarioCompletoResponse usuarioCompleto = empresaUsuarioService.crearUsuario(
+                usuarioGuardado,
+                idEmpresa,2);
+
+        if(usuarioCompleto==null){
+            throw new RuntimeException("No se pudo crear el usuario");
+        }
 
         return usuarioMapper.toResponse(usuarioGuardado);
+
     }
 
 }

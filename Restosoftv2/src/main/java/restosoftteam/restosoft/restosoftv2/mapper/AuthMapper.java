@@ -23,6 +23,7 @@ public class AuthMapper {
         response.setTelefono(usuario.getTelefono());
         response.setFechaNacimiento(usuario.getFechaNacimiento());
         response.setEstado(usuario.getEstado());
+        response.setImagenUrl(usuario.getImagenUrl());
         response.setRol(toRolResponse(rol));
 
         return response;

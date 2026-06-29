@@ -30,4 +30,6 @@ public class UsuarioResponse {
 
     private RolResponse rol;
 
+    private String imagenUrl;
+
 }

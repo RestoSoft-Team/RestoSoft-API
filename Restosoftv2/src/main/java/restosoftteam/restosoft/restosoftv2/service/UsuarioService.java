@@ -1,5 +1,6 @@
 package restosoftteam.restosoft.restosoftv2.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import restosoftteam.restosoft.restosoftv2.dto.request.ClienteRequest;
 import restosoftteam.restosoft.restosoftv2.dto.request.EmpleadoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioCompletoResponse;
@@ -16,8 +17,8 @@ public interface UsuarioService {
      */
     UsuarioCompletoResponse crearEmpleado(
             Integer idEmpresa,
-            EmpleadoRequest request
-    );
+            EmpleadoRequest request,
+            MultipartFile imagen);
 
     /**
      * Obtiene un empleado específico
@@ -43,7 +44,8 @@ public interface UsuarioService {
     UsuarioCompletoResponse actualizarEmpleado(
             Integer idEmpresa,
             Integer idUsuario,
-            EmpleadoRequest request
+            EmpleadoRequest request,
+            MultipartFile imagen
     );
 
     /**
@@ -67,7 +69,10 @@ public interface UsuarioService {
      */
     List<UsuarioResponse> listarUsuarios();
 
-    UsuarioResponse crearCliente(ClienteRequest request);
+    public UsuarioResponse crearCliente(
+            Integer idEmpresa,
+            ClienteRequest request,
+            MultipartFile imagen);
 
     List<UsuarioCompletoResponse> listarClientes(Integer idEmpresa);
 }
