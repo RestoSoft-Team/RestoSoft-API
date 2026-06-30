@@ -24,6 +24,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class PedidoServiceImpl implements PedidoService {
 
+    private final org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate;
+
     private final PedidoMapper pedidoMapper;
     private final EmpresaRepository empresaRepository;
     private final PedidoRepository pedidoRepository;
@@ -83,7 +85,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     @Transactional
-    public PedidoResponse save(PedidoRequest request, Integer idEmpresa) {
+    public PedidoResponse save(PedidoRequest request, Integer idEmpresa, Integer idUsuario) {
         Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada al pedido no se ha encontrado."));
 
@@ -113,11 +115,14 @@ public class PedidoServiceImpl implements PedidoService {
         }
         pedidoMesaRepository.saveAll(mesasAsignadas);
 
-        // 2. Guardar Meseros
+        if (!request.getIdUsuarios().contains(idUsuario)) {
+            request.getIdUsuarios().add(idUsuario);
+        }
+
         List<PedidoUsuario> meserosAsignados = new ArrayList<>();
-        for (Integer idUsuario : request.getIdUsuarios()) {
-            Usuario usuario = usuarioRepository.findById(idUsuario)
-                    .orElseThrow(() -> new RecursoNoEncontradoException("El usuario con ID " + idUsuario + " no se ha encontrado."));
+        for (Integer idUsu : request.getIdUsuarios()) {
+            Usuario usuario = usuarioRepository.findById(idUsu)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("El usuario con ID " + idUsu + " no se ha encontrado."));
             PedidoUsuario pu = new PedidoUsuario();
             pu.setPedido(pedido);
             pu.setUsuario(usuario);
@@ -125,6 +130,7 @@ public class PedidoServiceImpl implements PedidoService {
         }
         pedidoUsuarioRepository.saveAll(meserosAsignados);
 
+        // 3. Guardar Productos (Detalles y Unidades)
         if (request.getDetalles() != null && !request.getDetalles().isEmpty()) {
             List<DetallePedido> detalles = new ArrayList<>();
             for (DetallePedidoRequest dr : request.getDetalles()) {
@@ -142,7 +148,6 @@ public class PedidoServiceImpl implements PedidoService {
                     UnidadPreparacion unidad = new UnidadPreparacion();
                     unidad.setDetallePedido(dp);
                     unidad.setEstado("PENDIENTE");
-                    unidad.setFechaInicio(Instant.now());
                     unidades.add(unidad);
                 }
                 dp.setUnidades(unidades);
@@ -151,22 +156,26 @@ public class PedidoServiceImpl implements PedidoService {
             }
             detallePedidoRepository.saveAll(detalles);
         }
+        java.util.Map<String, String> payload = new java.util.HashMap<>();
+        payload.put("tipo", "NUEVO_PEDIDO");
+        payload.put("idPedido", pedido.getId().toString());
+
+        messagingTemplate.convertAndSend("/topic/cocina", payload);
 
         return pedidoMapper.toResponse(pedido);
     }
 
     @Override
     @Transactional
-    public PedidoResponse update(PedidoRequest request, Integer id) {
+    public PedidoResponse update(PedidoRequest request, Integer id, Integer idEmpresa) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El pedido que se intentar actualizar no se ha encontrado."));
 
-        Empresa empresa = empresaRepository.findById(request.getIdempresa())
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada al pedido no se ha encontrado."));
 
         pedidoMapper.updateEntityFromDto(request, pedido);
         pedido.setEmpresa(empresa);
-
 
         return pedidoMapper.toResponse(pedidoRepository.save(pedido));
     }

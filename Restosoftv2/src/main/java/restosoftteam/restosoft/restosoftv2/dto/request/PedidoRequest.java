@@ -10,10 +10,10 @@ import java.util.List;
 @Setter
 public class PedidoRequest {
     private String observaciones;
-    @NotNull(message = "El id empresa no puede estar vacio.")
-    private Integer idempresa;
+
     @NotNull(message = "El estado de el pedido no puede estar vacio.")
     private String estado;
+
     @NotNull(message = "La fecha de el pedido no puede estar vacio.")
     private Instant fecha;
 
@@ -24,4 +24,5 @@ public class PedidoRequest {
     private List<Integer> idUsuarios;
 
     private List<DetallePedidoRequest> detalles;
+
 }

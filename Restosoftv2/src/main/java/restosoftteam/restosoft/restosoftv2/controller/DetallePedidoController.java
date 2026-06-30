@@ -23,8 +23,6 @@ public class DetallePedidoController {
         return ResponseEntity.ok(detallePedidoService.listAllByPedidoId(idPedido));
     }
 
-    // 👇 Se quita el PathVariable de empresa
-    @GetMapping("/{idDetallePedido}")
     public ResponseEntity<DetallePedidoResponse> obtenerDetallePedidoPorId(@PathVariable Integer idDetallePedido, @IdEmpresa Integer idEmpresa) {
         return ResponseEntity.ok(detallePedidoService.findByDetallePedidoId(idDetallePedido, idEmpresa));
     }

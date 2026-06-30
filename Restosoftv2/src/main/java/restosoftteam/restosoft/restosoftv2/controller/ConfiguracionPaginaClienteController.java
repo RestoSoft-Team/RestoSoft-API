@@ -12,7 +12,9 @@ import restosoftteam.restosoft.restosoftv2.service.ConfiguracionPaginaClienteSer
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/configuracion")
-public class ConfiguracionPaginaClienteController {
+public class
+
+ConfiguracionPaginaClienteController {
     private final ConfiguracionPaginaClienteService configuracionPaginaClienteService;
 
     @GetMapping("/{idEmpresa}")

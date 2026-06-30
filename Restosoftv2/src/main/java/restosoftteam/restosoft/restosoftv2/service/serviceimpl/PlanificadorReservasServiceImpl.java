@@ -1,6 +1,7 @@
 package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +15,15 @@ import restosoftteam.restosoft.restosoftv2.repository.ReservaRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class PlanificadorReservasServiceImpl {
+
+    private final SimpMessagingTemplate messagingTemplate;
 
     private final ReservaRepository reservaRepository;
     private final ReservaMesaRepository reservaMesaRepository;
@@ -43,6 +48,11 @@ public class PlanificadorReservasServiceImpl {
 
                 mesa.setEstado(EstadoMesa.RESERVADA);
                 mesaRepository.save(mesa);
+
+                Map<String, String> payload = new HashMap<>();
+                payload.put("tipo", "MESA_RESERVADA");
+                payload.put("idMesa", mesa.getId().toString());
+                messagingTemplate.convertAndSend("/topic/cocina", payload);
             }
 
             reserva.setEstado(EstadoReserva.ACTIVA);

@@ -1,4 +1,4 @@
-package restosoftteam.restosoft.restosoftv2.config;
+package restosoftteam.restosoft.restosoftv2.websocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -18,6 +18,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-mesas").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint("/ws-restosoft").setAllowedOriginPatterns("*").withSockJS();
     }
 }

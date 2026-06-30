@@ -79,6 +79,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+                        .requestMatchers("/ws-restosoft/**").permitAll()
+
                         .requestMatchers("/uploads/**").permitAll()
 
                         // 5. CREACIÓN PÚBLICA (POST)

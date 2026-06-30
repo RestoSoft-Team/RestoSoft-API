@@ -19,12 +19,19 @@ import restosoftteam.restosoft.restosoftv2.repository.UnidadPreparacionRepositor
 import restosoftteam.restosoft.restosoftv2.service.DetallePedidoService;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DetallePedidoServiceImpl implements DetallePedidoService {
+
+    private final org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate;
 
     private final DetallePedidoRepository detallePedidoRepository;
     private final DetallePedidoMapper detallePedidoMapper;
@@ -73,7 +80,44 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
             detallePedido.getUnidades().add(unidad);
         }
 
-        return detallePedidoMapper.toResponse(detallePedidoRepository.save(detallePedido));
+        detallePedidoRepository.save(detallePedido);
+
+        List<UnidadPreparacion> todasLasUnidades = unidadPreparacionRepository.findAllByDetallePedido_Pedido_Id(pedido.getId());
+
+        boolean todasListas = true;
+        boolean algunaPreparando = false;
+
+        for (UnidadPreparacion u : todasLasUnidades) {
+            if (!"LISTO".equals(u.getEstado())) {
+                todasListas = false;
+            }
+            if ("PREPARANDO".equals(u.getEstado())) {
+                algunaPreparando = true;
+            }
+        }
+
+        if (todasListas) {
+            pedido.setEstado("LISTO");
+        } else if (algunaPreparando) {
+            pedido.setEstado("PREPARANDO");
+        } else {
+            pedido.setEstado("PENDIENTE");
+        }
+
+        pedidoRepository.save(pedido);
+
+        Map<String, String> payload = new HashMap<>();
+        payload.put("tipo", "PRODUCTO_AGREGADO");
+        payload.put("idPedido", pedido.getId().toString());
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                messagingTemplate.convertAndSend("/topic/cocina", payload);
+            }
+        });
+
+        return detallePedidoMapper.toResponse(detallePedido);
     }
 
     @Override
@@ -166,7 +210,37 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
         } else {
             pedido.setEstado("PENDIENTE");
         }
-
         pedidoRepository.save(pedido);
+
+        String nombreMesa = pedido.getMesas().stream()
+                .map(pm -> pm.getMesa().getNumeroMesa())
+                .collect(Collectors.joining(", "));
+
+        String nombrePlato = unidad.getDetallePedido().getPlato().getNombre();
+
+        Map<String, String> payloadCocina = new HashMap<>();
+        payloadCocina.put("tipo", "ESTADO_ACTUALIZADO");
+        payloadCocina.put("idPedido", pedido.getId().toString());
+        payloadCocina.put("estadoUnidad", estado); // 👈 AGREGAMOS EL ESTADO
+        payloadCocina.put("mesa", nombreMesa != null ? nombreMesa : "N/A");
+        payloadCocina.put("plato", nombrePlato != null ? nombrePlato : "Plato");
+
+        // 👇 ENVÍAR AMBOS WEBSOCKETS DESPUÉS DEL COMMIT DE LA BD
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                messagingTemplate.convertAndSend("/topic/cocina", payloadCocina);
+
+                if ("LISTO".equals(estado)) {
+                    Map<String, String> payloadNotif = new HashMap<>();
+                    payloadNotif.put("tipo", "PLATO_LISTO");
+                    payloadNotif.put("idPedido", pedido.getId().toString());
+                    payloadNotif.put("mesa", nombreMesa != null ? nombreMesa : "N/A");
+                    payloadNotif.put("plato", nombrePlato != null ? nombrePlato : "Plato");
+
+                    messagingTemplate.convertAndSend("/topic/notificaciones", payloadNotif);
+                }
+            }
+        });
     }
 }
