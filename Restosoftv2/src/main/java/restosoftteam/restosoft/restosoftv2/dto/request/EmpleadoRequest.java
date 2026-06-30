@@ -30,8 +30,8 @@ public class EmpleadoRequest {
     @Size(max = 150)
     private String email;
 
-    @NotBlank(message = "La contraseña es obligatoria.")
-    @Size(min = 8, max = 255)
+    @NotBlank(message = "La contraseña es obligatoria.", groups = OnCreate.class)
+    @Size(min = 8, max = 255, message = "La contraseña debe tener al menos 8 caracteres.", groups = {OnCreate.class, OnUpdate.class})
     private String password;
 
     @NotBlank(message = "El teléfono es obligatorio.")
@@ -45,6 +45,9 @@ public class EmpleadoRequest {
     private Integer idRol;
 
     private Boolean eliminarImagen = false;
+
+    public interface OnCreate {}
+    public interface OnUpdate {}
 
 
 }

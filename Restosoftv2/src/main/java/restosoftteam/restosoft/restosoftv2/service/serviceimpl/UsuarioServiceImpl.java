@@ -12,8 +12,10 @@ import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioResponse;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
 import restosoftteam.restosoft.restosoftv2.exception.RegistroYaExistenteException;
 import restosoftteam.restosoft.restosoftv2.mapper.UsuarioMapper;
+import restosoftteam.restosoft.restosoftv2.model.Rol;
 import restosoftteam.restosoft.restosoftv2.model.Usuario;
 import restosoftteam.restosoft.restosoftv2.repository.EmpresaUsuarioRepository;
+import restosoftteam.restosoft.restosoftv2.repository.RolRepository;
 import restosoftteam.restosoft.restosoftv2.repository.UsuarioRepository;
 import restosoftteam.restosoft.restosoftv2.service.EmpresaUsuarioService;
 import restosoftteam.restosoft.restosoftv2.service.UsuarioService;
@@ -28,6 +30,8 @@ import java.util.List;
 public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+
+    private final RolRepository rolRepository;
 
     private final EmpresaUsuarioRepository empresaUsuarioRepository;
 
@@ -270,9 +274,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuarioGuardado =
                 usuarioRepository.save(usuario);
 
+        Rol rol = rolRepository.findByNombre("CLIENTE")
+                .orElseThrow(()-> new RecursoNoEncontradoException("Rol de cliente no existente contacte al administrador."));
+
+
         UsuarioCompletoResponse usuarioCompleto = empresaUsuarioService.crearUsuario(
                 usuarioGuardado,
-                idEmpresa,2);
+                idEmpresa,rol.getId());
 
         if(usuarioCompleto==null){
             throw new RuntimeException("No se pudo crear el usuario");

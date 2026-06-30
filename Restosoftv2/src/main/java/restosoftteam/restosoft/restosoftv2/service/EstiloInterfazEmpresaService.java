@@ -6,10 +6,10 @@ import restosoftteam.restosoft.restosoftv2.model.Empresa;
 import restosoftteam.restosoft.restosoftv2.model.EstiloInterfazEmpresa;
 
 public interface EstiloInterfazEmpresaService {
-    EstiloInterfazEmpresaResponse findByIdEmpresa(Integer id);
-    EstiloInterfazEmpresaResponse save(EstiloInterfazEmpresaRequest estilo);
-    EstiloInterfazEmpresaResponse update(EstiloInterfazEmpresaRequest estilo, Integer id);
-    void delete(Integer id);
+    EstiloInterfazEmpresaResponse findByIdEmpresa(Integer idEmpresa);
+    EstiloInterfazEmpresaResponse save(EstiloInterfazEmpresaRequest estilo,Integer idEmpresa);
+    EstiloInterfazEmpresaResponse update(EstiloInterfazEmpresaRequest estilo, Integer idEmpresa);
+    void delete(Integer idEmpresa);
 
 
 }
