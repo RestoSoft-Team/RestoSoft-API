@@ -84,7 +84,7 @@ public class SecurityConfig {
 
                         // 5. CREACIÓN PÚBLICA (POST)
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/empleados").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/usuarios/clientes","/api/usuarios/clientes/[idEmpresa}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/clientes","/api/usuarios/clientes/{idEmpresa}").permitAll()
 
                         // 6. LISTAR CLIENTES PÚBLICO (GET) -> AGREGADO PARA ARREGLAR TU 403
 
