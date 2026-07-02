@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -40,13 +39,7 @@ public class MovimientoInventario {
     private BigDecimal stockNuevo;
 
     @NotNull
-    @Column(
-            name = "fecha_movimiento",
-            nullable = false,
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
+    @Column(name = "fecha_movimiento", nullable = false, columnDefinition = "DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private Instant fechaMovimiento;
 
     @Size(max = 255)
@@ -56,12 +49,14 @@ public class MovimientoInventario {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idinsumo", nullable = false)
-    private Insumo idinsumo;
+    private Insumo insumo;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa idempresa;
+    private Empresa empresa;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idproveedor")
+    private Proveedor proveedor;
 }

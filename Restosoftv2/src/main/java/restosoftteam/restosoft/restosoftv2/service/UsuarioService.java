@@ -75,4 +75,6 @@ public interface UsuarioService {
             MultipartFile imagen);
 
     List<UsuarioCompletoResponse> listarClientes(Integer idEmpresa);
+
+    UsuarioResponse actualizarCliente(Integer idEmpresa, Integer idUsuario, ClienteRequest request, MultipartFile imagen);
 }
