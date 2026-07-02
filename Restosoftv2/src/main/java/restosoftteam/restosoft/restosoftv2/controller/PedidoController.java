@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import restosoftteam.restosoft.restosoftv2.dto.request.PedidoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.PedidoResponse;
 import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
-import restosoftteam.restosoft.restosoftv2.security.annotation.IdUsuario; // 👈 IMPORT
+import restosoftteam.restosoft.restosoftv2.security.annotation.IdUsuario;
 import restosoftteam.restosoft.restosoftv2.service.PedidoService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pedido")
@@ -54,5 +55,30 @@ public class PedidoController {
     @GetMapping("/mesa/{idMesa}")
     public ResponseEntity<PedidoResponse> obtenerPedidoPorMesa(@PathVariable Integer idMesa, @IdEmpresa Integer idEmpresa) {
         return ResponseEntity.ok(pedidoService.findPedidoActivoByMesa(idMesa, idEmpresa));
+    }
+
+    @PostMapping("/enviar-ticket/{idPedido}")
+    public ResponseEntity<Void> enviarTicketCorreo(@PathVariable Integer idPedido, @IdEmpresa Integer idEmpresa) {
+        pedidoService.enviarTicketPedido(idPedido, idEmpresa);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/procesar-pago/{idPedido}")
+    public ResponseEntity<Void> procesarPago(@PathVariable Integer idPedido, @RequestBody Map<String, Object> payload, @IdEmpresa Integer idEmpresa) {
+        String tipoPago = (String) payload.get("tipoPago");
+        List<Map<String, Object>> metodosPago = (List<Map<String, Object>>) payload.get("metodosPago");
+        pedidoService.procesarPago(idPedido, tipoPago, metodosPago, idEmpresa);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/cancelar/{idPedido}")
+    public ResponseEntity<Void> cancelarPedido(
+            @PathVariable Integer idPedido,
+            @RequestBody Map<String, String> payload,
+            @IdEmpresa Integer idEmpresa) {
+
+        String motivo = payload.get("motivo");
+        pedidoService.cancelarPedido(idPedido, motivo, idEmpresa);
+        return ResponseEntity.ok().build();
     }
 }

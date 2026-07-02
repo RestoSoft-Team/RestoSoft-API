@@ -72,6 +72,9 @@ public class SecurityConfig {
                                 "/api/auth/register"
                         ).permitAll()
 
+                        .requestMatchers("/api/registro/**").permitAll()
+                        .requestMatchers("/api/zonas/upload-plano").permitAll()
+
                         // 4. SWAGGER PÚBLICO
                         .requestMatchers(
                                 "/swagger-ui/**",

@@ -1,5 +1,6 @@
 package restosoftteam.restosoft.restosoftv2.dto.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,4 +26,8 @@ public class PedidoRequest {
 
     private List<DetallePedidoRequest> detalles;
 
+    @Email(message = "El correo del cliente debe ser válido")
+    private String emailCliente;
+
+    private String tipoPago;
 }

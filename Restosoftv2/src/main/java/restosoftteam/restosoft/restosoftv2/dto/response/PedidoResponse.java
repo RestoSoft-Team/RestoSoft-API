@@ -17,4 +17,8 @@ public class PedidoResponse {
     private List<String> numerosMesas;
 
     private List<DetallePedidoResponse> detalles;
+
+    private String emailCliente;
+
+    private String tipoPago;
 }

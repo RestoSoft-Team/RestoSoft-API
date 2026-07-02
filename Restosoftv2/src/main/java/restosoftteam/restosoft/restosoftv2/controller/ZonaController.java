@@ -1,5 +1,6 @@
 package restosoftteam.restosoft.restosoftv2.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,13 +44,11 @@ public class ZonaController {
 
     @PostMapping("/guardarM")
     public ResponseEntity<Map<String, String>> guardarConfiguracionCompleta(@Valid @RequestBody ConfiguracionesRestauranteRequest request) {
-
         Map<Long, Integer> mapaIdsZonas = new HashMap<>();
 
         if (request.getZonas() != null) {
             for (ZonaRequest zonaRequest : request.getZonas()) {
                 ZonaResponse zonaGuardada = zonaService.crearZona(zonaRequest);
-
                 if (zonaRequest.getIdTemporal() != null) {
                     mapaIdsZonas.put(zonaRequest.getIdTemporal(), zonaGuardada.getId());
                 }
@@ -58,11 +57,8 @@ public class ZonaController {
 
         if (request.getMesas() != null) {
             for (MesaRequest mesaRequest : request.getMesas()) {
-
                 Integer idZonaReal = mapaIdsZonas.get(mesaRequest.getIdZona());
-
                 if (idZonaReal != null) {
-
                     mesaService.crearMesaConZonaReal(mesaRequest, idZonaReal);
                 } else {
                     throw new RuntimeException("La mesa está asignada a una zona que no existe");
@@ -77,8 +73,22 @@ public class ZonaController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/sincronizar-plano")
+    public ResponseEntity<Map<String, String>> sincronizarPlano(
+            @Valid @RequestBody ConfiguracionesRestauranteRequest request,
+            @Parameter(hidden = true) @IdEmpresa Integer idEmpresa) {
+
+        zonaService.sincronizarPlano(request, idEmpresa);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("mensaje", "Plano actualizado con éxito");
+        response.put("status", "200");
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping
-    public ResponseEntity<List<ZonaResponse>> obtenerZonasPorEmpresa(@IdEmpresa Integer idEmpresa) {
+    public ResponseEntity<List<ZonaResponse>> obtenerZonasPorEmpresa(@Parameter(hidden = true) @IdEmpresa Integer idEmpresa) {
         return ResponseEntity.ok(zonaService.obtenerZonasPorEmpresa(idEmpresa));
     }
 }

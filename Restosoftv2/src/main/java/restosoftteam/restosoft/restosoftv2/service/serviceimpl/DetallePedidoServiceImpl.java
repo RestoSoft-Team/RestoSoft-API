@@ -84,19 +84,19 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
 
         List<UnidadPreparacion> todasLasUnidades = unidadPreparacionRepository.findAllByDetallePedido_Pedido_Id(pedido.getId());
 
-        boolean todasListas = true;
+        boolean todasListasOEntregadas = true;
         boolean algunaPreparando = false;
 
         for (UnidadPreparacion u : todasLasUnidades) {
-            if (!"LISTO".equals(u.getEstado())) {
-                todasListas = false;
+            if (!"LISTO".equals(u.getEstado()) && !"ENTREGADO".equals(u.getEstado())) {
+                todasListasOEntregadas = false;
             }
             if ("PREPARANDO".equals(u.getEstado())) {
                 algunaPreparando = true;
             }
         }
 
-        if (todasListas) {
+        if (todasListasOEntregadas) {
             pedido.setEstado("LISTO");
         } else if (algunaPreparando) {
             pedido.setEstado("PREPARANDO");
@@ -191,25 +191,34 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
 
         List<UnidadPreparacion> todasLasUnidades = unidadPreparacionRepository.findAllByDetallePedido_Pedido_Id(pedido.getId());
 
-        boolean todasListas = true;
+        boolean todasEntregadas = true;
+        boolean todasListasOEntregadas = true;
         boolean algunaPreparando = false;
 
         for (UnidadPreparacion u : todasLasUnidades) {
-            if (!"LISTO".equals(u.getEstado())) {
-                todasListas = false;
+            String estadoU = u.getEstado();
+
+            if (!"ENTREGADO".equals(estadoU)) {
+                todasEntregadas = false;
             }
-            if ("PREPARANDO".equals(u.getEstado())) {
+            if (!"LISTO".equals(estadoU) && !"ENTREGADO".equals(estadoU)) {
+                todasListasOEntregadas = false;
+            }
+            if ("PREPARANDO".equals(estadoU)) {
                 algunaPreparando = true;
             }
         }
 
-        if (todasListas) {
-            pedido.setEstado("LISTO");
+        if (todasEntregadas) {
+            pedido.setEstado("ENTREGADO"); // Si todo se entregó, el pedido pasa a ENTREGADO
+        } else if (todasListasOEntregadas) {
+            pedido.setEstado("LISTO"); // Si todo está listo o entregado, se mantiene en LISTO
         } else if (algunaPreparando) {
             pedido.setEstado("PREPARANDO");
         } else {
             pedido.setEstado("PENDIENTE");
         }
+
         pedidoRepository.save(pedido);
 
         String nombreMesa = pedido.getMesas().stream()
@@ -221,11 +230,11 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
         Map<String, String> payloadCocina = new HashMap<>();
         payloadCocina.put("tipo", "ESTADO_ACTUALIZADO");
         payloadCocina.put("idPedido", pedido.getId().toString());
-        payloadCocina.put("estadoUnidad", estado); // 👈 AGREGAMOS EL ESTADO
+        payloadCocina.put("estadoUnidad", estado);
+        payloadCocina.put("idUnidad", unidad.getId().toString());
         payloadCocina.put("mesa", nombreMesa != null ? nombreMesa : "N/A");
         payloadCocina.put("plato", nombrePlato != null ? nombrePlato : "Plato");
 
-        // 👇 ENVÍAR AMBOS WEBSOCKETS DESPUÉS DEL COMMIT DE LA BD
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
@@ -235,6 +244,7 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
                     Map<String, String> payloadNotif = new HashMap<>();
                     payloadNotif.put("tipo", "PLATO_LISTO");
                     payloadNotif.put("idPedido", pedido.getId().toString());
+                    payloadNotif.put("idUnidad", unidad.getId().toString());
                     payloadNotif.put("mesa", nombreMesa != null ? nombreMesa : "N/A");
                     payloadNotif.put("plato", nombrePlato != null ? nombrePlato : "Plato");
 
