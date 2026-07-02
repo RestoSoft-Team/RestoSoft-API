@@ -5,9 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restosoftteam.restosoft.restosoftv2.dto.response.MesaResponse;
 import restosoftteam.restosoft.restosoftv2.mapper.MesaMapper;
-import restosoftteam.restosoft.restosoftv2.model.Mesa;
 import restosoftteam.restosoft.restosoftv2.repository.MesaRepository;
-import restosoftteam.restosoft.restosoftv2.security.annotation.IdUsuario; // 👈 IMPORTAR LA ANOTACIÓN
+import restosoftteam.restosoft.restosoftv2.security.annotation.IdUsuario;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -37,7 +37,6 @@ public class RegistroWizardServiceImpl implements RegistroWizardService {
 
         request.getAdmin().setIdRol(rolAdmin.getId());
 
-        // Aquí pasamos la imagen del admin a tu método existente
         usuarioService.crearEmpleado(idEmpresa, request.getAdmin(), imagenAdmin);
 
         Map<Long, Integer> mapaIdsZonas = new HashMap<>();

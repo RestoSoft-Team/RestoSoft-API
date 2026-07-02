@@ -210,9 +210,9 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
         }
 
         if (todasEntregadas) {
-            pedido.setEstado("ENTREGADO"); // Si todo se entregó, el pedido pasa a ENTREGADO
+            pedido.setEstado("ENTREGADO");
         } else if (todasListasOEntregadas) {
-            pedido.setEstado("LISTO"); // Si todo está listo o entregado, se mantiene en LISTO
+            pedido.setEstado("LISTO"); 
         } else if (algunaPreparando) {
             pedido.setEstado("PREPARANDO");
         } else {

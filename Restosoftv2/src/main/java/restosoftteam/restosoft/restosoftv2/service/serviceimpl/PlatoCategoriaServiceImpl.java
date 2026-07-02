@@ -23,7 +23,6 @@ public class PlatoCategoriaServiceImpl implements PlatoCategoriaService {
     private final EmpresaRepository empresaRepository;
     private final PlatoCategoriaMapper mapper;
 
-    // 👇 Se añade idEmpresa como parámetro
     @Override
     @Transactional
     public PlatoCategoriaResponse save(PlatoCategoriaRequest request, Integer idEmpresa) {

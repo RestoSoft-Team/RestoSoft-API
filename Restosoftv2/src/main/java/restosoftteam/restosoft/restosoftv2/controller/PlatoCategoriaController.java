@@ -39,7 +39,6 @@ public class PlatoCategoriaController {
         return ResponseEntity.ok(platoCategoriaService.findById(id));
     }
 
-    // 👇 Se quita el PathVariable y se usa la anotación
     @GetMapping
     public ResponseEntity<List<PlatoCategoriaResponse>> listarPorEmpresa(@IdEmpresa Integer idEmpresa) {
         return ResponseEntity.ok(platoCategoriaService.findAllByEmpresa(idEmpresa));
