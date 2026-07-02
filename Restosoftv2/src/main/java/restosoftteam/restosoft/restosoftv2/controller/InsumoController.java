@@ -1,5 +1,6 @@
 package restosoftteam.restosoft.restosoftv2.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,17 +23,17 @@ public class InsumoController {
 
     @PostMapping
     public ResponseEntity<InsumoResponse> crearInsumo(
-            @IdEmpresa Integer idEmpresa,
-            @Valid @RequestBody InsumoRequest insumoRequest) {
-        return new ResponseEntity<>(insumoService.crear(idEmpresa, insumoRequest), HttpStatus.CREATED);
+            @Valid @RequestBody InsumoRequest request,
+            @Parameter(hidden = true) @IdEmpresa Integer idEmpresa) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(insumoService.crear(request, idEmpresa));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<InsumoResponse> actualizarInsumo(
             @PathVariable Integer id,
-            @IdEmpresa Integer idEmpresa,
-            @Valid @RequestBody InsumoRequest insumoRequest) {
-        return ResponseEntity.ok(insumoService.actualizar(id, idEmpresa, insumoRequest));
+            @Valid @RequestBody InsumoRequest request,
+            @Parameter(hidden = true) @IdEmpresa Integer idEmpresa) {
+        return ResponseEntity.ok(insumoService.actualizar(id, request, idEmpresa));
     }
 
     @DeleteMapping("/{id}")

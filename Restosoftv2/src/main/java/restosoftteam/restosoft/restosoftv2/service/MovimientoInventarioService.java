@@ -6,7 +6,6 @@ import restosoftteam.restosoft.restosoftv2.dto.response.MovimientoInventarioResp
 import java.util.List;
 
 public interface MovimientoInventarioService {
-    List<MovimientoInventarioResponse> listar();
-
-    MovimientoInventarioResponse crear(MovimientoInventarioRequest request);
+    List<MovimientoInventarioResponse> listar(Integer idEmpresa);
+    MovimientoInventarioResponse crear(MovimientoInventarioRequest request, Integer idEmpresa);
 }

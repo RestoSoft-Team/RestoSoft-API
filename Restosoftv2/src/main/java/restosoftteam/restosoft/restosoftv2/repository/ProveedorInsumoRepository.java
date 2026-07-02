@@ -13,4 +13,5 @@ public interface ProveedorInsumoRepository extends JpaRepository<ProveedorInsumo
     List<ProveedorInsumo> findByInsumoId(Integer idInsumo);
     void deleteByProveedorIdAndInsumoId(Integer idProveedor, Integer idInsumo);
     boolean existsByProveedorIdAndInsumoId(Integer proveedorId, Integer insumoId);
+    void deleteAllByInsumoId(Integer idInsumo);
 }

@@ -42,7 +42,6 @@ public class    InsumoRequest {
     @NotNull(message = "El id del proveedor no puede estar vacío.")
     private Integer idProveedor;
 
-    @NotNull(message = "El id de la empresa no puede estar vacío.")
     private Integer idEmpresa;
 
     private Integer idCategoria;

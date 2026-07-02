@@ -20,7 +20,6 @@ public class ProveedorRequest {
     @Email(message = "Debe ser un email válido")
     private String email;
 
-    @NotNull(message = "El ID de la empresa es obligatorio")
     private Integer idEmpresa;
 
     private boolean estado;

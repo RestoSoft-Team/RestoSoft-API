@@ -24,9 +24,9 @@ public class ProveedorServiceImpl implements ProveedorService {
 
     @Override
     @Transactional
-    public ProveedorResponse crear(ProveedorRequest request) {
-        // 1. Buscar empresa
-        Empresa empresa = empresaRepository.findById(request.getIdEmpresa())
+    public ProveedorResponse crear(ProveedorRequest request, Integer idEmpresa) {
+        // 1. Buscar empresa usando el id del TOKEN
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
 
         // 2. Mapear
@@ -35,28 +35,28 @@ public class ProveedorServiceImpl implements ProveedorService {
         // 3. ASIGNAR (Forzamos la relación)
         p.setEmpresa(empresa);
 
-        // DEPURACIÓN: Imprimir en consola para ver si tiene empresa antes de guardar
-        System.out.println("DEBUG: Proveedor a guardar: " + p.getNombre());
-        System.out.println("DEBUG: ¿Empresa es nula?: " + (p.getEmpresa() == null));
-
         // 4. Guardar
         Proveedor guardado = repo.save(p);
 
         return mapper.toResponse(guardado);
     }
 
-    @Override @Transactional(readOnly = true)
-    public List<ProveedorResponse> listar() {
-        return repo.findAll().stream().map(mapper::toResponse).toList();
+    @Override
+    @Transactional(readOnly = true) // Necesario para evitar LazyInitializationException
+    public List<ProveedorResponse> listar(Integer idEmpresa) {
+        return repo.findByEmpresaId(idEmpresa)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 
     @Override
     @Transactional
-    public ProveedorResponse actualizar(Integer id, ProveedorRequest request) {
+    public ProveedorResponse actualizar(Integer id, ProveedorRequest request, Integer idEmpresa) {
         Proveedor proveedor = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Proveedor no encontrado con ID: " + id));
 
-        Empresa empresa = empresaRepository.findById(request.getIdEmpresa())
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
 
         // Actualiza los campos con el mapper
@@ -67,6 +67,8 @@ public class ProveedorServiceImpl implements ProveedorService {
 
         return mapper.toResponse(repo.save(proveedor));
     }
+
+
 
     @Override
     @Transactional

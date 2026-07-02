@@ -45,75 +45,57 @@ public class InsumoServiceImpl implements InsumoService {
 
     @Override
     @Transactional
-    public InsumoResponse crear(Integer idEmpresa,InsumoRequest request) {
-        if (insumoRepository.existsByNombreAndEmpresaId(request.getNombre(), request.getIdEmpresa())){
-            throw new RegistroYaExistenteException("Ya existe un insumo con ese nombre en esta empresa");
-        }
-        Empresa empresa = empresaRepository.findById(request.getIdEmpresa())
-                .orElseThrow(() -> new RecursoNoEncontradoException("Empresa no encontrada"));
+    public InsumoResponse crear(InsumoRequest request, Integer idEmpresa) {
+        Empresa empresa = empresaRepository.findById(idEmpresa)
+                .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
 
-        Proveedor proveedor = null;
-        if (request.getIdProveedor() != null){
-            proveedor = proveedorRepository.findByIdAndEmpresaId(request.getIdProveedor(), request.getIdEmpresa())
-                    .orElseThrow(() -> new RecursoNoEncontradoException("Proveedor no encontrado"));
-        }
-
-
-
-        InsumoCategoria categoria = null;
-        if (request.getIdCategoria() != null){
-            categoria = insumoCategoriaRepository.findById(request.getIdCategoria())
-                    .orElseThrow(() -> new RecursoNoEncontradoException("Categoría no encontrada"));
-        }
-        List<ProveedorInsumo> listaProveedorInsumo = new ArrayList<>();
         Insumo insumo = insumoMapper.toEntity(request);
-        insumo.setEmpresa(empresa);
-        insumo.setProveedores(listaProveedorInsumo);
-        insumo.setCategoria(categoria);
+        insumo.setEmpresa(empresa); // Forzamos la relación
+        Insumo guardado = insumoRepository.save(insumo);
 
-        return insumoMapper.toResponse(insumoRepository.save(insumo));
+        // Lógica para guardar el proveedor en la tabla intermedia
+        if (request.getIdProveedor() != null) {
+            Proveedor proveedor = proveedorRepository.findById(request.getIdProveedor())
+                    .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+
+            ProveedorInsumo pi = new ProveedorInsumo();
+            pi.setInsumo(guardado);
+            pi.setProveedor(proveedor);
+            proveedorInsumoRepository.save(pi);
+        }
+
+        return insumoMapper.toResponse(guardado);
     }
 
     @Override
     @Transactional
-    public InsumoResponse actualizar(Integer id,Integer idEmpresa ,InsumoRequest request) {
-        Insumo insumo = insumoRepository.findByIdAndEmpresaId(id, request.getIdEmpresa())
-                .orElseThrow(() -> new RecursoNoEncontradoException("Insumo no encontrado"));
+    public InsumoResponse actualizar(Integer id, InsumoRequest request, Integer idEmpresa) {
+        Insumo insumo = insumoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Insumo no encontrado"));
 
-        Proveedor proveedor = null;
-        if (request.getIdProveedor() != null){
-            proveedor = proveedorRepository.findByIdAndEmpresaId(request.getIdProveedor(), request.getIdEmpresa())
-                    .orElseThrow(() -> new RecursoNoEncontradoException("Proveedor no encontrado"));
-        }
+        Empresa empresa = empresaRepository.findById(idEmpresa)
+                .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
 
-        InsumoCategoria categoria = null;
-        if (request.getIdCategoria() != null){
-            categoria = insumoCategoriaRepository.findById(request.getIdCategoria())
-                    .orElseThrow(() -> new RecursoNoEncontradoException("Categoría no encontrada"));
-        }
-
-        // 1. Mapear campos simples (nombre, stock, etc)
         insumoMapper.updateEntityFromDto(request, insumo);
+        insumo.setEmpresa(empresa); // Forzamos la relación
+        Insumo guardado = insumoRepository.save(insumo);
 
-        // 2. Asignar categoría
-        insumo.setCategoria(categoria);
+        // Lógica para actualizar el proveedor en la tabla intermedia
+        if (request.getIdProveedor() != null) {
+            // 1. Borramos las relaciones anteriores que tenía este insumo
+            proveedorInsumoRepository.deleteAllByInsumoId(guardado.getId());
 
-        // ✅ 3. MANEJO SEGURO DE PROVEEDORES (Sin reemplazar la lista de Hibernate)
-        // Primero, limpiamos los proveedores actuales de esta lista vigilada
-        insumo.getProveedores().clear();
+            // 2. Creamos la nueva relación con el proveedor seleccionado
+            Proveedor proveedor = proveedorRepository.findById(request.getIdProveedor())
+                    .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
 
-        // Segundo, si mandaron un proveedor nuevo, lo agregamos a la MISMA lista
-        if (proveedor != null) {
-            ProveedorInsumo nuevaRelacion = new ProveedorInsumo();
-            nuevaRelacion.setInsumo(insumo);
-            nuevaRelacion.setProveedor(proveedor);
-            // Si tu entidad ProveedorInsumo tiene campo estado, descomenta la siguiente línea:
-            // nuevaRelacion.setEstado("ACTIVO");
-
-            insumo.getProveedores().add(nuevaRelacion);
+            ProveedorInsumo pi = new ProveedorInsumo();
+            pi.setInsumo(guardado);
+            pi.setProveedor(proveedor);
+            proveedorInsumoRepository.save(pi);
         }
 
-        return insumoMapper.toResponse(insumoRepository.save(insumo));
+        return insumoMapper.toResponse(guardado);
     }
 
     @Override

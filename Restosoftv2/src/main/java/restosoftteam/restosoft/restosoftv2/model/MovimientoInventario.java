@@ -57,5 +57,9 @@ public class MovimientoInventario {
     @JoinColumn(name = "idempresa", nullable = false)
     private Empresa empresa;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idproveedor", nullable = false)
+    private Proveedor proveedor;
+
 
 }

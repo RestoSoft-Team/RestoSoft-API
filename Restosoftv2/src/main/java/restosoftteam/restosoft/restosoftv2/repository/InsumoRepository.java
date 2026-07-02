@@ -16,4 +16,6 @@ public interface InsumoRepository extends JpaRepository <Insumo, Integer> {
 
     @Query("SELECT i FROM Insumo i LEFT JOIN FETCH i.proveedores JOIN FETCH i.empresa WHERE i.empresa.id = :idEmpresa")
     List<Insumo> findAllByEmpresaId(Integer idEmpresa);
+
+
 }

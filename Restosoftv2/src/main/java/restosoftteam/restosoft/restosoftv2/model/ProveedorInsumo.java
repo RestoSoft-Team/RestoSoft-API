@@ -1,5 +1,6 @@
 package restosoftteam.restosoft.restosoftv2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class ProveedorInsumo {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idproveedor", nullable = false)
+    @JsonIgnore
     private Proveedor proveedor;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

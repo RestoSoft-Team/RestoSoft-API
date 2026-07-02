@@ -6,8 +6,11 @@ import restosoftteam.restosoft.restosoftv2.dto.response.ProveedorResponse;
 import java.util.List;
 
 public interface ProveedorService {
-    ProveedorResponse crear(ProveedorRequest request);
-    List<ProveedorResponse> listar();
-    ProveedorResponse actualizar(Integer id, ProveedorRequest request); // NUEVO
+    ProveedorResponse crear(ProveedorRequest request, Integer idEmpresa);
+
+    List<ProveedorResponse> listar(Integer idEmpresa);
+
+    ProveedorResponse actualizar(Integer id, ProveedorRequest request, Integer idEmpresa);
+
     void eliminar(Integer id);
 }

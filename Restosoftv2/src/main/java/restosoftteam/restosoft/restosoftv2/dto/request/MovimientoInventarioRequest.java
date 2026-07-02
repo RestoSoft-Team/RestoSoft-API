@@ -14,6 +14,8 @@ public class MovimientoInventarioRequest {
     @NotNull(message = "El insumo es obligatorio")
     private Integer idInsumo;
 
+    private Integer idProveedor;
+
     @NotBlank(message = "El tipo de movimiento es obligatorio (ENTRADA/SALIDA)")
     private String tipoMovimiento;
 
@@ -30,6 +32,6 @@ public class MovimientoInventarioRequest {
 
     private Instant fechaMovimiento;
 
-    @NotNull(message = "La empresa es obligatoria")
+
     private Integer idEmpresa;
 }
