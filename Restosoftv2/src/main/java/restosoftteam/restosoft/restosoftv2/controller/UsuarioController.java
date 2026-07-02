@@ -104,6 +104,15 @@ public class UsuarioController {
     }
 
 
+    @PutMapping(value = "/clientes/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UsuarioResponse> actualizarCliente(
+            @IdEmpresa Integer idEmpresa,
+            @PathVariable Integer id,
+            @Valid @RequestPart("cliente") ClienteRequest request,
+            @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
+        return ResponseEntity.ok(usuarioService.actualizarCliente(idEmpresa, id, request, imagen));
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminarEmpleado(
