@@ -21,7 +21,6 @@ public class MovimientoInventarioRequest {
 
     @NotNull @Positive(message = "La cantidad debe ser mayor a cero")
     private BigDecimal cantidad;
-
     private BigDecimal stockAnterior;
 
     private BigDecimal stockNuevo;

@@ -49,8 +49,13 @@ public class InsumoServiceImpl implements InsumoService {
         Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
 
+        InsumoCategoria insumoCategoria = insumoCategoriaRepository.findById(request.getIdCategoria())
+                .orElseThrow(()->new RecursoNoEncontradoException("categoria no encontrada"));
+
         Insumo insumo = insumoMapper.toEntity(request);
+
         insumo.setEmpresa(empresa); // Forzamos la relación
+        insumo.setCategoria(insumoCategoria);
         Insumo guardado = insumoRepository.save(insumo);
 
         // Lógica para guardar el proveedor en la tabla intermedia

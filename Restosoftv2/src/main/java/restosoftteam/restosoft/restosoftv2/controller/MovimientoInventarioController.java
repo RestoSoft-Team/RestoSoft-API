@@ -30,6 +30,7 @@ public class MovimientoInventarioController {
     public ResponseEntity<MovimientoInventarioResponse> registrarMovimiento(
             @RequestBody MovimientoInventarioRequest request,
             @Parameter(hidden = true) @IdEmpresa Integer idEmpresa) {
+        System.out.println("salidas" + request);
         return new ResponseEntity<>(movimientoService.crear(request, idEmpresa), HttpStatus.CREATED);
     }
 }

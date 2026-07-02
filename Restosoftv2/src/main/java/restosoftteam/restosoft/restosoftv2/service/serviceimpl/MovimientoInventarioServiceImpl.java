@@ -26,7 +26,7 @@ public class MovimientoInventarioServiceImpl implements MovimientoInventarioServ
     private final MovimientoInventarioRepository movimientoRepository;
     private final InsumoRepository insumoRepository;
     private final EmpresaRepository empresaRepository;
-    private final ProveedorRepository proveedorRepository; // <-- Asegúrate de inyectar esto
+    private final ProveedorRepository proveedorRepository;
     private final MovimientoInventarioMapper mapper;
 
     @Override
@@ -54,14 +54,16 @@ public class MovimientoInventarioServiceImpl implements MovimientoInventarioServ
                 .orElseThrow(() -> new RuntimeException("Insumo no encontrado"));
         movimiento.setInsumo(insumo);
 
-        // 4. Buscamos el proveedor y lo seteamos (si existe)
+        // 4. Buscamos el proveedor y lo seteamos SOLO si viene en la request
+        //    (las salidas/mermas NO requieren proveedor)
         if (request.getIdProveedor() != null) {
             Proveedor proveedor = proveedorRepository.findById(request.getIdProveedor())
                     .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
             movimiento.setProveedor(proveedor);
+        } else {
+            movimiento.setProveedor(null);
         }
 
-        // 5. ¡NUEVO! ACTUALIZAR EL STOCK DEL INSUMO EN LA BASE DE DATOS
         BigDecimal stockActualBD = insumo.getStockActual() != null ? insumo.getStockActual() : BigDecimal.ZERO;
         BigDecimal cantidadMovimiento = request.getCantidad() != null ? request.getCantidad() : BigDecimal.ZERO;
 
@@ -69,27 +71,26 @@ public class MovimientoInventarioServiceImpl implements MovimientoInventarioServ
         BigDecimal nuevoStockCalculado;
 
         if (tipoMov.equals("ENTRADA")) {
-            // Si es entrada, SUMA al stock
             nuevoStockCalculado = stockActualBD.add(cantidadMovimiento);
-        } else if (tipoMov.equals("SALIDA") || tipoMov.equals("MERMA") || tipoMov.equals("DANO") || tipoMov.equals("CONSUMO_INTERNO")) {
-            // Si es salida, resta al stock (y evita negativos)
+        } else if (tipoMov.equals("SALIDA")
+                || tipoMov.equals("MERMA")
+                || tipoMov.equals("DANO")
+                || tipoMov.equals("DAÑO")
+                || tipoMov.equals("CONSUMO_INTERNO")) {
             nuevoStockCalculado = stockActualBD.subtract(cantidadMovimiento);
             if (nuevoStockCalculado.compareTo(BigDecimal.ZERO) < 0) {
                 nuevoStockCalculado = BigDecimal.ZERO;
             }
         } else {
-            nuevoStockCalculado = stockActualBD; // Si no es ninguno, se mantiene igual
+            nuevoStockCalculado = stockActualBD;
         }
 
-        // Guardamos el nuevo stock en el objeto insumo
         insumo.setStockActual(nuevoStockCalculado);
-        insumoRepository.save(insumo); // ¡ESTO ES LO QUE ACTUALIZA LA TABLA INSUMOS!
+        insumoRepository.save(insumo);
 
-        // Forzamos los valores reales en el movimiento para que el historial sea exacto
         movimiento.setStockAnterior(stockActualBD);
         movimiento.setStockNuevo(nuevoStockCalculado);
 
-        // 6. Guardamos el movimiento y retornamos la respuesta
         return mapper.toResponse(movimientoRepository.save(movimiento));
     }
 }
