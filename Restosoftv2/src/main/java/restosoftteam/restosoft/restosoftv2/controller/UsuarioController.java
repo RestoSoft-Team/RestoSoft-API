@@ -52,6 +52,18 @@ public class UsuarioController {
                         request,imagen));
     }
 
+    @PostMapping(value = "/clientes/{idEmpresa}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UsuarioResponse> crearClienteLogin(
+            @Parameter(hidden = true)
+            @PathVariable Integer idEmpresa,
+            @Validated(ClienteRequest.OnCreate.class) @RequestPart("cliente") ClienteRequest request,
+            @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(usuarioService.crearCliente(idEmpresa,
+                        request,imagen));
+    }
+
 
     @GetMapping
     public ResponseEntity<List<UsuarioCompletoResponse>> listarEmpleados(

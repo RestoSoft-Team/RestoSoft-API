@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import restosoftteam.restosoft.restosoftv2.dto.request.ReservaMesaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponse;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponseMapStruct;
+import restosoftteam.restosoft.restosoftv2.model.Usuario;
 import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
+import restosoftteam.restosoft.restosoftv2.security.annotation.IdUsuario;
 import restosoftteam.restosoft.restosoftv2.service.ReservaMesaService;
 
 import java.util.ArrayList;
@@ -21,6 +23,11 @@ public class ReservaMesaController {
     @GetMapping("/reserva/{idReserva}")
     public ResponseEntity<List<ReservaMesaResponseMapStruct>> listarPorReservaId(@PathVariable Integer idReserva) {
         List<ReservaMesaResponseMapStruct> lista = reservaMesaService.findAllByReservaId(idReserva);
+        return ResponseEntity.ok(lista);
+    }
+    @GetMapping("/reserva/cliente")
+    public ResponseEntity<List<ReservaMesaResponseMapStruct>> listarPorCliente(@IdUsuario Integer idUsuario) {
+        List<ReservaMesaResponseMapStruct> lista = reservaMesaService.findAllByCliente(idUsuario);
         return ResponseEntity.ok(lista);
     }
 
