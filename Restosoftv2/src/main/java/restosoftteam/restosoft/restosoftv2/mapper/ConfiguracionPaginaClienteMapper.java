@@ -14,6 +14,7 @@ public interface ConfiguracionPaginaClienteMapper {
     @Mapping(target = "empresa", ignore = true)
     ConfiguracionPaginaCliente toEntity(ConfiguracionPaginaClienteRequest request);
 
+    @Mapping(source = "empresa.id", target = "idEmpresa")
     ConfiguracionPaginaClienteResponse toResponse(ConfiguracionPaginaCliente entity);
 
     @Mapping(target = "empresa", ignore = true)

@@ -11,14 +11,8 @@ import restosoftteam.restosoft.restosoftv2.exception.ValorInconsistenteException
 import restosoftteam.restosoft.restosoftv2.mapper.MesaMapper;
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMapper;
 import restosoftteam.restosoft.restosoftv2.mapper.ReservaMesaMapper;
-import restosoftteam.restosoft.restosoftv2.model.Empresa;
-import restosoftteam.restosoft.restosoftv2.model.Mesa;
-import restosoftteam.restosoft.restosoftv2.model.Reserva;
-import restosoftteam.restosoft.restosoftv2.model.ReservaMesa;
-import restosoftteam.restosoft.restosoftv2.repository.EmpresaRepository;
-import restosoftteam.restosoft.restosoftv2.repository.MesaRepository;
-import restosoftteam.restosoft.restosoftv2.repository.ReservaMesaRepository;
-import restosoftteam.restosoft.restosoftv2.repository.ReservaRepository;
+import restosoftteam.restosoft.restosoftv2.model.*;
+import restosoftteam.restosoft.restosoftv2.repository.*;
 import restosoftteam.restosoft.restosoftv2.service.ReservaMesaService;
 
 import java.util.ArrayList;
@@ -30,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservaMesaServiceImpl implements ReservaMesaService {
     private final ReservaMesaRepository reservaMesaRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ReservaMesaMapper reservaMesaMapper;
     private final ReservaRepository reservaRepository;
     private final MesaRepository mesaRepository;
@@ -195,6 +190,15 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
         return !new HashSet<>(actuales)
                 .equals(new HashSet<>(nuevasMesas));
 
+    }
+    @Override
+    public List<ReservaMesaResponseMapStruct> findAllByCliente(Integer idUsuario){
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RecursoNoEncontradoException("La reserva relacionada no existe."));
+
+
+        return reservaMesaRepository.findAllByReservaUsuario(usuario)
+                .stream().map(reservaMesaMapper::toResponse).toList();
     }
 
 }

@@ -14,43 +14,58 @@ import restosoftteam.restosoft.restosoftv2.security.exception.JwtAuthenticationE
 import restosoftteam.restosoft.restosoftv2.security.model.UsuarioAutenticado;
 
 @Component
-public class IdUsuarioArgumentResolver
-        implements HandlerMethodArgumentResolver {
+public class IdUsuarioArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-
         return parameter.hasParameterAnnotation(IdUsuario.class)
                 && Integer.class.equals(parameter.getParameterType());
-
     }
-
 
     @Override
     public Object resolveArgument(
-
             MethodParameter parameter,
-
             ModelAndViewContainer mavContainer,
-
             NativeWebRequest webRequest,
-
             WebDataBinderFactory binderFactory) {
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+        try {
+            String headerUsuarioId = webRequest.getHeader("idusuario");
 
-        if (!(authentication.getPrincipal()
-                instanceof UsuarioAutenticado usuario)) {
+            if (headerUsuarioId != null && !headerUsuarioId.isBlank()) {
+                try {
+                    return Integer.parseInt(headerUsuarioId);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException(
+                            "El header 'idusuario' debe ser un número válido."
+                    );
+                }
+            }
 
-            throw new JwtAuthenticationException(
-                    "No existe un usuario autenticado."
-            );
+            Authentication authentication =
+                    SecurityContextHolder.getContext().getAuthentication();
 
+            System.out.println(">>> DEBUG AUTH: " + authentication);
+            System.out.println(">>> DEBUG PRINCIPAL: "
+                    + (authentication != null ? authentication.getPrincipal() : "NULL"));
+
+            if (!(authentication.getPrincipal() instanceof UsuarioAutenticado usuario)) {
+                throw new JwtAuthenticationException(
+                        "No existe un usuario autenticado."
+                );
+            }
+
+            if (usuario.getUsuarioId() == null) {
+                throw new JwtAuthenticationException(
+                        "El usuario autenticado no tiene un ID de usuario asociado en el token."
+                );
+            }
+
+            return usuario.getUsuarioId();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
         }
-
-        return usuario.getUsuarioId();
-
     }
-
 }
