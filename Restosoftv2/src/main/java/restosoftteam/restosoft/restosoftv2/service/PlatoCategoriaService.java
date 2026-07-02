@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface PlatoCategoriaService {
-    PlatoCategoriaResponse save(PlatoCategoriaRequest request);
+    PlatoCategoriaResponse save(PlatoCategoriaRequest request,Integer idEmpresa);
     PlatoCategoriaResponse update(Integer id, PlatoCategoriaRequest request);
     void delete(Integer id);
     PlatoCategoriaResponse findById(Integer id);

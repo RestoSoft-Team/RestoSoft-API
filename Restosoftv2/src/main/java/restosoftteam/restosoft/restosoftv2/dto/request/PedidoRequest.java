@@ -1,5 +1,6 @@
 package restosoftteam.restosoft.restosoftv2.dto.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,10 +11,10 @@ import java.util.List;
 @Setter
 public class PedidoRequest {
     private String observaciones;
-    @NotNull(message = "El id empresa no puede estar vacio.")
-    private Integer idempresa;
+
     @NotNull(message = "El estado de el pedido no puede estar vacio.")
     private String estado;
+
     @NotNull(message = "La fecha de el pedido no puede estar vacio.")
     private Instant fecha;
 
@@ -24,4 +25,9 @@ public class PedidoRequest {
     private List<Integer> idUsuarios;
 
     private List<DetallePedidoRequest> detalles;
+
+    @Email(message = "El correo del cliente debe ser válido")
+    private String emailCliente;
+
+    private String tipoPago;
 }

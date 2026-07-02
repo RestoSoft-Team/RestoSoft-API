@@ -73,12 +73,17 @@ public class SecurityConfig {
                                 "/api/configuracion/empresa/{nombreEmpresa}"
                         ).permitAll()
 
+                        .requestMatchers("/api/registro/**").permitAll()
+                        .requestMatchers("/api/zonas/upload-plano").permitAll()
+
                         // 4. SWAGGER PÚBLICO
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
                         ).permitAll()
+
+                        .requestMatchers("/ws-restosoft/**").permitAll()
 
                         .requestMatchers("/uploads/**").permitAll()
 

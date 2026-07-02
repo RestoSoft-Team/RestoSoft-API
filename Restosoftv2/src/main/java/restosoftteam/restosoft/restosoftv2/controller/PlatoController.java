@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restosoftteam.restosoft.restosoftv2.dto.request.PlatoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.PlatoResponse;
+import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
 import restosoftteam.restosoft.restosoftv2.service.PlatoService;
 
 import java.util.List;
@@ -19,26 +20,22 @@ public class PlatoController {
 
     @GetMapping("/{idPlato}")
     public ResponseEntity<PlatoResponse> obtenerPorId(@PathVariable Integer idPlato) {
-        PlatoResponse platoResponse = platoService.findById(idPlato);
-        return ResponseEntity.ok(platoResponse);
+        return ResponseEntity.ok(platoService.findById(idPlato));
     }
 
-    @GetMapping("/empresa/{idEmpresa}")
-    public ResponseEntity<List<PlatoResponse>> listarPorEmpresaId(@PathVariable Integer idEmpresa) {
-        List<PlatoResponse> listaplatoResponse = platoService.findAllByEmpresaId(idEmpresa);
-        return ResponseEntity.ok(listaplatoResponse);
+    @GetMapping
+    public ResponseEntity<List<PlatoResponse>> listarPorEmpresa(@IdEmpresa Integer idEmpresa) {
+        return ResponseEntity.ok(platoService.findAllByEmpresaId(idEmpresa));
     }
 
     @PostMapping
-    public ResponseEntity<PlatoResponse> guardarPlato(@Valid @RequestBody PlatoRequest request){
-        PlatoResponse platoResponse = platoService.save(request);
-        return new ResponseEntity<>(platoResponse, HttpStatus.CREATED);
+    public ResponseEntity<PlatoResponse> guardarPlato(@Valid @RequestBody PlatoRequest request, @IdEmpresa Integer idEmpresa){
+        return new ResponseEntity<>(platoService.save(request, idEmpresa), HttpStatus.CREATED);
     }
 
     @PutMapping("/{idPlato}")
     public ResponseEntity<PlatoResponse> actualizarPlato(@PathVariable Integer idPlato, @Valid @RequestBody PlatoRequest request){
-        PlatoResponse platoResponse = platoService.update(request,idPlato);
-        return ResponseEntity.ok(platoResponse);
+        return ResponseEntity.ok(platoService.update(request, idPlato));
     }
 
     @DeleteMapping("/{idPlato}")

@@ -9,6 +9,6 @@ public interface PlatoService {
     PlatoResponse findById(Integer id);
     List<PlatoResponse> findAllByEmpresaId(Integer idEmpresa);
     PlatoResponse update(PlatoRequest request, Integer id);
-    PlatoResponse save(PlatoRequest request);
+    PlatoResponse save(PlatoRequest request, Integer idEmpresa);
     void delete(Integer id);
 }

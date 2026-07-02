@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Pedido - RestSoft</title>
+    <style>
+        body { font-family: 'Inter', Arial, sans-serif; background-color: #f8f9fb; color: #111827; margin: 0; padding: 20px; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .header { text-align: center; border-bottom: 3px solid #6b1e28; padding-bottom: 20px; margin-bottom: 30px; }
+        .header h1 { color: #6b1e28; margin: 0; font-size: 32px; text-transform: uppercase; letter-spacing: 1px; }
+        .header p { margin: 5px 0 0 0; color: #6b7280; font-size: 14px; }
+        .status-badge { display: inline-block; background: #fff3df; color: #d97706; padding: 6px 18px; border-radius: 20px; font-weight: bold; font-size: 13px; margin-top: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-pedido { background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 30px; font-size: 14px; color: #4b5563; line-height: 1.6; }
+        .info-pedido strong { color: #111827; font-weight: 700; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th { background-color: #f1f3f6; color: #6b7280; font-size: 11px; text-transform: uppercase; padding: 12px 15px; text-align: left; border-bottom: 2px solid #e8ebf0; letter-spacing: 0.5px; }
+        td { padding: 15px; border-bottom: 1px solid #f1f3f6; font-size: 14px; color: #374151; }
+        .summary { text-align: right; margin-top: 20px; }
+        .summary-line { font-size: 16px; color: #6b7280; margin-bottom: 8px; }
+        .summary-total { font-size: 28px; font-weight: 800; color: #6b1e28; margin-top: 15px; border-top: 2px solid #e8ebf0; padding-top: 15px; }
+        .footer { text-align: center; margin-top: 40px; font-size: 12px; color: #9ca3af; }
+        .footer hr { border: 0; border-top: 1px solid #e8ebf0; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>RestSoft</h1>
+        <p>Su pedido ha sido recibido exitosamente</p>
+        <div class="status-badge" th:text="${estado}">PENDIENTE</div>
+    </div>
+
+    <div class="info-pedido">
+        <strong>Pedido #RS-<span th:text="${pedidoId}"></span></strong><br>
+        Mesa: <span th:text="${mesa}"></span> | Mesero: <span th:text="${mesero}"></span><br>
+        Fecha: <span th:text="${fecha}"></span>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Cantidad</th>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th style="text-align: right;">Subtotal</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.cantidad}">1</td>
+            <td th:text="${item.nombre}">Producto</td>
+            <td>$<span th:text="${#numbers.formatDecimal(item.precio, 1, 0)}">0</span></td>
+            <td style="text-align: right; font-weight: 600;">$<span th:text="${#numbers.formatDecimal(item.subtotal, 1, 0)}">0</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="summary">
+        <div class="summary-total">
+            Total: $<span th:text="${#numbers.formatDecimal(total, 1, 0)}">0</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <hr>
+        <p>Estamos preparando su orden con todo nuestro cariño.<br>¡Gracias por su preferencia!</p>
+    </div>
+</div>
+</body>
+</html>

@@ -28,11 +28,8 @@ public class PlatoServiceImpl implements PlatoService {
 
     @Override
     public PlatoResponse findById(Integer id) {
-
         return platoMapper.toResponse(platoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El plato no se ha encontrado.")));
-
-
     }
 
     @Override
@@ -44,7 +41,6 @@ public class PlatoServiceImpl implements PlatoService {
     @Override
     @Transactional
     public PlatoResponse update(PlatoRequest request, Integer id) {
-
         Plato plato = platoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El plato que se intenta actualizar no existe."));
 
@@ -59,14 +55,12 @@ public class PlatoServiceImpl implements PlatoService {
         plato.setCategoria(platoCategoria);
 
         return platoMapper.toResponse(platoRepository.save(plato));
-
     }
 
     @Override
     @Transactional
-    public PlatoResponse save(PlatoRequest request) {
-
-        Empresa empresa = empresaRepository.findById(request.getIdempresa())
+    public PlatoResponse save(PlatoRequest request, Integer idEmpresa) {
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada no existe."));
 
         PlatoCategoria platoCategoria = platoCategoriaRepository.findById(request.getIdcategoria())
@@ -76,16 +70,13 @@ public class PlatoServiceImpl implements PlatoService {
         plato.setEmpresa(empresa);
         plato.setCategoria(platoCategoria);
         return platoMapper.toResponse(platoRepository.save(plato));
-
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-
         Plato plato = platoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El plato que se intenta eliminar no existe."));
         platoRepository.delete(plato);
-
     }
 }

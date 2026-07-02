@@ -1,6 +1,5 @@
 package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,8 @@ public class PlatoCategoriaServiceImpl implements PlatoCategoriaService {
 
     @Override
     @Transactional
-    public PlatoCategoriaResponse save(PlatoCategoriaRequest request) {
-        Empresa empresa = empresaRepository.findById(request.getIdEmpresa())
+    public PlatoCategoriaResponse save(PlatoCategoriaRequest request, Integer idEmpresa) {
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Empresa no encontrada"));
         PlatoCategoria categoria = mapper.toEntity(request);
         categoria.setIdempresa(empresa);
