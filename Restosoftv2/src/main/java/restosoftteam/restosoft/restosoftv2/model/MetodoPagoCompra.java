@@ -22,12 +22,12 @@ public class MetodoPagoCompra {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idcompra", nullable = false)
-    private Compra idcompra;
+    private Compra compra;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idmetodo_pago", nullable = false)
-    private MetodoPago idmetodoPago;
+    private MetodoPago metodoPago;
 
 
 }

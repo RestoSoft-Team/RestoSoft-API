@@ -30,4 +30,5 @@ public interface ReservaMesaService {
 
     public boolean cambiaronMesas(Reserva reserva, List<Integer> nuevasMesas);
 
+    List<ReservaMesaResponseMapStruct> findAllByCliente(Integer idUsuario);
 }

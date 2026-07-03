@@ -1,0 +1,60 @@
+[33m02e68e3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Merge branch 'main' of github.com:RestoSoft-Team/RestoSoft-API
+[33m00a7aba[m[33m ([m[1;32mcontroller_inventario[m[33m)[m feat: agregar consumer completo de inventario
+[33m61cc659[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #33 from RestoSoft-Team/jwt_security
+[33m6f3fe1f[m[33m ([m[1;31morigin/jwt_security[m[33m)[m fix: modificaciones para uso de @idEmpresa .
+[33m95b66f4[m Merge pull request #32 from RestoSoft-Team/jwt_security
+[33md94d073[m fix: login
+[33me39e064[m Merge pull request #31 from RestoSoft-Team/jwt_security
+[33m01132be[m feat: @idEmpresa , @IdRol and more an fix usuarios for login
+[33m060f49e[m feat: @idEmpresa , @IdRol and more an fix usuarios for login
+[33m694f3e8[m Merge pull request #30 from RestoSoft-Team/pedido_service_impl
+[33ma4796b1[m[33m ([m[1;31morigin/pedido_service_impl[m[33m)[m refactor/feat:  modelos,controller,services en DetallePedido/PedidoMesa/PedidoUsuario
+[33mae5ed6e[m commit guardar2
+[33m92b1f95[m Merge branch 'main' into pedido_service_impl
+[33m0ef9c9f[m Merge branch 'main' into pedido_service_impl
+[33m6d157de[m Merge branch 'main' into pedido_service_impl
+[33m618dc71[m guardar para pull
+[33ma4906b0[m Merge pull request #29 from RestoSoft-Team/controller_reservas
+[33m757151e[m[33m ([m[1;31morigin/controller_reservas[m[33m)[m feat: jwt
+[33m263f380[m Merge pull request #28 from RestoSoft-Team/pedido_service_impl
+[33me87c42f[m refactor: cambios model/repository/dto/service en pedido
+[33mf487fea[m refactor: cambios model/repository/dto/service
+[33m968f48a[m Merge branch 'main' into controller_mesa
+[33m0e4db8b[m guardar
+[33m601cd52[m Merge pull request #27 from RestoSoft-Team/controller_reservas
+[33m9eda768[m merge main into controller_reservas
+[33m7cc27ef[m feat: validacio reservas , schedule task cancelacion, y finalizacion reservas impl.
+[33m6502d1a[m Merge pull request #26 from RestoSoft-Team/controller_reservas
+[33m49bf7df[m merge controller_mesas into controller_reservas
+[33m0254d50[m pull to main
+[33md09bb56[m fix: validations reserva.
+[33me49f85d[m Merge pull request #25 from RestoSoft-Team/controller_mesa
+[33mdcca822[m[33m ([m[1;31morigin/controller_mesa[m[33m)[m feat: Metodo de comprobacion sesion de mesas
+[33me7f5adf[m Merge pull request #24 from RestoSoft-Team/controller_usuario
+[33mb505e06[m[33m ([m[1;31morigin/controller_usuario[m[33m)[m Merge branch 'main' of github.com:RestoSoft-Team/RestoSoft-API
+[33m5964dba[m[33m ([m[1;31morigin/repository_usuarios[m[33m)[m refactor: Modulo terminado de usuarios, junto con reportes y bcrypt password.
+[33m6d387e1[m fix: arreglo js reservas para consumir la api
+[33mdd0cfe8[m merge main into inventario
+[33m385fc6e[m feat: inventario(repository,service,controller)
+[33meaca38e[m merge main and reservas
+[33m7cfaa7d[m nothing
+[33m757fb4f[m[33m ([m[1;31morigin/controller_usuarios[m[33m)[m Merge pull request #23 from RestoSoft-Team/methots_reserva
+[33m4a2e3ab[m[33m ([m[1;31morigin/methots_reserva[m[33m)[m feat: creacion de metodos para transaciones de datos en front , reservas y ususario rol.
+[33mcb84b79[m Merge pull request #22 from RestoSoft-Team/controller_platos
+[33m3b84946[m[33m ([m[1;31morigin/controller_platos[m[33m)[m fix: response mesa.
+[33m9ffb6bb[m Merge pull request #21 from RestoSoft-Team/repository_usuarios
+[33m6cda572[m Merge branch 'main' into repository_usuarios
+[33m4b6c06a[m Merge pull request #20 from RestoSoft-Team/controller_mesa
+[33mabc3999[m refactor: union de ramas.
+[33m75d0414[m feat: agregar usuarios y reportes.
+[33m2da7e5e[m Merge pull request #19 from RestoSoft-Team/controller_platos
+[33mf4bc741[m fix: responsesDtos.
+[33m305abee[m refactor: Merge de rama  controllerReserva a controllerMesa
+[33maace41c[m Merge pull request #18 from RestoSoft-Team/controller_platos
+[33mb9207d4[m[33m ([m[1;31morigin/controller_reserva_mesa[m[33m)[m fix: endpoints delete in ReservaMesa.
+[33m0197bef[m fix: endpoints delete in ReservaMesa.
+[33m03d0d2e[m refactor: Merge de rama  controllerReserva a controllerMesa
+[33m9176035[m refactor: Merge de rama  controllerReserva a controllerMesa
+[33md0ff380[m Merge pull request #17 from RestoSoft-Team/controller_reserva_mesa
+[33mc511422[m[33m ([m[1;31morigin/controller_reserva[m[33m)[m refactor: merge main to controller_reserva
+[33m14b607d[m feat: creacion PedidoController,PlatoController,ReservaController

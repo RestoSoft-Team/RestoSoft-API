@@ -28,6 +28,12 @@ public class Pedido {
     @Column(name = "observaciones", length = 500)
     private String observaciones;
 
+    @Column(name = "email_cliente", length = 150)
+    private String emailCliente;
+
+    @Column(name = "tipo_pago", length = 50)
+    private String tipoPago;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)

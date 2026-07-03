@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,15 +36,10 @@ public class DetallePedido {
     @NotNull
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
-
-    @NotNull
-    @Column(name = "cantidad_preparada", nullable = false)
-    private Integer cantidadPreparada = 0;
-
     @NotNull
     @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioUnitario;
 
-    @Column(name = "estado", length = 50)
-    private String estado;
+    @OneToMany(mappedBy = "detallePedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UnidadPreparacion> unidades = new ArrayList<>();
 }

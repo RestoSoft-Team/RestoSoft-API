@@ -41,6 +41,13 @@ public class ClienteRequest {
     @NotNull
     private LocalDate fechaNacimiento;
 
+    @NotNull(message = "Debe seleccionar un rol.")
+    private Integer idRol;
+
+    private Boolean estado;
+
+    private Boolean eliminarImagen = false;
+
     public interface OnCreate {}
     public interface OnUpdate {}
 

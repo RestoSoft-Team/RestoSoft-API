@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface DetallePedidoRepository extends JpaRepository<DetallePedido, Integer> {
 
-    @Query("SELECT d FROM DetallePedido d JOIN FETCH d.plato p JOIN FETCH p.categoria WHERE d.pedido.id = :idPedido")
+    @Query("SELECT d FROM DetallePedido d JOIN FETCH d.plato p JOIN FETCH p.categoria LEFT JOIN FETCH d.unidades WHERE d.pedido.id = :idPedido")
     List<DetallePedido> findAllByPedido_Id(@Param("idPedido") Integer idPedido);
 }

@@ -78,4 +78,6 @@ public interface UsuarioService {
 
     UsuarioResponse asignarCodigoBarras(Integer idUsuario, String codigo);
 
+    UsuarioResponse actualizarCliente(Integer idEmpresa, Integer idUsuario, ClienteRequest request, MultipartFile imagen);
+
 }

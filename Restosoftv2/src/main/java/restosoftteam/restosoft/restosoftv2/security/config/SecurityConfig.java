@@ -34,7 +34,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Permitir el origen de VS Code Live Server
-        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500","http://127.0.0.1:5501"));
+        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500","http://127.0.0.1:5501","http://localhost:3000/"));
 
         // Permitir todos los métodos (GET, POST, PUT, DELETE, OPTIONS)
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
@@ -69,8 +69,12 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/configuracion",
                                 "/api/auth/cliente",
-                                "/api/auth/register"
+                                "/api/auth/register",
+                                "/api/configuracion/empresa/{nombreEmpresa}"
                         ).permitAll()
+
+                        .requestMatchers("/api/registro/**").permitAll()
+                        .requestMatchers("/api/zonas/upload-plano").permitAll()
 
                         // 4. SWAGGER PÚBLICO
                         .requestMatchers(
@@ -79,11 +83,13 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+                        .requestMatchers("/ws-restosoft/**").permitAll()
+
                         .requestMatchers("/uploads/**").permitAll()
 
                         // 5. CREACIÓN PÚBLICA (POST)
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/empleados").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/usuarios/clientes").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/clientes","/api/usuarios/clientes/{idEmpresa}").permitAll()
 
                         // 6. MÓDULO 1 (Empleados/Roles/Asistencia/Horarios)
 
