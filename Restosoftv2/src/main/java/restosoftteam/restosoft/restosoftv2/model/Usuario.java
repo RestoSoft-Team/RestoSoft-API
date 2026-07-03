@@ -68,6 +68,9 @@ public class Usuario {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idrol")
     private Rol rol;
+    @Column(name = "codigo_barras", unique = true, length = 50)
+    private  String codigoBarras;
+
 
 
 

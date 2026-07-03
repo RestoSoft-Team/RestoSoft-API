@@ -75,4 +75,7 @@ public interface UsuarioService {
             MultipartFile imagen);
 
     List<UsuarioCompletoResponse> listarClientes(Integer idEmpresa);
+
+    UsuarioResponse asignarCodigoBarras(Integer idUsuario, String codigo);
+
 }

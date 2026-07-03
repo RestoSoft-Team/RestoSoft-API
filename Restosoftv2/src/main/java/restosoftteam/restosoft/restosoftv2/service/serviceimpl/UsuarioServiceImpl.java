@@ -290,4 +290,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     }
 
+    @Override
+    public UsuarioResponse asignarCodigoBarras(Integer idUsuario, String codigo) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado: " + idUsuario));
+
+        if (usuarioRepository.existsByCodigoBarras(codigo)) {
+            throw new RegistroYaExistenteException("Ese código de barras ya está asignado a otro usuario.");
+        }
+        usuario.setCodigoBarras(codigo);
+        return usuarioMapper.toResponse(usuarioRepository.save(usuario));
+    }
+
 }
