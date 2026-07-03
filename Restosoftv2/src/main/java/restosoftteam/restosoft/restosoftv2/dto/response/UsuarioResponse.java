@@ -32,4 +32,6 @@ public class UsuarioResponse {
 
     private String imagenUrl;
 
+    private  String codigoBarras;
+
 }
