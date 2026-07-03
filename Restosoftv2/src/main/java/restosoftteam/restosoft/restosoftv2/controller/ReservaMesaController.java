@@ -34,6 +34,8 @@ public class ReservaMesaController {
     @GetMapping("/empresa/hoy")
     public ResponseEntity<List<ReservaMesaResponseMapStruct>> listarPorIdEmpresaDiario(@IdEmpresa Integer idEmpresa) {
         List<ReservaMesaResponseMapStruct> lista = reservaMesaService.findAllByEmpresaIdDiario(idEmpresa);
+        System.out.println(lista);
+
         return ResponseEntity.ok(lista);
     }
 

@@ -10,6 +10,7 @@ import restosoftteam.restosoft.restosoftv2.dto.request.ReservaMesaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.request.ReservaRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponse;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReservaMesaResponseMapStruct;
+import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
 import restosoftteam.restosoft.restosoftv2.service.ReservaService;
 
 import java.util.List;
@@ -22,17 +23,18 @@ public class ReservaController {
 
     @PostMapping
     public ResponseEntity<ReservaMesaResponse> guardarReserva(
-            @Valid @RequestBody ReservaCompletaRequest request) {
+            @Valid @RequestBody ReservaCompletaRequest request,
+            @IdEmpresa Integer idEmpresa) {
 
-        ReservaMesaResponse reservaMesaResponse = reservaService.save(request.getReserva(), request.getIdsMesa());
+        ReservaMesaResponse reservaMesaResponse = reservaService.save(request.getReserva(), request.getIdsMesa(),idEmpresa);
         return new ResponseEntity<>(reservaMesaResponse, HttpStatus.CREATED);
 
     }
 
     @PutMapping("/{idReserva}")
-    public ResponseEntity<ReservaMesaResponse> actualizarReserva(@PathVariable Integer idReserva, @Valid @RequestBody ReservaCompletaRequest request) {
+    public ResponseEntity<ReservaMesaResponse> actualizarReserva(@PathVariable Integer idReserva, @Valid @RequestBody ReservaCompletaRequest request,@IdEmpresa Integer idEmpresa) {
 
-        ReservaMesaResponse reservaMesaResponse = reservaService.update(request.getReserva(), idReserva, request.getIdsMesa());
+        ReservaMesaResponse reservaMesaResponse = reservaService.update(request.getReserva(), idReserva, request.getIdsMesa(),idEmpresa);
         return ResponseEntity.ok(reservaMesaResponse);
     }
 

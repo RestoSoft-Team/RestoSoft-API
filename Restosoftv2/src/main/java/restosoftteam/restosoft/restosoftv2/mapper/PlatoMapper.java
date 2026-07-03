@@ -20,5 +20,6 @@ public interface PlatoMapper {
 
     @Mapping(target = "empresa", ignore = true)
     @Mapping(target = "categoria", ignore = true)
+    @Mapping(target = "imagenUrl", ignore = true)
     void updateEntityFromDto(PlatoRequest dto, @MappingTarget Plato entity);
 }

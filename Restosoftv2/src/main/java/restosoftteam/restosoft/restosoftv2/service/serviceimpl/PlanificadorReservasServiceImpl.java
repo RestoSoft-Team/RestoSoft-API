@@ -33,7 +33,7 @@ public class PlanificadorReservasServiceImpl {
     @Transactional
     public void verificarYActivarReservas() {
 
-        List<Reserva> reservasParaActivar = reservaRepository.findReservasPorActivar(LocalDate.now(), LocalTime.now().minusHours(1), EstadoReserva.CONFIRMADA);
+        List<Reserva> reservasParaActivar = reservaRepository.findReservasPorActivar(LocalDate.now(), LocalTime.now().plusHours(1), EstadoReserva.CONFIRMADA);
 
         if (reservasParaActivar.isEmpty()) {
             return;

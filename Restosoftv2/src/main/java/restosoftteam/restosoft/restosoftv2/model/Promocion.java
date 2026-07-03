@@ -10,6 +10,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -54,5 +56,12 @@ public class Promocion {
     @Column(name = "estado", nullable = false)
     private String estado;
 
+    @ManyToMany
+    @JoinTable(
+            name = "promociones_has_platos",
+            joinColumns = @JoinColumn(name = "promociones_idpromocion"),
+            inverseJoinColumns = @JoinColumn(name = "platos_idplato")
+    )
+    private List<Plato> platos = new ArrayList<>();
 
 }

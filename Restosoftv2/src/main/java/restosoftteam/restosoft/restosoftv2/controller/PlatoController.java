@@ -3,8 +3,10 @@ package restosoftteam.restosoft.restosoftv2.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import restosoftteam.restosoft.restosoftv2.dto.request.PlatoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.PlatoResponse;
 import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
@@ -28,14 +30,21 @@ public class PlatoController {
         return ResponseEntity.ok(platoService.findAllByEmpresaId(idEmpresa));
     }
 
-    @PostMapping
-    public ResponseEntity<PlatoResponse> guardarPlato(@Valid @RequestBody PlatoRequest request, @IdEmpresa Integer idEmpresa){
-        return new ResponseEntity<>(platoService.save(request, idEmpresa), HttpStatus.CREATED);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PlatoResponse> guardarPlato(
+            @Valid @RequestPart("plato") PlatoRequest request,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen,
+            @IdEmpresa Integer idEmpresa){
+        return new ResponseEntity<>(platoService.save(request, idEmpresa, imagen), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{idPlato}")
-    public ResponseEntity<PlatoResponse> actualizarPlato(@PathVariable Integer idPlato, @Valid @RequestBody PlatoRequest request){
-        return ResponseEntity.ok(platoService.update(request, idPlato));
+    @PutMapping(value = "/{idPlato}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PlatoResponse> actualizarPlato(
+            @PathVariable Integer idPlato,
+            @Valid @RequestPart("plato") PlatoRequest request,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen,
+            @IdEmpresa Integer idEmpresa){
+        return ResponseEntity.ok(platoService.update(request, idPlato, imagen, idEmpresa));
     }
 
     @DeleteMapping("/{idPlato}")

@@ -38,12 +38,12 @@ public class Compra {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idproveedor", nullable = false)
-    private Proveedor proveedor;
+    private Proveedor idproveedor;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idempresa", nullable = false)
-    private Empresa empresa;
+    private Empresa idempresa;
 
 
 }

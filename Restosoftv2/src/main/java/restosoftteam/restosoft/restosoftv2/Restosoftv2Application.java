@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableAsync
 public class Restosoftv2Application {
-
     public static void main(String[] args) {
         SpringApplication.run(Restosoftv2Application.class, args);
     }

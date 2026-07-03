@@ -17,6 +17,7 @@ import restosoftteam.restosoft.restosoftv2.model.Usuario;
 import restosoftteam.restosoft.restosoftv2.repository.EmpresaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.ReservaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.UsuarioRepository;
+import restosoftteam.restosoft.restosoftv2.security.annotation.IdEmpresa;
 import restosoftteam.restosoft.restosoftv2.service.ReservaMesaService;
 import restosoftteam.restosoft.restosoftv2.service.ReservaService;
 
@@ -39,7 +40,7 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     @Transactional
-    public ReservaMesaResponse save(ReservaRequest request, List<Integer> idSmesas) {
+    public ReservaMesaResponse save(ReservaRequest request, List<Integer> idSmesas, Integer idEmpresa) {
 
         if(idSmesas.isEmpty()){
             throw new ValorInconsistenteException("No se ha seleccionado ninguna mesa.");
@@ -47,7 +48,7 @@ public class ReservaServiceImpl implements ReservaService {
 
         validarDisponibilidadMesas(request.getFecha(),request.getHora(),idSmesas,null);
 
-        Empresa empresa = empresaRepository.findById(request.getIdempresa())
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada no existe."));
 
         Usuario usuario = usuarioRepository.findById(request.getIdusuario())
@@ -64,7 +65,7 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     @Transactional
-    public ReservaMesaResponse update(ReservaRequest request, Integer idReserva, List<Integer> idSmesas) {
+    public ReservaMesaResponse update(ReservaRequest request, Integer idReserva, List<Integer> idSmesas,Integer idEmpresa) {
 
         if(idSmesas.isEmpty()){
             throw new ValorInconsistenteException("No se ha seleccionado ninguna mesa.");
@@ -90,7 +91,7 @@ public class ReservaServiceImpl implements ReservaService {
 
         }
 
-        Empresa empresa = empresaRepository.findById(request.getIdempresa())
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada no existe."));
 
         Usuario usuario = usuarioRepository.findById(request.getIdusuario())
