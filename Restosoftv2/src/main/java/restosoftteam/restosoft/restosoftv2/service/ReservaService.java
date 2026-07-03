@@ -7,8 +7,8 @@ import restosoftteam.restosoft.restosoftv2.dto.response.ReservaResponse;
 import java.util.List;
 
 public interface ReservaService {
-    ReservaMesaResponse save(ReservaRequest request, List<Integer> idSmesas);
-    ReservaMesaResponse update(ReservaRequest request, Integer idReserva, List<Integer> idSmesas);
+    ReservaMesaResponse save(ReservaRequest request, List<Integer> idSmesas,Integer idEmpresa);
+    ReservaMesaResponse update(ReservaRequest request, Integer idReserva, List<Integer> idSmesas,Integer idEmpresa);
     void delete(Integer idReserva);
 
 

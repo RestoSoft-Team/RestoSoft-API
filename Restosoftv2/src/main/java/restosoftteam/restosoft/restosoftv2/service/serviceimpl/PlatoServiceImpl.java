@@ -3,6 +3,7 @@ package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import restosoftteam.restosoft.restosoftv2.dto.request.PlatoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.PlatoResponse;
 import restosoftteam.restosoft.restosoftv2.exception.RecursoNoEncontradoException;
@@ -15,6 +16,7 @@ import restosoftteam.restosoft.restosoftv2.repository.PlatoCategoriaRepository;
 import restosoftteam.restosoft.restosoftv2.repository.PlatoRepository;
 import restosoftteam.restosoft.restosoftv2.service.PlatoService;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -25,6 +27,7 @@ public class PlatoServiceImpl implements PlatoService {
     private final PlatoMapper platoMapper;
     private final EmpresaRepository empresaRepository;
     private final PlatoCategoriaRepository platoCategoriaRepository;
+    private final ArchivoStorageService archivoStorageService;
 
     @Override
     public PlatoResponse findById(Integer id) {
@@ -40,11 +43,11 @@ public class PlatoServiceImpl implements PlatoService {
 
     @Override
     @Transactional
-    public PlatoResponse update(PlatoRequest request, Integer id) {
+    public PlatoResponse update(PlatoRequest request, Integer id, MultipartFile imagen, Integer idEmpresa) {
         Plato plato = platoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El plato que se intenta actualizar no existe."));
 
-        Empresa empresa = empresaRepository.findById(request.getIdempresa())
+        Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada no existe."));
 
         PlatoCategoria platoCategoria = platoCategoriaRepository.findById(request.getIdcategoria())
@@ -54,12 +57,24 @@ public class PlatoServiceImpl implements PlatoService {
         plato.setEmpresa(empresa);
         plato.setCategoria(platoCategoria);
 
+        if (imagen != null && !imagen.isEmpty()) {
+            try {
+                if (plato.getImagenUrl() != null) {
+                    archivoStorageService.eliminarImagen(plato.getImagenUrl());
+                }
+                String nuevaUrl = archivoStorageService.guardarImagen(imagen);
+                plato.setImagenUrl(nuevaUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al guardar la imagen del plato", e);
+            }
+        }
+
         return platoMapper.toResponse(platoRepository.save(plato));
     }
 
     @Override
     @Transactional
-    public PlatoResponse save(PlatoRequest request, Integer idEmpresa) {
+    public PlatoResponse save(PlatoRequest request, Integer idEmpresa, MultipartFile imagen) {
         Empresa empresa = empresaRepository.findById(idEmpresa)
                 .orElseThrow(() -> new RecursoNoEncontradoException("La empresa relacionada no existe."));
 
@@ -69,6 +84,17 @@ public class PlatoServiceImpl implements PlatoService {
         Plato plato = platoMapper.toEntity(request);
         plato.setEmpresa(empresa);
         plato.setCategoria(platoCategoria);
+
+        String urlImagen = "default-plate.png";
+        if (imagen != null && !imagen.isEmpty()) {
+            try {
+                urlImagen = archivoStorageService.guardarImagen(imagen);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al guardar la imagen del plato", e);
+            }
+        }
+        plato.setImagenUrl(urlImagen);
+
         return platoMapper.toResponse(platoRepository.save(plato));
     }
 
@@ -77,6 +103,11 @@ public class PlatoServiceImpl implements PlatoService {
     public void delete(Integer id) {
         Plato plato = platoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El plato que se intenta eliminar no existe."));
+
+        if (plato.getImagenUrl() != null && !plato.getImagenUrl().equals("default-plate.png")) {
+            archivoStorageService.eliminarImagen(plato.getImagenUrl());
+        }
+
         platoRepository.delete(plato);
     }
 }

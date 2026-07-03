@@ -179,7 +179,7 @@ public class ReservaMesaServiceImpl implements ReservaMesaService {
     }
     @Override
     public boolean cambiaronMesas(Reserva reserva,
-                                             List<Integer> nuevasMesas){
+                                  List<Integer> nuevasMesas){
 
         List<Integer> actuales =
                 reservaMesaRepository.findAllByReserva(reserva)

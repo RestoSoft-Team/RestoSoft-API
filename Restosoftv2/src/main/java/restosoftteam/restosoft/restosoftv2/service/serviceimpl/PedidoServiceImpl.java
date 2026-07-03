@@ -18,10 +18,7 @@ import restosoftteam.restosoft.restosoftv2.service.PedidoService;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -45,6 +42,8 @@ public class PedidoServiceImpl implements PedidoService {
     private final DetallePedidoRepository detallePedidoRepository;
     private final DetallePedidoMapper detallePedidoMapper;
     private final EmailService emailService;
+    private final VentaRepository ventaRepository;
+    private final MetodoPagoRepository metodoPagoRepository;
 
     @Override
     public PedidoResponse findById(Integer id) {
@@ -354,6 +353,8 @@ public class PedidoServiceImpl implements PedidoService {
         emailService.enviarFacturaPago(emailCliente, emailEmpresa, pedido.getId(), mesa, mesero, items, subtotal, divisiones, "DIVIDIDO");
     }
 
+
+
     @Override
     @Transactional
     public void procesarPago(Integer idPedido, String tipoPago, List<Map<String, Object>> metodosPago, Integer idEmpresa) {
@@ -371,12 +372,46 @@ public class PedidoServiceImpl implements PedidoService {
             }
         }
         detallePedidoRepository.saveAll(detalles);
+
         List<PedidoMesa> mesasDelPedido = pedidoMesaRepository.findByPedido_Id(pedido.getId());
         for (PedidoMesa pm : mesasDelPedido) {
             Mesa mesa = pm.getMesa();
             mesa.setEstado(EstadoMesa.LIBRE);
             mesaRepository.save(mesa);
         }
+
+        BigDecimal subtotal = BigDecimal.ZERO;
+        for (DetallePedido det : detalles) {
+            int cantidad = det.getUnidades() != null ? det.getUnidades().size() : det.getCantidad();
+            subtotal = subtotal.add(det.getPrecioUnitario().multiply(BigDecimal.valueOf(cantidad)));
+        }
+        BigDecimal impuestos = subtotal.multiply(new BigDecimal("0.19"));
+        BigDecimal propina = subtotal.multiply(new BigDecimal("0.10")); // Propina sugerida 10%
+        BigDecimal totalFinal = subtotal.add(impuestos).add(propina);
+
+        Venta venta = new Venta();
+        venta.setValorTotal(totalFinal);
+        venta.setPropina(propina);
+        venta.setObservaciones("Venta automática - Pedido #" + idPedido);
+        venta.setEstadoPago("PAGADO");
+        venta.setIdpedido(pedido);
+
+        if (!pedido.getUsuarios().isEmpty()) {
+            venta.setIdusuario(pedido.getUsuarios().get(0).getUsuario());
+        }
+        venta.setIdempresa(pedido.getEmpresa());
+        venta.setFecha(Instant.now());
+
+        Set<MetodoPago> metodos = new HashSet<>();
+        for (Map<String, Object> mpMap : metodosPago) {
+            Object idObj = mpMap.get("idMetodoPago");
+            if (idObj != null) {
+                Integer idMetodo = (Integer) idObj;
+                metodoPagoRepository.findById(idMetodo).ifPresent(metodos::add);
+            }
+        }
+        venta.setMetodosPago(metodos);
+        ventaRepository.save(venta);
 
         if (pedido.getEmailCliente() != null && !pedido.getEmailCliente().trim().isEmpty()) {
             String emailCliente = pedido.getEmailCliente();
@@ -385,7 +420,7 @@ public class PedidoServiceImpl implements PedidoService {
             String meseroStr = pedido.getUsuarios().stream().map(u -> u.getUsuario().getNombres()).collect(Collectors.joining(", "));
 
             List<Map<String, Object>> items = new ArrayList<>();
-            BigDecimal subtotal = BigDecimal.ZERO;
+            BigDecimal subtotalEmail = BigDecimal.ZERO;
             for (DetallePedido det : detalles) {
                 int cantidad = det.getUnidades() != null ? det.getUnidades().size() : det.getCantidad();
                 BigDecimal sub = det.getPrecioUnitario().multiply(BigDecimal.valueOf(cantidad));
@@ -394,10 +429,10 @@ public class PedidoServiceImpl implements PedidoService {
                 item.put("nombre", det.getPlato().getNombre());
                 item.put("subtotal", sub);
                 items.add(item);
-                subtotal = subtotal.add(sub);
+                subtotalEmail = subtotalEmail.add(sub);
             }
 
-            emailService.enviarFacturaPago(emailCliente, emailEmpresa, pedido.getId(), mesaStr, meseroStr, items, subtotal, metodosPago, tipoPago);
+            emailService.enviarFacturaPago(emailCliente, emailEmpresa, pedido.getId(), mesaStr, meseroStr, items, subtotalEmail, metodosPago, tipoPago);
         }
     }
 
