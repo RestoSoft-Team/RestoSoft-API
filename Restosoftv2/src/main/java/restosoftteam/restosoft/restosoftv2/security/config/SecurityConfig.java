@@ -91,7 +91,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/empleados").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/clientes","/api/usuarios/clientes/{idEmpresa}").permitAll()
 
-                        // 6. LISTAR CLIENTES PÚBLICO (GET) -> AGREGADO PARA ARREGLAR TU 403
+                        // 6. MÓDULO 1 (Empleados/Roles/Asistencia/Horarios)
+
+
+                        .requestMatchers("/api/asistencias/**").permitAll()
 
                         // 7. PREFLIGHT DE CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

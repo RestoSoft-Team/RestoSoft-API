@@ -2,6 +2,7 @@ package restosoftteam.restosoft.restosoftv2.service.serviceimpl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import restosoftteam.restosoft.restosoftv2.dto.response.ReporteAsistenciaResponse;
 import restosoftteam.restosoft.restosoftv2.model.Asistencia;
 import restosoftteam.restosoft.restosoftv2.repository.AsistenciaRepository;
@@ -22,6 +23,7 @@ public class ReporteServiceImpl implements ReporteService {
     // Cuando Sebastián termine ventas agregas: private final VentaRepository ventaRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ReporteAsistenciaResponse> reporteAsistenciaEmpleados(
             Integer idEmpresa, LocalDate inicio, LocalDate fin) {
 

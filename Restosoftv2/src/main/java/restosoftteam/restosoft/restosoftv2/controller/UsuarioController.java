@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import restosoftteam.restosoft.restosoftv2.dto.request.ClienteRequest;
+import restosoftteam.restosoft.restosoftv2.dto.request.CodigoBarrasRequest;
 import restosoftteam.restosoft.restosoftv2.dto.request.EmpleadoRequest;
 import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioCompletoResponse;
 import restosoftteam.restosoft.restosoftv2.dto.response.UsuarioResponse;
@@ -129,6 +130,11 @@ public class UsuarioController {
             @IdEmpresa Integer idEmpresa) {
 
         return ResponseEntity.ok(usuarioService.obtenerEmpleado(idEmpresa, id));
+    }
+    @PatchMapping("/{id}/codigo-barras")
+    public ResponseEntity<UsuarioResponse> asignarCodigoBarras(
+            @PathVariable Integer id, @Valid @RequestBody CodigoBarrasRequest request) {
+        return ResponseEntity.ok(usuarioService.asignarCodigoBarras(id, request.getCodigoBarras()));
     }
 
 }
