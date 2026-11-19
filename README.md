@@ -1,12 +1,21 @@
-# 📌 Sistema de Reservas Multiempresa (SaaS) con Multitenancy y Tiempo Real
+# Sistema de Reservas Multiempresa (SaaS) con Multitenancy y Tiempo Real
+
+![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.5-6DB33F?logo=springboot&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-RBAC%20%2B%20JWT-6DB33F?logo=spring&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-Build-C71A36?logo=apachemaven&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-Base%20de%20datos-4479A1?logo=mysql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-0.11.5-black?logo=jsonwebtokens&logoColor=white)
+![WebSockets](https://img.shields.io/badge/WebSockets-Tiempo%20real-365FA0)
+![Swagger](https://img.shields.io/badge/Swagger%20OpenAPI-2.8.9-85EA2D)
 
 Backend para la gestión de reservas orientado a múltiples empresas (multitenancy), con autenticación basada en JWT, control de acceso por roles (RBAC), subdominios personalizados, configuración visual dinámica y sincronización en tiempo real mediante WebSockets.
 
 ---
 
-# 🚀 Características Principales
+# Características Principales
 
-## ✅ Multitenancy por Subdominio
+## Multitenancy por Subdominio
 
 Cada empresa opera de forma aislada utilizando un subdominio único.
 
@@ -22,7 +31,7 @@ El backend identifica automáticamente la empresa a partir del subdominio y carg
 
 ---
 
-## ✅ Roles y Permisos (RBAC)
+## Roles y Permisos (RBAC)
 
 ### Administrador
 
@@ -45,7 +54,7 @@ Acceso limitado a:
 
 ---
 
-## ✅ Personalización por Empresa
+## Personalización por Empresa
 
 Cada empresa puede configurar:
 
@@ -58,7 +67,7 @@ Cada empresa puede configurar:
 
 ---
 
-## ✅ Reservas en Tiempo Real
+## Reservas en Tiempo Real
 
 Las nuevas reservas son notificadas instantáneamente a los paneles administrativos mediante WebSockets.
 
@@ -66,7 +75,7 @@ No es necesario recargar la página.
 
 ---
 
-# 🏗 Arquitectura General
+# Arquitectura General
 
 ```text
 Cliente Web
@@ -90,11 +99,11 @@ Administradores y Empleados
 
 ---
 
-# ⚙️ MÓDULO 1: EMPRESA (ADMINISTRADORES Y EMPLEADOS)
+# MÓDULO 1: EMPRESA (ADMINISTRADORES Y EMPLEADOS)
 
 ---
 
-# 🔑 1. Autenticación, Roles y Seguridad
+# 1. Autenticación, Roles y Seguridad
 
 ## Login
 
@@ -165,7 +174,7 @@ El sistema permite invalidar tokens.
 
 ---
 
-# 🛠️ 2. Gestión del Administrador
+# 2. Gestión del Administrador
 
 ---
 
@@ -202,7 +211,7 @@ POST /api/empresa/configuracion/logo
 
 ---
 
-## 🌐 Gestión de Subdominios
+## Gestión de Subdominios
 
 ### Creación Automática
 
@@ -241,7 +250,7 @@ PUT /api/empresa/subdominio
 
 ---
 
-## 📅 Gestión de Disponibilidad
+## Gestión de Disponibilidad
 
 Permite definir:
 
@@ -278,7 +287,7 @@ PUT /api/empresa/disponibilidad
 
 ---
 
-# 📅 3. Gestión de Empleados
+# 3. Gestión de Empleados
 
 ---
 
@@ -341,11 +350,11 @@ PUT /api/reservas/{id}/estado
 
 ---
 
-# 👥 MÓDULO 2: CLIENTE DE LA EMPRESA
+# MÓDULO 2: CLIENTE DE LA EMPRESA
 
 ---
 
-# 🌐 1. Identificación y Carga Dinámica
+# 1. Identificación y Carga Dinámica
 
 ---
 
@@ -384,7 +393,7 @@ El backend:
 
 ---
 
-# 📝 2. Proceso de Reserva
+# 2. Proceso de Reserva
 
 ---
 
@@ -432,7 +441,7 @@ La reserva queda asociada al tenant correspondiente.
 
 ---
 
-# ⚡ Sincronización en Tiempo Real
+# Sincronización en Tiempo Real
 
 ---
 
@@ -475,7 +484,7 @@ Estado: Pendiente
 
 ---
 
-# 🔌 WebSockets
+# WebSockets
 
 ## Conexión
 
@@ -500,7 +509,7 @@ Solo reciben eventos:
 
 ---
 
-# 🗄 Modelo de Datos Simplificado
+# Modelo de Datos Simplificado
 
 ## Empresas
 
@@ -569,7 +578,7 @@ reservas
 
 ---
 
-# 🔒 Seguridad
+# Seguridad
 
 - JWT Authentication
 - RBAC (Role Based Access Control)
@@ -582,7 +591,7 @@ reservas
 
 ---
 
-# 📡 Flujo Completo
+# Flujo Completo
 
 ```text
 Cliente
@@ -617,22 +626,22 @@ Actualización en Tiempo Real
 
 ---
 
-# 🎯 Beneficios
+# Beneficios
 
-✅ Arquitectura Multiempresa (SaaS)
+- Arquitectura Multiempresa (SaaS)
 
-✅ Aislamiento por Tenant
+- Aislamiento por Tenant
 
-✅ Control de acceso por roles
+- Control de acceso por roles
 
-✅ Personalización por empresa
+- Personalización por empresa
 
-✅ Gestión centralizada de reservas
+- Gestión centralizada de reservas
 
-✅ Actualización en tiempo real
+- Actualización en tiempo real
 
-✅ Escalable para cientos o miles de empresas
+- Escalable para cientos o miles de empresas
 
-✅ Compatible con REST API + WebSockets
+- Compatible con REST API + WebSockets
 
 ---
